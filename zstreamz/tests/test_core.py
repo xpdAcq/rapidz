@@ -14,11 +14,11 @@ from tornado import gen
 from tornado.queues import Queue
 from tornado.ioloop import IOLoop
 
-import streamz as sz
+import zstreamz as sz
 
-from streamz import Stream
-from streamz.sources import sink_to_file, PeriodicCallback
-from streamz.utils_test import (inc, double, gen_test, tmpfile, captured_logger,
+from zstreamz import Stream
+from zstreamz.sources import sink_to_file, PeriodicCallback
+from zstreamz.utils_test import (inc, double, gen_test, tmpfile, captured_logger,
         clean, await_for)
 from distributed.utils_test import loop
 
@@ -657,7 +657,7 @@ def test_zip_latest_reverse():
 
 
 def test_triple_zip_latest():
-    from streamz.core import Stream
+    from zstreamz.core import Stream
     s1 = Stream()
     s2 = Stream()
     s3 = Stream()
@@ -1024,7 +1024,7 @@ def test_execution_order():
 def test_map_errors_log():
     a = Stream(asynchronous=True)
     b = a.delay(0.001).map(lambda x: 1 / x)
-    with captured_logger('streamz') as logger:
+    with captured_logger('zstreamz') as logger:
         a._emit(0)
         yield gen.sleep(0.1)
 
@@ -1043,7 +1043,7 @@ def test_map_errors_raises():
 def test_accumulate_errors_log():
     a = Stream(asynchronous=True)
     b = a.delay(0.001).accumulate(lambda x, y: x / y)
-    with captured_logger('streamz') as logger:
+    with captured_logger('zstreamz') as logger:
         a._emit(1)
         a._emit(0)
         yield gen.sleep(0.1)
@@ -1101,4 +1101,4 @@ def test_start():
 
 
 if sys.version_info >= (3, 5):
-    from streamz.tests.py3_test_core import *  # noqa
+    from zstreamz.tests.py3_test_core import *  # noqa

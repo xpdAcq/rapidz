@@ -1,6 +1,6 @@
 import operator
 
-from streamz import Stream, core
+from zstreamz import Stream, core
 
 _stream_types = {'streaming': [], 'updating': []}
 
@@ -160,14 +160,14 @@ class Streaming(OperatorMixin):
 
     Parameters
     ----------
-    stream: streamz.Stream
+    stream: zstreamz.Stream
     example: object
         An object to represent an example element of this stream
 
     See also
     --------
-    streamz.dataframe.StreamingDataFrame
-    streamz.dataframe.StreamingBatch
+    zstreamz.dataframe.StreamingDataFrame
+    zstreamz.dataframe.StreamingBatch
     """
     _subtype = object
     _stream_type = 'streaming'

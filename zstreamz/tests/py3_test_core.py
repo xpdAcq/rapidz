@@ -3,7 +3,7 @@ from time import time
 from distributed.utils_test import loop, inc  # noqa
 from tornado import gen
 
-from streamz import Stream
+from zstreamz import Stream
 
 
 def test_await_syntax(loop):  # noqa

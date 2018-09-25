@@ -330,7 +330,7 @@ class Stream(object):
         self._emit(x)
 
     def gather(self):
-        """ This is a no-op for core streamz
+        """ This is a no-op for core zstreamz
 
         This allows gather to be used in both dask and core streams
         """

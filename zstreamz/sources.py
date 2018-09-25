@@ -178,7 +178,7 @@ class from_kafka(Source):
 
     >>> source = Stream.from_kafka(['mytopic'],
     ...           {'bootstrap.servers': 'localhost:9092',
-    ...            'group.id': 'streamz'})  # doctest: +SKIP
+    ...            'group.id': 'zstreamz'})  # doctest: +SKIP
     """
     def __init__(self, topics, consumer_params, poll_interval=0.1, start=False,
                  **kwargs):
@@ -321,7 +321,7 @@ def from_kafka_batched(topic, consumer_params, poll_interval='1s',
 
     >>> source = Stream.from_kafka_batched('mytopic',
     ...           {'bootstrap.servers': 'localhost:9092',
-    ...            'group.id': 'streamz'}, npartitions=4)  # doctest: +SKIP
+    ...            'group.id': 'zstreamz'}, npartitions=4)  # doctest: +SKIP
     """
     if dask:
         from distributed.client import default_client

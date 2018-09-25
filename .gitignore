@@ -12,3 +12,5 @@ log
 *.swo
 .cache/
 .ipynb_checkpoints/
+
+dask-worker-space/

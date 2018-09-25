@@ -741,7 +741,7 @@ class Random(DataFrame):
     """
     def __init__(self, freq='100ms', interval='500ms', dask=False):
         if dask:
-            from streamz.dask import DaskStream
+            from zstreamz.dask import DaskStream
             source = DaskStream()
             loop = source.loop
         else:
