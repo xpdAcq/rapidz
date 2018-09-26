@@ -14,3 +14,5 @@ log
 .ipynb_checkpoints/
 
 dask-worker-space/
+# Rever
+rever/
