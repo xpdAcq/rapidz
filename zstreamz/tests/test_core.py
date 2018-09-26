@@ -1135,9 +1135,9 @@ def test_map_init():
     source.emit(1)
 
     assert L[0] == 1 + 10 + 20
-    assert tuple([_deref_weakref(x) for x in m._init_args]) == (m, source, add)
+    assert tuple([_deref_weakref(x) for x in m._init_args]) == (source, add)
     assert m._init_kwargs == dict(y=10)
-    assert tuple([_deref_weakref(x) for x in m2._init_args]) == (m2, m, add)
+    assert tuple([_deref_weakref(x) for x in m2._init_args]) == (m, add)
     assert m2._init_kwargs == dict(y=20)
 
 

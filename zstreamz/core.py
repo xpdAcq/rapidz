@@ -50,7 +50,6 @@ def args_kwargs(cls):
         @functools.wraps(func)
         def wraps(*args, **kwargs):
             self = args[0]
-            print(self.__module__, args)
             obj = func(*args, **kwargs)
             # TODO: decide if we want to capture self in args
             self._init_args = tuple([_weakref_node(a) for a in args[1:]])
