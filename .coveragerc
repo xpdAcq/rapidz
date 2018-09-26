@@ -1,6 +1,6 @@
 [run]
 source = 
-    streamz
+    zstreamz
 [report]
 omit =
     */python?.?/*
