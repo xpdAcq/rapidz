@@ -17,9 +17,17 @@ from tornado.ioloop import IOLoop
 import zstreamz as sz
 
 from zstreamz import Stream
+from zstreamz.core import _deref_weakref
 from zstreamz.sources import sink_to_file, PeriodicCallback
-from zstreamz.utils_test import (inc, double, gen_test, tmpfile, captured_logger,
-        clean, await_for)
+from zstreamz.utils_test import (
+    inc,
+    double,
+    gen_test,
+    tmpfile,
+    captured_logger,
+    clean,
+    await_for,
+)
 from distributed.utils_test import loop
 
 
@@ -151,8 +159,17 @@ def test_sliding_window():
     for i in range(10):
         source.emit(i)
 
-    assert L == [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5),
-                 (5, 6), (6, 7), (7, 8), (8, 9)]
+    assert L == [
+        (0, 1),
+        (1, 2),
+        (2, 3),
+        (3, 4),
+        (4, 5),
+        (5, 6),
+        (6, 7),
+        (7, 8),
+        (8, 9),
+    ]
 
 
 @gen_test()
@@ -201,9 +218,9 @@ def test_timed_window():
 
 
 def test_timed_window_timedelta(clean):
-    pytest.importorskip('pandas')
+    pytest.importorskip("pandas")
     source = Stream(asynchronous=True)
-    a = source.timed_window('10ms')
+    a = source.timed_window("10ms")
     assert a.interval == 0.010
 
 
@@ -235,13 +252,14 @@ def test_sink_to_file():
     with tmpfile() as fn:
         source = Stream()
         with sink_to_file(fn, source) as f:
-            source.emit('a')
-            source.emit('b')
+            source.emit("a")
+            source.emit("b")
 
         with open(fn) as f:
             data = f.read()
 
-        assert data == 'a\nb\n'
+        assert data == "a\nb\n"
+
 
 def test_sink_with_args_and_kwargs():
     L = dict()
@@ -257,7 +275,7 @@ def test_sink_with_args_and_kwargs():
 
     s.emit(1)
     s.emit(2)
-    assert L['supercat'] == [1, 2]
+    assert L["supercat"] == [1, 2]
 
 
 @gen_test()
@@ -332,11 +350,11 @@ def test_zip():
     L = c.sink_to_list()
 
     a.emit(1)
-    b.emit('a')
+    b.emit("a")
     a.emit(2)
-    b.emit('b')
+    b.emit("b")
 
-    assert L == [(1, 'a'), (2, 'b')]
+    assert L == [(1, "a"), (2, "b")]
     d = Stream()
     # test zip from the object itself
     # zip 3 streams together
@@ -363,8 +381,7 @@ def test_zip_literals():
     a.emit(4)
     b.emit(5)
 
-    assert L == [(1, 123, 2),
-                 (4, 123, 5)]
+    assert L == [(1, 123, 2), (4, 123, 5)]
 
 
 def test_zip_same():
@@ -388,12 +405,12 @@ def test_combine_latest():
 
     a.emit(1)
     a.emit(2)
-    b.emit('a')
+    b.emit("a")
     a.emit(3)
-    b.emit('b')
+    b.emit("b")
 
-    assert L == [(2, 'a'), (3, 'a'), (3, 'b')]
-    assert L2 == [(2, 'a'), (3, 'a'), (3, 'b')]
+    assert L == [(2, "a"), (3, "a"), (3, "b")]
+    assert L2 == [(2, "a"), (3, "a"), (3, "b")]
 
 
 def test_combine_latest_emit_on():
@@ -404,13 +421,13 @@ def test_combine_latest_emit_on():
     L = c.sink_to_list()
 
     a.emit(1)
-    b.emit('a')
+    b.emit("a")
     a.emit(2)
     a.emit(3)
-    b.emit('b')
+    b.emit("b")
     a.emit(4)
 
-    assert L == [(2, 'a'), (3, 'a'), (4, 'b')]
+    assert L == [(2, "a"), (3, "a"), (4, "b")]
 
 
 def test_combine_latest_emit_on_stream():
@@ -421,13 +438,13 @@ def test_combine_latest_emit_on_stream():
     L = c.sink_to_list()
 
     a.emit(1)
-    b.emit('a')
+    b.emit("a")
     a.emit(2)
     a.emit(3)
-    b.emit('b')
+    b.emit("b")
     a.emit(4)
 
-    assert L == [(2, 'a'), (3, 'a'), (4, 'b')]
+    assert L == [(2, "a"), (3, "a"), (4, "b")]
 
 
 @gen_test()
@@ -445,21 +462,21 @@ def test_zip_timeout():
     with pytest.raises(gen.TimeoutError):
         yield gen.with_timeout(timedelta(seconds=0.01), future)
 
-    b.emit('a')
+    b.emit("a")
     yield future
 
-    assert L == [(1, 'a')]
+    assert L == [(1, "a")]
 
 
 def test_frequencies():
     source = Stream()
     L = source.frequencies().sink_to_list()
 
-    source.emit('a')
-    source.emit('b')
-    source.emit('a')
+    source.emit("a")
+    source.emit("b")
+    source.emit("a")
 
-    assert L[-1] == {'a': 2, 'b': 1}
+    assert L[-1] == {"a": 2, "b": 1}
 
 
 def test_flatten():
@@ -572,16 +589,16 @@ def test_collect():
     source1.emit(2)
     assert L == []
 
-    source2.emit('anything')  # flushes collector
+    source2.emit("anything")  # flushes collector
     assert L == [(1, 2)]
 
-    source2.emit('anything')
+    source2.emit("anything")
     assert L == [(1, 2), ()]
 
     source1.emit(3)
     assert L == [(1, 2), ()]
 
-    source2.emit('anything')
+    source2.emit("anything")
     assert L == [(1, 2), (), (3,)]
 
 
@@ -591,7 +608,7 @@ def test_map_str():
 
     source = Stream()
     s = source.map(add, y=10)
-    assert str(s) == '<map: add>'
+    assert str(s) == "<map: add>"
 
 
 def test_filter_str():
@@ -600,24 +617,24 @@ def test_filter_str():
 
     source = Stream()
     s = source.filter(iseven)
-    assert str(s) == '<filter: iseven>'
+    assert str(s) == "<filter: iseven>"
 
 
 def test_timed_window_str(clean):
     source = Stream()
     s = source.timed_window(.05)
-    assert str(s) == '<timed_window: 0.05>'
+    assert str(s) == "<timed_window: 0.05>"
 
 
 def test_partition_str():
     source = Stream()
     s = source.partition(2)
-    assert str(s) == '<partition: 2>'
+    assert str(s) == "<partition: 2>"
 
 
 def test_stream_name_str():
-    source = Stream(stream_name='this is not a stream')
-    assert str(source) == '<this is not a stream; Stream>'
+    source = Stream(stream_name="this is not a stream")
+    assert str(source) == "<this is not a stream; Stream>"
 
 
 def test_zip_latest():
@@ -631,12 +648,12 @@ def test_zip_latest():
 
     a.emit(1)
     a.emit(2)
-    b.emit('a')
-    b.emit('b')
+    b.emit("a")
+    b.emit("b")
     a.emit(3)
 
-    assert L == [(1, 'a'), (2, 'a'), (3, 'b')]
-    assert L2 == [(3, 'b')]
+    assert L == [(1, "a"), (2, "a"), (3, "b")]
+    assert L2 == [(3, "b")]
 
 
 def test_zip_latest_reverse():
@@ -646,18 +663,19 @@ def test_zip_latest_reverse():
 
     L = c.sink_to_list()
 
-    b.emit('a')
+    b.emit("a")
     a.emit(1)
     a.emit(2)
     a.emit(3)
-    b.emit('b')
+    b.emit("b")
     a.emit(4)
 
-    assert L == [(1, 'a'), (2, 'a'), (3, 'a'), (4, 'b')]
+    assert L == [(1, "a"), (2, "a"), (3, "a"), (4, "b")]
 
 
 def test_triple_zip_latest():
     from zstreamz.core import Stream
+
     s1 = Stream()
     s2 = Stream()
     s3 = Stream()
@@ -665,14 +683,14 @@ def test_triple_zip_latest():
     L_simple = s_simple.sink_to_list()
 
     s1.emit(1)
-    s2.emit('I')
+    s2.emit("I")
     s2.emit("II")
     s1.emit(2)
     s2.emit("III")
-    s3.emit('a')
-    s3.emit('b')
+    s3.emit("a")
+    s3.emit("b")
     s1.emit(3)
-    assert L_simple == [(1, 'III', 'a'), (2, 'III', 'a'), (3, 'III', 'b')]
+    assert L_simple == [(1, "III", "a"), (2, "III", "a"), (3, "III", "b")]
 
 
 def test_connect():
@@ -685,7 +703,7 @@ def test_connect():
     # initialize the second stream to connect to
     source_upstream = Stream()
 
-    sout = source_downstream.map(lambda x : x + 1)
+    sout = source_downstream.map(lambda x: x + 1)
     L = list()
     sout = sout.map(L.append)
     source_upstream.connect(source_downstream)
@@ -707,7 +725,7 @@ def test_multi_connect():
     # initialize the second stream to connect to
     source_upstream = Stream()
 
-    sout = source_downstream.map(lambda x : x + 1)
+    sout = source_downstream.map(lambda x: x + 1)
     L = list()
     sout = sout.map(L.append)
     source_upstream.connect(source_downstream)
@@ -745,7 +763,9 @@ def test_gc():
     assert L == [1]
 
     del a
-    import gc; gc.collect()
+    import gc
+
+    gc.collect()
     start = time()
     while source.downstreams:
         sleep(0.01)
@@ -758,15 +778,16 @@ def test_gc():
 @gen_test()
 def test_from_file():
     with tmpfile() as fn:
-        with open(fn, 'wt') as f:
+        with open(fn, "wt") as f:
             f.write('{"x": 1, "y": 2}\n')
             f.write('{"x": 2, "y": 2}\n')
             f.write('{"x": 3, "y": 2}\n')
             f.flush()
 
-            source = Stream.from_textfile(fn, poll_interval=0.010,
-                                          asynchronous=True, start=False)
-            L = source.map(json.loads).pluck('x').sink_to_list()
+            source = Stream.from_textfile(
+                fn, poll_interval=0.010, asynchronous=True, start=False
+            )
+            L = source.map(json.loads).pluck("x").sink_to_list()
 
             assert L == []
 
@@ -790,9 +811,9 @@ def test_from_file():
 def test_filenames():
     with tmpfile() as fn:
         os.mkdir(fn)
-        with open(os.path.join(fn, 'a'), 'w') as f:
+        with open(os.path.join(fn, "a"), "w") as f:
             pass
-        with open(os.path.join(fn, 'b'), 'w') as f:
+        with open(os.path.join(fn, "b"), "w") as f:
             pass
 
         source = Stream.filenames(fn, asynchronous=True)
@@ -802,23 +823,23 @@ def test_filenames():
         while len(L) < 2:
             yield gen.sleep(0.01)
 
-        assert L == [os.path.join(fn, x) for x in ['a', 'b']]
+        assert L == [os.path.join(fn, x) for x in ["a", "b"]]
 
-        with open(os.path.join(fn, 'c'), 'w') as f:
+        with open(os.path.join(fn, "c"), "w") as f:
             pass
 
         while len(L) < 3:
             yield gen.sleep(0.01)
 
-        assert L == [os.path.join(fn, x) for x in ['a', 'b', 'c']]
+        assert L == [os.path.join(fn, x) for x in ["a", "b", "c"]]
 
 
 def test_docstrings():
     for s in [Stream, Stream()]:
-        assert 'every element' in s.map.__doc__
-        assert s.map.__name__ == 'map'
-        assert 'predicate' in s.filter.__doc__
-        assert s.filter.__name__ == 'filter'
+        assert "every element" in s.map.__doc__
+        assert s.map.__name__ == "map"
+        assert "predicate" in s.filter.__doc__
+        assert s.filter.__name__ == "filter"
 
 
 def test_subclass():
@@ -829,12 +850,12 @@ def test_subclass():
     class foo(NewStream):
         pass
 
-    assert hasattr(NewStream, 'map')
-    assert hasattr(NewStream(), 'map')
-    assert hasattr(NewStream, 'foo')
-    assert hasattr(NewStream(), 'foo')
-    assert not hasattr(Stream, 'foo')
-    assert not hasattr(Stream(), 'foo')
+    assert hasattr(NewStream, "map")
+    assert hasattr(NewStream(), "map")
+    assert hasattr(NewStream, "foo")
+    assert hasattr(NewStream(), "foo")
+    assert not hasattr(Stream, "foo")
+    assert not hasattr(Stream(), "foo")
 
 
 @gen_test()
@@ -882,9 +903,9 @@ def test_destroy():
 
 
 def dont_test_stream_kwargs(clean):
-    ''' Test the good and bad kwargs for the stream
+    """ Test the good and bad kwargs for the stream
         Currently just stream_name
-    '''
+    """
     test_name = "some test name"
 
     sin = Stream(stream_name=test_name)
@@ -898,25 +919,25 @@ def dont_test_stream_kwargs(clean):
     # these should be functions, use partial to partially initialize them
     # (if they require more arguments)
     streams = [
-               # some filter kwargs, so we comment them out
-               partial(sin.map, lambda x : x),
-               partial(sin.accumulate, lambda x1, x2 : x1),
-               partial(sin.filter, lambda x : True),
-               partial(sin.partition, 2),
-               partial(sin.sliding_window, 2),
-               partial(sin.timed_window, .01),
-               partial(sin.rate_limit, .01),
-               partial(sin.delay, .02),
-               partial(sin.buffer, 2),
-               partial(sin.zip, sin2),
-               partial(sin.combine_latest, sin2),
-               sin.frequencies,
-               sin.flatten,
-               sin.unique,
-               sin.union,
-               partial(sin.pluck, 0),
-               sin.collect,
-               ]
+        # some filter kwargs, so we comment them out
+        partial(sin.map, lambda x: x),
+        partial(sin.accumulate, lambda x1, x2: x1),
+        partial(sin.filter, lambda x: True),
+        partial(sin.partition, 2),
+        partial(sin.sliding_window, 2),
+        partial(sin.timed_window, .01),
+        partial(sin.rate_limit, .01),
+        partial(sin.delay, .02),
+        partial(sin.buffer, 2),
+        partial(sin.zip, sin2),
+        partial(sin.combine_latest, sin2),
+        sin.frequencies,
+        sin.flatten,
+        sin.unique,
+        sin.union,
+        partial(sin.pluck, 0),
+        sin.collect,
+    ]
 
     good_kwargs = dict(stream_name=test_name)
     bad_kwargs = dict(foo="bar")
@@ -937,6 +958,7 @@ def dont_test_stream_kwargs(clean):
     # and not getting TypeError
     # garbage collect and then try
     import gc
+
     gc.collect()
     sin.emit(1)
 
@@ -944,6 +966,7 @@ def dont_test_stream_kwargs(clean):
 @pytest.fixture
 def thread(loop):
     from threading import Thread, Event
+
     thread = Thread(target=loop.start)
     thread.daemon = True
     thread.start()
@@ -998,10 +1021,10 @@ def test_execution_order():
         b = s.pluck(1)
         a = s.pluck(0)
         l = a.combine_latest(b, emit_on=a).sink_to_list()
-        z = [(1, 'red'), (2, 'blue'), (3, 'green')]
+        z = [(1, "red"), (2, "blue"), (3, "green")]
         for zz in z:
             s.emit(zz)
-        L.append((l, ))
+        L.append((l,))
     for ll in L:
         assert ll == L[0]
 
@@ -1011,7 +1034,7 @@ def test_execution_order():
         a = s.pluck(0)
         b = s.pluck(1)
         l = a.combine_latest(b, emit_on=a).sink_to_list()
-        z = [(1, 'red'), (2, 'blue'), (3, 'green')]
+        z = [(1, "red"), (2, "blue"), (3, "green")]
         for zz in z:
             s.emit(zz)
         L2.append((l,))
@@ -1024,12 +1047,12 @@ def test_execution_order():
 def test_map_errors_log():
     a = Stream(asynchronous=True)
     b = a.delay(0.001).map(lambda x: 1 / x)
-    with captured_logger('zstreamz') as logger:
+    with captured_logger("zstreamz") as logger:
         a._emit(0)
         yield gen.sleep(0.1)
 
         out = logger.getvalue()
-        assert 'ZeroDivisionError' in out
+        assert "ZeroDivisionError" in out
 
 
 def test_map_errors_raises():
@@ -1043,13 +1066,13 @@ def test_map_errors_raises():
 def test_accumulate_errors_log():
     a = Stream(asynchronous=True)
     b = a.delay(0.001).accumulate(lambda x, y: x / y)
-    with captured_logger('zstreamz') as logger:
+    with captured_logger("zstreamz") as logger:
         a._emit(1)
         a._emit(0)
         yield gen.sleep(0.1)
 
         out = logger.getvalue()
-        assert 'ZeroDivisionError' in out
+        assert "ZeroDivisionError" in out
 
 
 def test_accumulate_errors_raises():
@@ -1098,6 +1121,24 @@ def test_start():
     s = MySource().map(inc)
     s.start()
     assert flag == [True]
+
+
+def test_map_init():
+    def add(x=0, y=0):
+        return x + y
+
+    source = Stream()
+    m = source.map(add, y=10)
+    m2 = m.map(add, y=20)
+    L = m2.sink_to_list()
+
+    source.emit(1)
+
+    assert L[0] == 1 + 10 + 20
+    assert tuple([_deref_weakref(x) for x in m._init_args]) == (source, add)
+    assert m._init_kwargs == dict(y=10)
+    assert tuple([_deref_weakref(x) for x in m2._init_args]) == (m, add)
+    assert m2._init_kwargs == dict(y=20)
 
 
 if sys.version_info >= (3, 5):
