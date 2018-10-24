@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
-from collections import deque
+from collections import deque, Sequence, Hashable
 from datetime import timedelta
 import functools
 import logging
@@ -43,6 +43,47 @@ def _deref_weakref(x):
     if isinstance(x, weakref.ref):
         return x()
     return x
+
+
+def apply(func, args, args2=None, kwargs=None):
+    if not isinstance(args, Sequence) or isinstance(args, str):
+        args = (args,)
+    if args2:
+        args = args + args2
+    if kwargs:
+        return func(*args, **kwargs)
+    else:
+        return func(*args)
+
+
+def move_to_first(node, f=True):
+    """Promote current node to first in the execution order
+
+    Parameters
+    ----------
+    node : zstreamz instance
+        Node to be promoted
+    f : bool or Sequence of zstreamz
+        The upstream node(s) to promote this node for. If True, promote all
+        upstream nodes. Defaults to True
+
+    Notes
+    -----
+    This is often used for saving data, since saving data before the rest of
+    the data is processed makes sure that all the data that can be saved
+    (before an exception is hit) is saved.
+    """
+    if f is True:
+        f = node.upstreams
+    if not isinstance(f, Sequence):
+        f = (f,)
+    for upstream in f:
+        for n in upstream.downstreams.data:
+            if n() is node:
+                break
+        upstream.downstreams.data._od.move_to_end(n, last=False)
+        del n
+    return node
 
 
 def args_kwargs(cls):
@@ -425,8 +466,11 @@ class Stream(object):
             upstream.downstreams.remove(self)
             self.upstreams.remove(upstream)
 
-    def scatter(self, **kwargs):
-        from .dask import scatter
+    def scatter(self, backend='dask', **kwargs):
+        # If backend is None (or falsey) don't scatter, run inline
+        if not backend:
+            return self
+        from .parallel import scatter
 
         return scatter(self, **kwargs)
 
@@ -664,7 +708,6 @@ def _truthy(x):
     return not not x
 
 
-@args_kwargs
 @Stream.register_api()
 class filter(Stream):
     """ Only pass through elements that satisfy the predicate
@@ -686,15 +729,18 @@ class filter(Stream):
     4
     """
 
-    def __init__(self, upstream, predicate, **kwargs):
+    def __init__(self, upstream, predicate, *args, **kwargs):
         if predicate is None:
             predicate = _truthy
         self.predicate = predicate
+        stream_name = kwargs.pop("stream_name", None)
+        self.kwargs = kwargs
+        self.args = args
 
-        Stream.__init__(self, upstream, **kwargs)
+        Stream.__init__(self, upstream, stream_name=stream_name)
 
     def update(self, x, who=None):
-        if self.predicate(x):
+        if self.predicate(x, *self.args, **self.kwargs):
             return self._emit(x)
 
 
@@ -978,6 +1024,7 @@ class zip(Stream):
 
     def __init__(self, *upstreams, **kwargs):
         self.maxsize = kwargs.pop("maxsize", 10)
+        first = kwargs.pop("first", None)
         self.condition = Condition()
         self.literals = [
             (i, val)
@@ -996,6 +1043,8 @@ class zip(Stream):
         ]
 
         Stream.__init__(self, upstreams=upstreams2, **kwargs)
+        if first:
+            move_to_first(self, first)
 
     def pack_literals(self, tup):
         """ Fill buffers for literals whenever we empty them """
@@ -1050,6 +1099,7 @@ class combine_latest(Stream):
 
     def __init__(self, *upstreams, **kwargs):
         emit_on = kwargs.pop("emit_on", None)
+        first = kwargs.pop("first", None)
 
         self.last = [None for _ in upstreams]
         self.missing = set(upstreams)
@@ -1063,6 +1113,9 @@ class combine_latest(Stream):
         else:
             self.emit_on = upstreams
         Stream.__init__(self, upstreams=upstreams, **kwargs)
+        if first:
+            move_to_first(self, first)
+
 
     def update(self, x, who=None):
         if self.missing and who in self.missing:
@@ -1138,14 +1191,21 @@ class unique(Stream):
             from zict import LRU
 
             self.seen = LRU(history, self.seen)
+            self.non_hash_seen = deque(maxlen=history)
 
         Stream.__init__(self, upstream, **kwargs)
 
     def update(self, x, who=None):
         y = self.key(x)
-        if y not in self.seen:
-            self.seen[y] = 1
-            return self._emit(x)
+        # If y is a dict then we can't use LRU cache use FILO deque instead
+        if not isinstance(y, Hashable):
+            if y not in self.non_hash_seen:
+                self.non_hash_seen.append(y)
+                return self._emit(x)
+        else:
+            if y not in self.seen:
+                self.seen[y] = 1
+                return self._emit(x)
 
 
 @args_kwargs
@@ -1265,12 +1325,15 @@ class zip_latest(Stream):
     """
 
     def __init__(self, lossless, *upstreams, **kwargs):
+        first = kwargs.pop("first", None)
         upstreams = (lossless,) + upstreams
         self.last = [None for _ in upstreams]
         self.missing = set(upstreams)
         self.lossless = lossless
         self.lossless_buffer = deque()
         Stream.__init__(self, upstreams=upstreams, **kwargs)
+        if first:
+            move_to_first(self, first)
 
     def update(self, x, who=None):
         idx = self.upstreams.index(who)
@@ -1368,3 +1431,65 @@ def sync(loop, func, *args, **kwargs):
         six.reraise(*error[0])
     else:
         return result[0]
+
+
+@Stream.register_api()
+class starsink(Stream):
+    """ Apply a function on every element
+
+    Examples
+    --------
+    >>> source = Stream()
+    >>> L = list()
+    >>> source.sink(L.append)
+    >>> source.sink(print)
+    >>> source.sink(print)
+    >>> source.emit(123)
+    123
+    123
+    >>> L
+    [123]
+
+    See Also
+    --------
+    map
+    Stream.sink_to_list
+    """
+
+    _graphviz_shape = "trapezium"
+
+    def __init__(self, upstream, func, *args, **kwargs):
+        self.func = func
+        # take the stream specific kwargs out
+        stream_name = kwargs.pop("stream_name", None)
+        self.kwargs = kwargs
+        self.args = args
+
+        Stream.__init__(self, upstream, stream_name=stream_name)
+        _global_sinks.add(self)
+
+    def update(self, x, who=None):
+        y = x + self.args
+        result = self.func(*y, **self.kwargs)
+        if gen.isawaitable(result):
+            return result
+        else:
+            return []
+
+
+def destroy_pipeline(source_node: Stream):
+    """Destroy all the nodes attached to the source
+
+    Parameters
+    ----------
+    source_node : Stream
+        The source node for the pipeline
+    """
+    for ds in list(source_node.downstreams):
+        destroy_pipeline(ds)
+    if source_node.upstreams:
+        try:
+            source_node.destroy()
+        # some source nodes are tuples and some are bad wekrefs
+        except (AttributeError, KeyError) as e:
+            pass
