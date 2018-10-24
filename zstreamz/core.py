@@ -466,7 +466,7 @@ class Stream(object):
             upstream.downstreams.remove(self)
             self.upstreams.remove(upstream)
 
-    def scatter(self, backend='dask', **kwargs):
+    def scatter(self, **kwargs):
         from .parallel import scatter
 
         return scatter(self, **kwargs)
