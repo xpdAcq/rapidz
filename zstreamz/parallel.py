@@ -1,10 +1,10 @@
 from concurrent.futures import Future
 from functools import wraps
 
-from streamz_ext import apply
+from zstreamz import apply
 from zstreamz.core import _truthy, args_kwargs
-from streamz_ext.core import get_io_loop
-from streamz_ext.clients import DEFAULT_BACKENDS
+from zstreamz.core import get_io_loop
+from zstreamz.clients import DEFAULT_BACKENDS
 from operator import getitem
 
 from tornado import gen
@@ -61,12 +61,12 @@ class ParallelStream(Stream):
     >>> from dask.distributed import Client
     >>> client = Client()
 
-    >>> from streamz_ext import Stream
+    >>> from zstreamz import Stream
     >>> source = Stream()
     >>> source.scatter().map(func).accumulate(binop).gather().sink(...)
 
     This runs on thread backends
-    >>> from streamz_ext import Stream
+    >>> from zstreamz import Stream
     >>> source = Stream()
     >>> source.scatter(backend='thread').map(func).accumulate(binop).gather().sink(...)
 

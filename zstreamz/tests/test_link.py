@@ -1,5 +1,5 @@
-from streamz_ext.link import *
-from streamz_ext import Stream
+from zstreamz.link import *
+from zstreamz import Stream
 
 try:
     from zstreamz.tests.test_link import *

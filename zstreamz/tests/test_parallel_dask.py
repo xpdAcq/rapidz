@@ -7,8 +7,8 @@ pytest.importorskip("dask.distributed")
 
 from tornado import gen
 
-from streamz_ext import Stream
-from streamz_ext.parallel import scatter
+from zstreamz import Stream
+from zstreamz.parallel import scatter
 
 from distributed import Future, Client
 from distributed.utils import sync
