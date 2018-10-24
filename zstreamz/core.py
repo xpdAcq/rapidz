@@ -467,9 +467,6 @@ class Stream(object):
             self.upstreams.remove(upstream)
 
     def scatter(self, backend='dask', **kwargs):
-        # If backend is None (or falsey) don't scatter, run inline
-        if not backend:
-            return self
         from .parallel import scatter
 
         return scatter(self, **kwargs)
