@@ -1113,7 +1113,6 @@ class combine_latest(Stream):
         if first:
             move_to_first(self, first)
 
-
     def update(self, x, who=None):
         if self.missing and who in self.missing:
             self.missing.remove(who)
