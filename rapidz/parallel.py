@@ -1,10 +1,10 @@
 from concurrent.futures import Future
 from functools import wraps
 
-from zstreamz import apply
-from zstreamz.core import _truthy, args_kwargs
-from zstreamz.core import get_io_loop
-from zstreamz.clients import DEFAULT_BACKENDS
+from rapidz import apply
+from rapidz.core import _truthy, args_kwargs
+from rapidz.core import get_io_loop
+from rapidz.clients import DEFAULT_BACKENDS
 from operator import getitem
 
 from tornado import gen
@@ -46,7 +46,7 @@ def filter_null_wrapper(func):
 class ParallelStream(Stream):
     """ A Parallel stream using multiple backends
 
-    This object is fully compliant with the ``zstreamz.core.Stream`` object but
+    This object is fully compliant with the ``rapidz.core.Stream`` object but
     uses a client for execution.  Operations like ``map`` and
     ``accumulate`` submit functions to run on the client instance
     and pass around futures.
@@ -61,12 +61,12 @@ class ParallelStream(Stream):
     >>> from dask.distributed import Client
     >>> client = Client()
 
-    >>> from zstreamz import Stream
+    >>> from rapidz import Stream
     >>> source = Stream()
     >>> source.scatter().map(func).accumulate(binop).gather().sink(...)
 
     This runs on thread backends
-    >>> from zstreamz import Stream
+    >>> from rapidz import Stream
     >>> source = Stream()
     >>> source.scatter(backend='thread').map(func).accumulate(binop).gather().sink(...)
 

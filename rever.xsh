@@ -1,4 +1,4 @@
-$PROJECT = 'zstreamz'
+$PROJECT = 'rapidz'
 $ACTIVITIES = ['version_bump',
                'changelog',
                'tag',

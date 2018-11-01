@@ -4,8 +4,8 @@ import os
 import pytest
 nx = pytest.importorskip('networkx')
 
-from zstreamz import Stream, create_graph, visualize
-from zstreamz.utils_test import tmpfile
+from rapidz import Stream, create_graph, visualize
+from rapidz.utils_test import tmpfile
 
 from ..graph import _clean_text
 

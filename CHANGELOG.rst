@@ -1,5 +1,5 @@
 ===================
-zstreamz Change Log
+rapidz Change Log
 ===================
 
 .. current developments

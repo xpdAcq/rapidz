@@ -10,12 +10,12 @@ import numpy as np
 import pandas as pd
 from tornado import gen
 
-from zstreamz import Stream
-from zstreamz.utils_test import gen_test
-from zstreamz.dataframe import (DataFrame, Series, DataFrames, Seriess,
+from rapidz import Stream
+from rapidz.utils_test import gen_test
+from rapidz.dataframe import (DataFrame, Series, DataFrames, Seriess,
         Aggregation)
-import zstreamz.dataframe as sd
-from zstreamz.dask import DaskStream
+import rapidz.dataframe as sd
+from rapidz.dask import DaskStream
 
 from distributed import Client
 from distributed.utils_test import loop  # flake8: noqa

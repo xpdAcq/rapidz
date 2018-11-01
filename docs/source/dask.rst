@@ -1,7 +1,7 @@
 Dask Integration
 ================
 
-The ``streamz.dask`` module contains a Dask_-powered implementation of the
+The ``rapidz.dask`` module contains a Dask_-powered implementation of the
 core Stream object.  This is a drop-in implementation, but uses Dask for
 execution and so can scale to a multicore machine or a distributed cluster.
 
@@ -9,7 +9,7 @@ execution and so can scale to a multicore machine or a distributed cluster.
 Quickstart
 ----------
 
-.. currentmodule:: streamz
+.. currentmodule:: rapidz
 
 Installation
 ++++++++++++
@@ -61,7 +61,7 @@ simple function across data, and then prints those results.  We use the core
        sleep(1)  # simulate actual work
        return x + 1
 
-   from streamz import Stream
+   from rapidz import Stream
 
    source = Stream()
    source.map(inc).sink(print)
@@ -75,13 +75,13 @@ sequentially.
 Parallel Execution
 ++++++++++++++++++
 
-.. currentmodule:: streamz
+.. currentmodule:: rapidz
 
 .. autosummary::
    scatter
    buffer
 
-.. currentmodule:: streamz.dask
+.. currentmodule:: rapidz.dask
 
 .. autosummary::
    gather

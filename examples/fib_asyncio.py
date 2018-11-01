@@ -1,4 +1,4 @@
-from streamz import Stream
+from rapidz import Stream
 import asyncio
 from tornado.platform.asyncio import AsyncIOMainLoop
 AsyncIOMainLoop().install()

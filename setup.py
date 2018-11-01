@@ -3,15 +3,15 @@
 from os.path import exists
 from setuptools import setup
 
-packages = ['zstreamz', 'zstreamz.dataframe']
+packages = ['rapidz', 'rapidz.dataframe']
 
 tests = [p + '.tests' for p in packages]
 
 
-setup(name='zstreamz',
+setup(name='rapidz',
       version='0.4.0',
       description='Streams',
-      url='http://github.com/mrocklin/zstreamz/',
+      url='http://github.com/xpdAcq/rapidz/',
       maintainer='CJ Wright',
       maintainer_email='cjwright4242@gmail.com',
       license='BSD',

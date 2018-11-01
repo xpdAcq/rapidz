@@ -1,4 +1,4 @@
-from streamz import Stream
+from rapidz import Stream
 from tornado.ioloop import IOLoop
 
 

@@ -4,7 +4,7 @@ API
 Stream
 ------
 
-.. currentmodule:: streamz
+.. currentmodule:: rapidz
 
 .. autosummary::
    Stream
@@ -45,7 +45,7 @@ Sources
 DaskStream
 ----------
 
-.. currentmodule:: streamz.dask
+.. currentmodule:: rapidz.dask
 
 .. autosummary::
    DaskStream
@@ -55,7 +55,7 @@ DaskStream
 Definitions
 -----------
 
-.. currentmodule:: streamz
+.. currentmodule:: rapidz
 
 .. autofunction:: accumulate
 .. autofunction:: buffer
@@ -81,7 +81,7 @@ Definitions
 .. autofunction:: from_kafka
 .. autofunction:: from_textfile
 
-.. currentmodule:: streamz.dask
+.. currentmodule:: rapidz.dask
 
 .. autofunction:: DaskStream
 .. autofunction:: gather

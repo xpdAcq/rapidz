@@ -11,7 +11,7 @@ from tornado import gen
 
 from ..core import Stream
 from ..dask import DaskStream
-from zstreamz.utils_test import gen_test, wait_for
+from rapidz.utils_test import gen_test, wait_for
 pytest.importorskip('distributed')
 from distributed.utils_test import gen_cluster  # flake8: noqa
 
@@ -31,7 +31,7 @@ def download_kafka(target):
                           cwd=os.path.dirname(target))
 
 
-def stop_docker(name='zstreamz-kafka', cid=None, let_fail=False):
+def stop_docker(name='rapidz-kafka', cid=None, let_fail=False):
     """Stop docker container with given name tag
 
     Parameters
@@ -62,7 +62,7 @@ def launch_kafka():
     stop_docker(let_fail=True)
     cmd = ("docker run -d -p 2181:2181 -p 9092:9092 --env "
            "ADVERTISED_HOST=127.0.01 --env ADVERTISED_PORT=9092 "
-           "--name zstreamz-kafka spotify/kafka")
+           "--name rapidz-kafka spotify/kafka")
     print(cmd)
     cid = subprocess.check_output(shlex.split(cmd)).decode()[:-1]
 
@@ -117,7 +117,7 @@ def kafka_service():
 def test_from_kafka():
     j = random.randint(0, 10000)
     ARGS = {'bootstrap.servers': 'localhost:9092',
-            'group.id': 'zstreamz-test%i' % j}
+            'group.id': 'rapidz-test%i' % j}
     with kafka_service() as kafka:
         stream = Stream.from_kafka([TOPIC], ARGS, asynchronous=True)
         out = stream.sink_to_list()
@@ -147,7 +147,7 @@ def test_from_kafka():
 def test_from_kafka_thread():
     j = random.randint(0, 10000)
     ARGS = {'bootstrap.servers': 'localhost:9092',
-            'group.id': 'zstreamz-test%i' % j}
+            'group.id': 'rapidz-test%i' % j}
     with kafka_service() as kafka:
         stream = Stream.from_kafka([TOPIC], ARGS)
         out = stream.sink_to_list()
@@ -176,7 +176,7 @@ def test_from_kafka_thread():
 def test_kafka_batch():
     j = random.randint(0, 10000)
     ARGS = {'bootstrap.servers': 'localhost:9092',
-            'group.id': 'zstreamz-test%i' % j}
+            'group.id': 'rapidz-test%i' % j}
     with kafka_service() as kafka:
         stream = Stream.from_kafka_batched(TOPIC, ARGS)
         out = stream.sink_to_list()
@@ -193,7 +193,7 @@ def test_kafka_batch():
 def test_kafka_dask_batch(c, s, w1, w2):
     j = random.randint(0, 10000)
     ARGS = {'bootstrap.servers': 'localhost:9092',
-            'group.id': 'zstreamz-test%i' % j}
+            'group.id': 'rapidz-test%i' % j}
     with kafka_service() as kafka:
         stream = Stream.from_kafka_batched(TOPIC, ARGS, asynchronous=True,
                                            dask=True)

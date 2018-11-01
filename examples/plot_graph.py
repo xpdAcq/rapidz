@@ -1,4 +1,4 @@
-from streamz import Stream
+from rapidz import Stream
 from operator import add
 
 source1 = Stream(stream_name='source1')

@@ -14,7 +14,7 @@ from . import core, sources
 class DaskStream(Stream):
     """ A Parallel stream using Dask
 
-    This object is fully compliant with the ``zstreamz.core.Stream`` object but
+    This object is fully compliant with the ``rapidz.core.Stream`` object but
     uses a Dask client for execution.  Operations like ``map`` and
     ``accumulate`` submit functions to run on the Dask instance using
     ``dask.distributed.Client.submit`` and pass around Dask futures.
@@ -29,7 +29,7 @@ class DaskStream(Stream):
     >>> from dask.distributed import Client
     >>> client = Client()
 
-    >>> from zstreamz import Stream
+    >>> from rapidz import Stream
     >>> source = Stream()
     >>> source.scatter().map(func).accumulate(binop).gather().sink(...)
 

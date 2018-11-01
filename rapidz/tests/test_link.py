@@ -1,8 +1,8 @@
-from zstreamz.link import *
-from zstreamz import Stream
+from rapidz.link import *
+from rapidz import Stream
 
 try:
-    from zstreamz.tests.test_link import *
+    from rapidz.tests.test_link import *
 except ImportError:
     pass
 

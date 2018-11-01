@@ -1,8 +1,8 @@
 import pytest
 import toolz
 
-from zstreamz.batch import Batch, Streaming
-from zstreamz.utils_test import inc
+from rapidz.batch import Batch, Streaming
+from rapidz.utils_test import inc
 
 
 def test_core():
@@ -20,7 +20,7 @@ def test_core():
 
 def test_dataframes():
     pd = pytest.importorskip('pandas')
-    from zstreamz.dataframe import DataFrame
+    from rapidz.dataframe import DataFrame
     data = [{'x': i, 'y': 2 * i} for i in range(10)]
 
     s = Batch(example=[{'x': 0, 'y': 0}])

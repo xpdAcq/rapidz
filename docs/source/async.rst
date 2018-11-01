@@ -6,11 +6,11 @@ you are only using operations like map and accumulate then you can safely skip
 this section.*
 
 When using time-based flow control like ``rate_limit``, ``delay``, or
-``timed_window`` Streamz relies on the Tornado_ framework for concurrency.
+``timed_window`` rapidz relies on the Tornado_ framework for concurrency.
 This allows us to handle many concurrent operations cheaply and consistently
 within a single thread.  However, this also adds complexity and requires some
 understanding of asynchronous programming.  There are a few different ways to
-use Streamz with a Tornado event loop.
+use rapidz with a Tornado event loop.
 
 We give a few examples below that all do the same thing, but with different
 styles.  In each case we use the following toy functions:
@@ -46,7 +46,7 @@ You may have an application that runs strictly within an event loop.
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
    from tornado.ioloop import IOLoop
 
    @gen.coroutine
@@ -72,7 +72,7 @@ This would also work with async-await syntax in Python 3
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
    from tornado.ioloop import IOLoop
 
    async def f():
@@ -94,7 +94,7 @@ interaction) or when using Dask (next section).
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
 
    source = Stream(asynchronous=False)  # starts IOLoop in separate thread
    source.map(increment).rate_limit('500ms').sink(write)
@@ -129,7 +129,7 @@ for ``Stream`` (mostly). Typically we create a Dask client, and then
    from dask.distributed import Client
    client = Client(processes=False)  # starts thread pool, IOLoop in separate thread
 
-   from streamz import Stream
+   from rapidz import Stream
    source = Stream()
    (source.scatter()       # scatter local elements to cluster, creating a DaskStream
           .map(increment)  # map a function remotely
