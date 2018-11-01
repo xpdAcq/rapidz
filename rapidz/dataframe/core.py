@@ -17,7 +17,6 @@ from . import aggregations
 
 
 class BaseFrame(Streaming):
-
     def round(self, decimals=0):
         """ Round elements in frame """
         return self.map_partitions(M.round, self, decimals=decimals)
@@ -42,21 +41,26 @@ class BaseFrame(Streaming):
         return self.map_partitions(lambda x: x.index, self)
 
     def map(self, func, na_action=None):
-        return self.map_partitions(self._subtype.map, self, func, na_action=na_action)
+        return self.map_partitions(
+            self._subtype.map, self, func, na_action=na_action
+        )
 
 
 class Frame(BaseFrame):
-    _stream_type = 'streaming'
+    _stream_type = "streaming"
 
     def groupby(self, other):
         """ Groupby aggreagtions """
         return GroupBy(self, other)
 
     def aggregate(self, aggregation):
-        return self.accumulate_partitions(aggregations.accumulator,
-                                          agg=aggregation,
-                                          start=None, stream_type='updating',
-                                          returns_state=True)
+        return self.accumulate_partitions(
+            aggregations.accumulator,
+            agg=aggregation,
+            start=None,
+            stream_type="updating",
+            returns_state=True,
+        )
 
     def sum(self):
         """ Sum frame """
@@ -136,30 +140,29 @@ class Frame(BaseFrame):
         return Window(self, n=n, value=value)
 
     def _cumulative_aggregation(self, op):
-        return self.accumulate_partitions(_cumulative_accumulator,
-                                          returns_state=True,
-                                          start=(),
-                                          op=op)
+        return self.accumulate_partitions(
+            _cumulative_accumulator, returns_state=True, start=(), op=op
+        )
 
     def cumsum(self):
         """ Cumulative sum """
-        return self._cumulative_aggregation(op='cumsum')
+        return self._cumulative_aggregation(op="cumsum")
 
     def cumprod(self):
         """ Cumulative product """
-        return self._cumulative_aggregation(op='cumprod')
+        return self._cumulative_aggregation(op="cumprod")
 
     def cummin(self):
         """ Cumulative minimum """
-        return self._cumulative_aggregation(op='cummin')
+        return self._cumulative_aggregation(op="cummin")
 
     def cummax(self):
         """ Cumulative maximum """
-        return self._cumulative_aggregation(op='cummax')
+        return self._cumulative_aggregation(op="cummax")
 
 
 class Frames(BaseFrame):
-    _stream_type = 'updating'
+    _stream_type = "updating"
 
     def sum(self, **kwargs):
         return self.map_partitions(M.sum, self, **kwargs)
@@ -209,9 +212,14 @@ class _DataFrameMixin(object):
     def __dir__(self):
         o = set(dir(type(self)))
         o.update(self.__dict__)
-        o.update(c for c in self.columns if
-                 (isinstance(c, pd.compat.string_types) and
-                 pd.compat.isidentifier(c)))
+        o.update(
+            c
+            for c in self.columns
+            if (
+                isinstance(c, pd.compat.string_types)
+                and pd.compat.isidentifier(c)
+            )
+        )
         return list(o)
 
     def assign(self, **kwargs):
@@ -242,11 +250,15 @@ class _DataFrameMixin(object):
         if isinstance(value, Series):
             result = self.assign(**{key: value})
         elif isinstance(value, DataFrame):
-            result = self.assign(**{k: value[c] for k, c in zip(key, value.columns)})
+            result = self.assign(
+                **{k: value[c] for k, c in zip(key, value.columns)}
+            )
         else:
             example = self.example.copy()
             example[key] = value
-            result = self.map_partitions(pd.DataFrame.assign, self, **{key: value})
+            result = self.map_partitions(
+                pd.DataFrame.assign, self, **{key: value}
+            )
 
         self.stream = result.stream
         self.example = result.example
@@ -267,11 +279,13 @@ class DataFrame(Frame, _DataFrameMixin):
     --------
     Series
     """
+
     _subtype = pd.DataFrame
 
     def __init__(self, *args, **kwargs):
         # {'x': sdf.x + 1, 'y': sdf.y - 1}
         if len(args) == 1 and not kwargs and isinstance(args[0], dict):
+
             def concat(tup, columns=None):
                 result = pd.concat(tup, axis=1)
                 result.columns = columns
@@ -280,8 +294,9 @@ class DataFrame(Frame, _DataFrameMixin):
             columns, values = zip(*args[0].items())
             stream = type(values[0].stream).zip(*[v.stream for v in values])
             stream = stream.map(concat, columns=list(columns))
-            example = pd.DataFrame({k: getattr(v, 'example', v)
-                                    for k, v in args[0].items()})
+            example = pd.DataFrame(
+                {k: getattr(v, "example", v) for k, v in args[0].items()}
+            )
             DataFrame.__init__(self, stream, example)
         else:
             return super(DataFrame, self).__init__(*args, **kwargs)
@@ -290,8 +305,10 @@ class DataFrame(Frame, _DataFrameMixin):
         """ Verify consistency of elements that pass through this stream """
         super(DataFrame, self).verify(x)
         if list(x.columns) != list(self.example.columns):
-            raise IndexError("Input expected to have columns %s, got %s" %
-                             (self.example.columns, x.columns))
+            raise IndexError(
+                "Input expected to have columns %s, got %s"
+                % (self.example.columns, x.columns)
+            )
 
 
 class _SeriesMixin(object):
@@ -315,13 +332,17 @@ class Series(Frame, _SeriesMixin):
     --------
     DataFrame
     """
+
     _subtype = pd.Series
 
     def value_counts(self):
-        return self.accumulate_partitions(aggregations.accumulator,
-                                          agg=aggregations.ValueCounts(),
-                                          start=None, stream_type='updating',
-                                          returns_state=True)
+        return self.accumulate_partitions(
+            aggregations.accumulator,
+            agg=aggregations.ValueCounts(),
+            start=None,
+            stream_type="updating",
+            returns_state=True,
+        )
 
 
 class Index(Series):
@@ -363,6 +384,7 @@ class Rolling(object):
     >>> sdf.rolling(10).x.mean()  # doctest: +SKIP
     >>> sdf.rolling('100ms').x.mean()  # doctest: +SKIP
     """
+
     def __init__(self, sdf, window, min_periods):
         self.root = sdf
         if not isinstance(window, int):
@@ -382,53 +404,55 @@ class Rolling(object):
             raise AttributeError("Rolling has no attribute %r" % key)
 
     def _known_aggregation(self, op, *args, **kwargs):
-        return self.root.accumulate_partitions(rolling_accumulator,
-                                              window=self.window,
-                                              op=op,
-                                              args=args,
-                                              kwargs=kwargs,
-                                              start=(),
-                                              returns_state=True)
+        return self.root.accumulate_partitions(
+            rolling_accumulator,
+            window=self.window,
+            op=op,
+            args=args,
+            kwargs=kwargs,
+            start=(),
+            returns_state=True,
+        )
 
     def sum(self):
         """ Rolling sum """
-        return self._known_aggregation('sum')
+        return self._known_aggregation("sum")
 
     def mean(self):
         """ Rolling mean """
-        return self._known_aggregation('mean')
+        return self._known_aggregation("mean")
 
     def min(self):
         """ Rolling minimum """
-        return self._known_aggregation('min')
+        return self._known_aggregation("min")
 
     def max(self):
         """ Rolling maximum """
-        return self._known_aggregation('max')
+        return self._known_aggregation("max")
 
     def median(self):
         """ Rolling median """
-        return self._known_aggregation('median')
+        return self._known_aggregation("median")
 
     def std(self, *args, **kwargs):
         """ Rolling standard deviation """
-        return self._known_aggregation('std', *args, **kwargs)
+        return self._known_aggregation("std", *args, **kwargs)
 
     def var(self, *args, **kwargs):
         """ Rolling variance """
-        return self._known_aggregation('var', *args, **kwargs)
+        return self._known_aggregation("var", *args, **kwargs)
 
     def count(self, *args, **kwargs):
         """ Rolling count """
-        return self._known_aggregation('count', *args, **kwargs)
+        return self._known_aggregation("count", *args, **kwargs)
 
     def aggregate(self, *args, **kwargs):
         """ Rolling aggregation """
-        return self._known_aggregation('aggregate', *args, **kwargs)
+        return self._known_aggregation("aggregate", *args, **kwargs)
 
     def quantile(self, *args, **kwargs):
         """ Rolling quantile """
-        return self._known_aggregation('quantile', *args, **kwargs)
+        return self._known_aggregation("quantile", *args, **kwargs)
 
 
 class Window(OperatorMixin):
@@ -441,13 +465,16 @@ class Window(OperatorMixin):
     --------
     DataFrame.window: contains full docstring
     """
+
     def __init__(self, sdf, n=None, value=None):
         if value is None and isinstance(n, (str, pd.Timedelta)):
             value = n
             n = None
         self.n = n
         self.root = sdf
-        if isinstance(value, str) and isinstance(self.root.example.index, pd.DatetimeIndex):
+        if isinstance(value, str) and isinstance(
+            self.root.example.index, pd.DatetimeIndex
+        ):
             value = pd.Timedelta(value)
         self.value = value
 
@@ -492,13 +519,15 @@ class Window(OperatorMixin):
         elif self.value is not None:
             diff = aggregations.diff_loc
             window = self.value
-        return self.root.accumulate_partitions(aggregations.window_accumulator,
-                                              diff=diff,
-                                              window=window,
-                                              agg=agg,
-                                              start=None,
-                                              returns_state=True,
-                                              stream_type='updating')
+        return self.root.accumulate_partitions(
+            aggregations.window_accumulator,
+            diff=diff,
+            window=window,
+            agg=agg,
+            start=None,
+            returns_state=True,
+            stream_type="updating",
+        )
 
     def full(self):
         return self.aggregate(aggregations.Full())
@@ -551,16 +580,16 @@ def rolling_accumulator(acc, new, window=None, op=None, args=(), kwargs={}):
     if isinstance(window, int):
         new_acc = df.iloc[-window:]
     else:
-        new_acc = df.loc[result.index.max() - window:]
-    result = result.iloc[len(acc):]
+        new_acc = df.loc[result.index.max() - window :]
+    result = result.iloc[len(acc) :]
     return new_acc, result
 
 
 def _accumulate_mean(accumulator, new):
     accumulator = accumulator.copy()
-    accumulator['sums'] += new.sum()
-    accumulator['counts'] += new.count()
-    result = accumulator['sums'] / accumulator['counts']
+    accumulator["sums"] += new.sum()
+    accumulator["counts"] += new.count()
+    result = accumulator["sums"] / accumulator["counts"]
     return accumulator, result
 
 
@@ -574,6 +603,7 @@ def _accumulate_size(accumulator, new):
 
 class GroupBy(object):
     """ Groupby aggregations on streaming dataframes """
+
     def __init__(self, root, grouper, index=None):
         self.root = root
         self.grouper = grouper
@@ -589,7 +619,7 @@ class GroupBy(object):
             raise AttributeError("GroupBy has no attribute %r" % key)
 
     def _accumulate(self, Agg, **kwargs):
-        stream_type = 'updating'
+        stream_type = "updating"
 
         if isinstance(self.grouper, Streaming):
             stream = self.root.stream.zip(self.grouper.stream)
@@ -602,18 +632,20 @@ class GroupBy(object):
 
         # Compute example
         state = agg.initial(self.root.example, grouper=grouper_example)
-        if hasattr(grouper_example, 'iloc'):
+        if hasattr(grouper_example, "iloc"):
             grouper_example = grouper_example.iloc[:0]
         elif isinstance(grouper_example, (np.ndarray, pd.Index)):
             grouper_example = grouper_example[:0]
-        _, example = agg.on_new(state,
-                                self.root.example.iloc[:0],
-                                grouper=grouper_example)
+        _, example = agg.on_new(
+            state, self.root.example.iloc[:0], grouper=grouper_example
+        )
 
-        outstream = stream.accumulate(aggregations.groupby_accumulator,
-                                      agg=agg,
-                                      start=None,
-                                      returns_state=True)
+        outstream = stream.accumulate(
+            aggregations.groupby_accumulator,
+            agg=agg,
+            start=None,
+            returns_state=True,
+        )
 
         for typ, s_type in _stream_types[stream_type]:
             if isinstance(example, typ):
@@ -647,20 +679,25 @@ class GroupBy(object):
 
 class WindowedGroupBy(GroupBy):
     """ Groupby aggregations over a window of data """
+
     def __init__(self, root, grouper, index=None, n=None, value=None):
         self.root = root
         self.grouper = grouper
         self.index = index
         self.n = n
-        if isinstance(value, str) and isinstance(self.root.example.index, pd.DatetimeIndex):
+        if isinstance(value, str) and isinstance(
+            self.root.example.index, pd.DatetimeIndex
+        ):
             value = pd.Timedelta(value)
         self.value = value
 
     def __getitem__(self, index):
-        return WindowedGroupBy(self.root, self.grouper, index, self.n, self.value)
+        return WindowedGroupBy(
+            self.root, self.grouper, index, self.n, self.value
+        )
 
     def _accumulate(self, Agg, **kwargs):
-        stream_type = 'updating'
+        stream_type = "updating"
 
         if isinstance(self.grouper, Streaming):
             stream = self.root.stream.zip(self.grouper.stream)
@@ -677,13 +714,13 @@ class WindowedGroupBy(GroupBy):
 
         # Compute example
         state = agg.initial(self.root.example, grouper=grouper_example)
-        if hasattr(grouper_example, 'iloc'):
+        if hasattr(grouper_example, "iloc"):
             grouper_example = grouper_example.iloc[:0]
         elif isinstance(grouper_example, (np.ndarray, pd.Index)):
             grouper_example = grouper_example[:0]
-        _, example = agg.on_new(state,
-                                self.root.example.iloc[:0],
-                                grouper=grouper_example)
+        _, example = agg.on_new(
+            state, self.root.example.iloc[:0], grouper=grouper_example
+        )
 
         if self.n is not None:
             diff = aggregations.diff_iloc
@@ -692,12 +729,14 @@ class WindowedGroupBy(GroupBy):
             diff = aggregations.diff_loc
             window = self.value
 
-        outstream = stream.accumulate(aggregations.windowed_groupby_accumulator,
-                                      agg=agg,
-                                      start=None,
-                                      returns_state=True,
-                                      diff=diff,
-                                      window=window)
+        outstream = stream.accumulate(
+            aggregations.windowed_groupby_accumulator,
+            agg=agg,
+            start=None,
+            returns_state=True,
+            diff=diff,
+            window=window,
+        )
 
         for typ, s_type in _stream_types[stream_type]:
             if isinstance(example, typ):
@@ -707,14 +746,18 @@ class WindowedGroupBy(GroupBy):
 
 def _random_df(tup):
     last, now, freq = tup
-    index = pd.DatetimeIndex(start=(last + freq.total_seconds()) * 1e9,
-                             end=now * 1e9,
-                             freq=freq)
+    index = pd.DatetimeIndex(
+        start=(last + freq.total_seconds()) * 1e9, end=now * 1e9, freq=freq
+    )
 
-    df = pd.DataFrame({'x': np.random.random(len(index)),
-                       'y': np.random.poisson(size=len(index)),
-                       'z': np.random.normal(0, 1, size=len(index))},
-                       index=index)
+    df = pd.DataFrame(
+        {
+            "x": np.random.random(len(index)),
+            "y": np.random.poisson(size=len(index)),
+            "z": np.random.normal(0, 1, size=len(index)),
+        },
+        index=index,
+    )
     return df
 
 
@@ -739,9 +782,11 @@ class Random(DataFrame):
     -------
     >>> source = Random(freq='100ms', interval='1s')  # doctest: +SKIP
     """
-    def __init__(self, freq='100ms', interval='500ms', dask=False):
+
+    def __init__(self, freq="100ms", interval="500ms", dask=False):
         if dask:
             from rapidz.dask import DaskStream
+
             source = DaskStream()
             loop = source.loop
         else:
@@ -757,8 +802,9 @@ class Random(DataFrame):
 
         super(Random, self).__init__(stream, example)
 
-        loop.add_callback(self._cb, self.interval, self.freq, self.source,
-                          self.continue_)
+        loop.add_callback(
+            self._cb, self.interval, self.freq, self.source, self.continue_
+        )
 
     def __del__(self):
         self.stop()
@@ -777,8 +823,8 @@ class Random(DataFrame):
             last = now
 
 
-_stream_types['streaming'].append((pd.DataFrame, DataFrame))
-_stream_types['streaming'].append((pd.Index, Index))
-_stream_types['streaming'].append((pd.Series, Series))
-_stream_types['updating'].append((pd.DataFrame, DataFrames))
-_stream_types['updating'].append((pd.Series, Seriess))
+_stream_types["streaming"].append((pd.DataFrame, DataFrame))
+_stream_types["streaming"].append((pd.Index, Index))
+_stream_types["streaming"].append((pd.Series, Series))
+_stream_types["updating"].append((pd.DataFrame, DataFrames))
+_stream_types["updating"].append((pd.Series, Seriess))

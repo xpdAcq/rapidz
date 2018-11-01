@@ -37,9 +37,10 @@ class DaskStream(Stream):
     --------
     dask.distributed.Client
     """
+
     def __init__(self, *args, **kwargs):
-        if 'loop' not in kwargs:
-            kwargs['loop'] = default_client().loop
+        if "loop" not in kwargs:
+            kwargs["loop"] = default_client().loop
         super(DaskStream, self).__init__(*args, **kwargs)
 
 
@@ -60,8 +61,14 @@ class map(DaskStream):
 
 @DaskStream.register_api()
 class accumulate(DaskStream):
-    def __init__(self, upstream, func, start=core.no_default,
-                 returns_state=False, **kwargs):
+    def __init__(
+        self,
+        upstream,
+        func,
+        start=core.no_default,
+        returns_state=False,
+        **kwargs
+    ):
         self.func = func
         self.state = start
         self.returns_state = returns_state
@@ -91,6 +98,7 @@ class scatter(DaskStream):
 
     All elements flowing through the input will be scattered out to the cluster
     """
+
     @gen.coroutine
     def update(self, x, who=None):
         client = default_client()
@@ -117,6 +125,7 @@ class gather(core.Stream):
     buffer
     scatter
     """
+
     @gen.coroutine
     def update(self, x, who=None):
         client = default_client()
@@ -129,7 +138,7 @@ class gather(core.Stream):
 class starmap(DaskStream):
     def __init__(self, upstream, func, **kwargs):
         self.func = func
-        stream_name = kwargs.pop('stream_name', None)
+        stream_name = kwargs.pop("stream_name", None)
         self.kwargs = kwargs
 
         DaskStream.__init__(self, upstream, stream_name=stream_name)

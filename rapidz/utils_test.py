@@ -14,8 +14,8 @@ from .core import _io_loops
 
 
 @contextmanager
-def tmpfile(extension=''):
-    extension = '.' + extension.lstrip('.')
+def tmpfile(extension=""):
+    extension = "." + extension.lstrip(".")
     handle, filename = tempfile.mkstemp(extension)
     os.close(handle)
     os.remove(filename)
@@ -61,6 +61,7 @@ def gen_test(timeout=10):
     def test_foo():
         yield ...  # use tornado coroutines
     """
+
     def _(func):
         def test_func():
             with pristine_loop() as loop:
@@ -69,7 +70,9 @@ def gen_test(timeout=10):
                     loop.run_sync(cor, timeout=timeout)
                 finally:
                     loop.stop()
+
         return test_func
+
     return _
 
 

@@ -2,7 +2,7 @@ import operator
 
 from rapidz import Stream, core
 
-_stream_types = {'streaming': [], 'updating': []}
+_stream_types = {"streaming": [], "updating": []}
 
 
 def map_partitions(func, *args, **kwargs):
@@ -15,20 +15,26 @@ def map_partitions(func, *args, **kwargs):
     --------
     Streaming.accumulate_partitions
     """
-    example = kwargs.pop('example', None)
+    example = kwargs.pop("example", None)
     if example is None:
-        example = func(*[getattr(arg, 'example', arg) for arg in args], **kwargs)
+        example = func(
+            *[getattr(arg, "example", arg) for arg in args], **kwargs
+        )
 
     streams = [arg for arg in args if isinstance(arg, Streaming)]
-    if 'stream_type' in kwargs:
-        stream_type = kwargs['stream_type']
+    if "stream_type" in kwargs:
+        stream_type = kwargs["stream_type"]
     else:
-        stream_type = ('streaming'
-                       if any(s._stream_type == 'streaming' for s in streams)
-                       else 'updating')
+        stream_type = (
+            "streaming"
+            if any(s._stream_type == "streaming" for s in streams)
+            else "updating"
+        )
 
     if len(streams) > 1:
-        stream = type(streams[0].stream).zip(*[getattr(arg, 'stream', arg) for arg in args])
+        stream = type(streams[0].stream).zip(
+            *[getattr(arg, "stream", arg) for arg in args]
+        )
         stream = stream.map(apply_args, func, kwargs)
 
     else:
@@ -37,10 +43,14 @@ def map_partitions(func, *args, **kwargs):
         if isinstance(args[0], Streaming):
             stream = s.stream.map(func, *args[1:], **kwargs)
         else:
-            other = [(i, arg) for i, arg in enumerate(args)
-                     if not isinstance(arg, Streaming)]
-            stream = s.stream.map(partial_by_order, function=func, other=other,
-                                  **kwargs)
+            other = [
+                (i, arg)
+                for i, arg in enumerate(args)
+                if not isinstance(arg, Streaming)
+            ]
+            stream = s.stream.map(
+                partial_by_order, function=func, other=other, **kwargs
+            )
 
     for typ, s_type in _stream_types[stream_type]:
         if isinstance(example, typ):
@@ -169,22 +179,28 @@ class Streaming(OperatorMixin):
     rapidz.dataframe.StreamingDataFrame
     rapidz.dataframe.StreamingBatch
     """
+
     _subtype = object
-    _stream_type = 'streaming'
+    _stream_type = "streaming"
     map_partitions = staticmethod(map_partitions)
 
     def __init__(self, stream=None, example=None, stream_type=None):
         assert example is not None
         self.example = example
         if not isinstance(self.example, self._subtype):
-            msg = ("For streaming type %s we expect an example of type %s. "
-                   "Got %s") % (type(self).__name__, self._subtype.__name__,
-                                str(self.example))
+            msg = (
+                "For streaming type %s we expect an example of type %s. "
+                "Got %s"
+            ) % (
+                type(self).__name__,
+                self._subtype.__name__,
+                str(self.example),
+            )
             raise TypeError(msg)
         assert isinstance(self.example, self._subtype)
         self.stream = stream or Stream()
         if stream_type:
-            if stream_type not in ['streaming', 'updating']:
+            if stream_type not in ["streaming", "updating"]:
                 raise Exception()
             self._stream_type = stream_type
 
@@ -195,16 +211,17 @@ class Streaming(OperatorMixin):
         --------
         Streaming.map_partitions
         """
-        start = kwargs.pop('start', core.no_default)
-        returns_state = kwargs.pop('returns_state', False)
-        example = kwargs.pop('example', None)
-        stream_type = kwargs.pop('stream_type', self._stream_type)
+        start = kwargs.pop("start", core.no_default)
+        returns_state = kwargs.pop("returns_state", False)
+        example = kwargs.pop("example", None)
+        stream_type = kwargs.pop("stream_type", self._stream_type)
         if example is None:
             example = func(start, self.example, *args, **kwargs)
         if returns_state:
             _, example = example
-        stream = self.stream.accumulate(func, *args, start=start,
-                returns_state=returns_state, **kwargs)
+        stream = self.stream.accumulate(
+            func, *args, start=start, returns_state=returns_state, **kwargs
+        )
 
         for typ, s_type in _stream_types[stream_type]:
             if isinstance(example, typ):
@@ -213,13 +230,13 @@ class Streaming(OperatorMixin):
 
     def __repr__(self):
         example = self.example
-        if hasattr(example, 'head'):
+        if hasattr(example, "head"):
             example = example.head(2)
         return "%s - elements like:\n%r" % (type(self).__name__, example)
 
     def _repr_html_(self):
         example = self.example
-        if hasattr(example, 'head'):
+        if hasattr(example, "head"):
             example = example.head(2)
         try:
             body = example._repr_html_()
@@ -229,7 +246,12 @@ class Streaming(OperatorMixin):
         return "<h5>%s - elements like<h5>\n%s" % (type(self).__name__, body)
 
     def _ipython_display_(self, **kwargs):
-        return self.stream.latest().rate_limit(0.5).gather()._ipython_display_(**kwargs)
+        return (
+            self.stream.latest()
+            .rate_limit(0.5)
+            .gather()
+            ._ipython_display_(**kwargs)
+        )
 
     def emit(self, x):
         self.verify(x)
@@ -238,16 +260,18 @@ class Streaming(OperatorMixin):
     def verify(self, x):
         """ Verify elements that pass through this stream """
         if not isinstance(x, self._subtype):
-            raise TypeError("Expected type %s, got type %s" %
-                            (self._subtype, type(x)))
+            raise TypeError(
+                "Expected type %s, got type %s" % (self._subtype, type(x))
+            )
 
 
-def stream_type(example, stream_type='streaming'):
+def stream_type(example, stream_type="streaming"):
     for typ, s_type in _stream_types[stream_type]:
         if isinstance(example, typ):
             return s_type
-    raise TypeError("No streaming equivalent found for type %s" %
-                    type(example).__name__)
+    raise TypeError(
+        "No streaming equivalent found for type %s" % type(example).__name__
+    )
 
 
 def partial_by_order(*args, **kwargs):
@@ -257,8 +281,8 @@ def partial_by_order(*args, **kwargs):
     >>> partial_by_order(5, function=add, other=[(1, 10)])
     15
     """
-    function = kwargs.pop('function')
-    other = kwargs.pop('other')
+    function = kwargs.pop("function")
+    other = kwargs.pop("other")
     args2 = list(args)
     for i, arg in other:
         args2.insert(i, arg)

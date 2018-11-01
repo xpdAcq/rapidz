@@ -9,7 +9,7 @@ class methodcaller(object):
     serializable
     """
 
-    __slots__ = ('method',)
+    __slots__ = ("method",)
     func = property(lambda self: self.method)  # For `funcname` to work
 
     def __new__(cls, method):
@@ -42,6 +42,7 @@ class MethodCache(object):
     >>> M.count(a, 3) == a.count(3)
     True
     """
+
     __getattr__ = staticmethod(methodcaller)
     __dir__ = lambda self: list(_method_cache)
 

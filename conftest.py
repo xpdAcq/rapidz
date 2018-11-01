@@ -6,10 +6,10 @@ def pytest_addoption(parser):
 
 
 def pytest_runtest_setup(item):
-    if 'slow' in item.keywords and not item.config.getoption("--runslow"):
+    if "slow" in item.keywords and not item.config.getoption("--runslow"):
         pytest.skip("need --runslow option to run")
 
 
 def pytest_ignore_collect(path, config):
-    if 'run_test.py' in str(path):
+    if "run_test.py" in str(path):
         return True

@@ -18,6 +18,7 @@ class Batch(Streaming):
     >>> text = Streaming.from_file(myfile)  # doctest: +SKIP
     >>> b = text.partition(100).map(json.loads)  # doctest: +SKIP
     """
+
     def __init__(self, stream=None, example=None):
         if example is None:
             example = []
@@ -54,6 +55,7 @@ class Batch(Streaming):
         """
         import pandas as pd
         import rapidz.dataframe  # flake8: noqa
+
         return self.map_partitions(pd.DataFrame, self)
 
     def to_stream(self):
@@ -82,4 +84,4 @@ def _accumulate_sum(accumulator, new):
 
 map_type = type(map(lambda x: x, []))
 
-_stream_types['streaming'].append(((list, tuple, set), Batch))
+_stream_types["streaming"].append(((list, tuple, set), Batch))

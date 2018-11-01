@@ -2,7 +2,8 @@ from operator import add
 import time
 
 import pytest
-pytest.importorskip('dask.distributed')
+
+pytest.importorskip("dask.distributed")
 
 from tornado import gen
 
@@ -11,7 +12,13 @@ from rapidz import Stream
 
 from distributed import Future, Client
 from distributed.utils import sync
-from distributed.utils_test import gen_cluster, inc, cluster, loop, slowinc  # flake8: noqa
+from distributed.utils_test import (
+    gen_cluster,
+    inc,
+    cluster,
+    loop,
+    slowinc,
+)  # flake8: noqa
 
 
 @gen_cluster(client=True)
@@ -66,17 +73,17 @@ def test_zip(c, s, a, b):
     L = c.gather().sink_to_list()
 
     yield a.emit(1)
-    yield b.emit('a')
+    yield b.emit("a")
     yield a.emit(2)
-    yield b.emit('b')
+    yield b.emit("b")
 
-    assert L == [(1, 'a'), (2, 'b')]
+    assert L == [(1, "a"), (2, "b")]
 
 
 @pytest.mark.slow
 def test_sync(loop):
     with cluster() as (s, [a, b]):
-        with Client(s['address'], loop=loop) as client:  # flake8: noqa
+        with Client(s["address"], loop=loop) as client:  # flake8: noqa
             source = Stream()
             L = source.scatter().map(inc).gather().sink_to_list()
 
@@ -93,7 +100,7 @@ def test_sync(loop):
 @pytest.mark.slow
 def test_sync_2(loop):
     with cluster() as (s, [a, b]):
-        with Client(s['address'], loop=loop):  # flake8: noqa
+        with Client(s["address"], loop=loop):  # flake8: noqa
             source = Stream()
             L = source.scatter().map(inc).gather().sink_to_list()
 
@@ -105,10 +112,16 @@ def test_sync_2(loop):
 
 
 @pytest.mark.slow
-@gen_cluster(client=True, ncores=[('127.0.0.1', 1)] * 2)
+@gen_cluster(client=True, ncores=[("127.0.0.1", 1)] * 2)
 def test_buffer(c, s, a, b):
     source = Stream(asynchronous=True)
-    L = source.scatter().map(slowinc, delay=0.5).buffer(5).gather().sink_to_list()
+    L = (
+        source.scatter()
+        .map(slowinc, delay=0.5)
+        .buffer(5)
+        .gather()
+        .sink_to_list()
+    )
 
     start = time.time()
     for i in range(5):
@@ -134,7 +147,7 @@ def test_buffer(c, s, a, b):
 @pytest.mark.slow
 def test_buffer_sync(loop):
     with cluster() as (s, [a, b]):
-        with Client(s['address'], loop=loop) as c:  # flake8: noqa
+        with Client(s["address"], loop=loop) as c:  # flake8: noqa
             source = Stream()
             buff = source.scatter().map(slowinc, delay=0.5).buffer(5)
             L = buff.gather().sink_to_list()
@@ -156,13 +169,13 @@ def test_buffer_sync(loop):
             assert L == list(map(inc, range(10)))
 
 
-@pytest.mark.xfail(reason='')
+@pytest.mark.xfail(reason="")
 @pytest.mark.slow
 def test_stream_shares_client_loop(loop):
     with cluster() as (s, [a, b]):
-        with Client(s['address'], loop=loop) as client:  # flake8: noqa
+        with Client(s["address"], loop=loop) as client:  # flake8: noqa
             source = Stream()
-            d = source.timed_window('20ms').scatter()
+            d = source.timed_window("20ms").scatter()
             assert source.loop is client.loop
 
 

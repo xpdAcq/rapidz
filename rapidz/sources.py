@@ -21,7 +21,9 @@ def PeriodicCallback(callback, callback_time, asynchronous=False, **kwargs):
     return source
 
 
-def sink_to_file(filename, upstream, mode='w', prefix='', suffix='\n', flush=False):
+def sink_to_file(
+    filename, upstream, mode="w", prefix="", suffix="\n", flush=False
+):
     file = open(filename, mode=mode)
 
     def write(text):
@@ -34,7 +36,7 @@ def sink_to_file(filename, upstream, mode='w', prefix='', suffix='\n', flush=Fal
 
 
 class Source(Stream):
-    _graphviz_shape = 'doubleoctagon'
+    _graphviz_shape = "doubleoctagon"
 
 
 @Stream.register_api(staticmethod)
@@ -63,8 +65,10 @@ class from_textfile(Source):
     -------
     Stream
     """
-    def __init__(self, f, poll_interval=0.100, delimiter='\n', start=False,
-                 **kwargs):
+
+    def __init__(
+        self, f, poll_interval=0.100, delimiter="\n", start=False, **kwargs
+    ):
         if isinstance(f, str):
             f = open(f)
         self.file = f
@@ -82,7 +86,7 @@ class from_textfile(Source):
 
     @gen.coroutine
     def do_poll(self):
-        buffer = ''
+        buffer = ""
         while True:
             line = self.file.read()
             if line:
@@ -117,12 +121,13 @@ class filenames(Source):
     >>> source = Stream.filenames('path/to/dir')  # doctest: +SKIP
     >>> source = Stream.filenames('path/to/*.csv', poll_interval=0.500)  # doctest: +SKIP
     """
+
     def __init__(self, path, poll_interval=0.100, start=False, **kwargs):
-        if '*' not in path:
+        if "*" not in path:
             if os.path.isdir(path):
                 if not path.endswith(os.path.sep):
-                    path = path + '/'
-                path = path + '*'
+                    path = path + "/"
+                path = path + "*"
         self.path = path
         self.seen = set()
         self.poll_interval = poll_interval
@@ -180,8 +185,10 @@ class from_kafka(Source):
     ...           {'bootstrap.servers': 'localhost:9092',
     ...            'group.id': 'rapidz'})  # doctest: +SKIP
     """
-    def __init__(self, topics, consumer_params, poll_interval=0.1, start=False,
-                 **kwargs):
+
+    def __init__(
+        self, topics, consumer_params, poll_interval=0.1, start=False, **kwargs
+    ):
         self.cpars = consumer_params
         self.consumer = None
         self.topics = topics
@@ -211,6 +218,7 @@ class from_kafka(Source):
     def start(self):
         import confluent_kafka as ck
         import distributed
+
         if self.stopped:
             finalize = distributed.compatibility.finalize
             self.stopped = False
@@ -239,8 +247,15 @@ class from_kafka(Source):
 
 class FromKafkaBatched(Stream):
     """Base class for both local and cluster-based batched kafka processing"""
-    def __init__(self, topic, consumer_params, poll_interval='1s',
-                 npartitions=1, **kwargs):
+
+    def __init__(
+        self,
+        topic,
+        consumer_params,
+        poll_interval="1s",
+        npartitions=1,
+        **kwargs
+    ):
         self.consumer_params = consumer_params
         self.topic = topic
         self.npartitions = npartitions
@@ -253,6 +268,7 @@ class FromKafkaBatched(Stream):
     @gen.coroutine
     def poll_kafka(self):
         import confluent_kafka as ck
+
         consumer = ck.Consumer(self.consumer_params)
 
         try:
@@ -262,14 +278,22 @@ class FromKafkaBatched(Stream):
                 for partition in range(self.npartitions):
                     tp = ck.TopicPartition(self.topic, partition, 0)
                     try:
-                        low, high = consumer.get_watermark_offsets(tp,
-                                                                   timeout=0.1)
+                        low, high = consumer.get_watermark_offsets(
+                            tp, timeout=0.1
+                        )
                     except (RuntimeError, ck.KafkaException):
                         continue
                     current_position = self.positions[partition]
                     lowest = max(current_position, low)
-                    out.append((self.consumer_params, self.topic, partition,
-                                lowest, high - 1))
+                    out.append(
+                        (
+                            self.consumer_params,
+                            self.topic,
+                            partition,
+                            lowest,
+                            high - 1,
+                        )
+                    )
                     self.positions[partition] = high
 
                 for part in out:
@@ -286,8 +310,15 @@ class FromKafkaBatched(Stream):
 
 
 @Stream.register_api(staticmethod)
-def from_kafka_batched(topic, consumer_params, poll_interval='1s',
-                       npartitions=1, start=False, dask=False, **kwargs):
+def from_kafka_batched(
+    topic,
+    consumer_params,
+    poll_interval="1s",
+    npartitions=1,
+    start=False,
+    dask=False,
+    **kwargs
+):
     """ Get messages from Kafka in batches
 
     Uses the confluent-kafka library,
@@ -325,10 +356,15 @@ def from_kafka_batched(topic, consumer_params, poll_interval='1s',
     """
     if dask:
         from distributed.client import default_client
-        kwargs['loop'] = default_client().loop
-    source = FromKafkaBatched(topic, consumer_params,
-                              poll_interval=poll_interval,
-                              npartitions=npartitions, **kwargs)
+
+        kwargs["loop"] = default_client().loop
+    source = FromKafkaBatched(
+        topic,
+        consumer_params,
+        poll_interval=poll_interval,
+        npartitions=npartitions,
+        **kwargs
+    )
     if dask:
         source = source.scatter()
 
@@ -344,6 +380,7 @@ def get_message_batch(kafka_params, topic, partition, low, high, timeout=None):
     This will block until messages are available, or timeout is reached.
     """
     import confluent_kafka as ck
+
     t0 = time.time()
     consumer = ck.Consumer(kafka_params)
     tp = ck.TopicPartition(topic, partition, low)
