@@ -1,10 +1,5 @@
-from rapidz.link import *
 from rapidz import Stream
-
-try:
-    from rapidz.tests.test_link import *
-except ImportError:
-    pass
+from rapidz.link import link
 
 
 def test_link():
