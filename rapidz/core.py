@@ -1487,5 +1487,5 @@ def destroy_pipeline(source_node: Stream):
         try:
             source_node.destroy()
         # some source nodes are tuples and some are bad wekrefs
-        except (AttributeError, KeyError) as e:
+        except (AttributeError, KeyError):
             pass
