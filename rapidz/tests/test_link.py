@@ -1,10 +1,5 @@
-from zstreamz.link import *
-from zstreamz import Stream
-
-try:
-    from zstreamz.tests.test_link import *
-except ImportError:
-    pass
+from rapidz import Stream
+from rapidz.link import link
 
 
 def test_link():

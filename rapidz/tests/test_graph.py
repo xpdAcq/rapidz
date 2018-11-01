@@ -2,17 +2,18 @@ from operator import add, mul
 import os
 
 import pytest
-nx = pytest.importorskip('networkx')
 
-from zstreamz import Stream, create_graph, visualize
-from zstreamz.utils_test import tmpfile
+nx = pytest.importorskip("networkx")
+
+from rapidz import Stream, create_graph, visualize
+from rapidz.utils_test import tmpfile
 
 from ..graph import _clean_text
 
 
 def test_create_graph():
-    source1 = Stream(stream_name='source1')
-    source2 = Stream(stream_name='source2')
+    source1 = Stream(stream_name="source1")
+    source2 = Stream(stream_name="source2")
 
     n1 = source1.zip(source2)
     n2 = n1.map(add)
@@ -25,28 +26,36 @@ def test_create_graph():
 
 
 def test_create_file():
-    source1 = Stream(stream_name='source1')
-    source2 = Stream(stream_name='source2')
+    source1 = Stream(stream_name="source1")
+    source2 = Stream(stream_name="source2")
 
     n1 = source1.zip(source2)
-    n2 = n1.map(add).scan(mul).map(lambda x : x + 1)
+    n2 = n1.map(add).scan(mul).map(lambda x: x + 1)
     n2.sink(source1.emit)
 
-    with tmpfile(extension='png') as fn:
+    with tmpfile(extension="png") as fn:
         visualize(n1, filename=fn)
         assert os.path.exists(fn)
 
-    with tmpfile(extension='svg') as fn:
+    with tmpfile(extension="svg") as fn:
         n1.visualize(filename=fn, rankdir="LR")
         assert os.path.exists(fn)
 
-    with tmpfile(extension='dot') as fn:
+    with tmpfile(extension="dot") as fn:
         n1.visualize(filename=fn, rankdir="LR")
         with open(fn) as f:
             text = f.read()
 
-        for word in ['rankdir', 'source1', 'source2', 'zip', 'map', 'add',
-                     'shape=box', 'shape=ellipse']:
+        for word in [
+            "rankdir",
+            "source1",
+            "source2",
+            "zip",
+            "map",
+            "add",
+            "shape=box",
+            "shape=ellipse",
+        ]:
             assert word in text
 
 

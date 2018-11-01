@@ -134,12 +134,13 @@ class Full(Aggregation):
     This is somewhat expensive, builtin aggregations should be preferred when
     possible
     """
+
     def on_new(self, acc, new):
         result = pd.concat([acc, new])
         return result, result
 
     def on_old(self, acc, old):
-        result = acc.iloc[len(old):]
+        result = acc.iloc[len(old) :]
         return result, result
 
     def initial(self, new):
@@ -207,7 +208,7 @@ def diff_loc(dfs, new, window=None):
     while dfs[0].index.min() < mn:
         o = dfs[0].loc[:mn]
         old.append(o)  # TODO: avoid copy if fully lost
-        dfs[0] = dfs[0].iloc[len(o):]
+        dfs[0] = dfs[0].iloc[len(o) :]
         if not len(dfs[0]):
             dfs.popleft()
 
@@ -269,20 +270,22 @@ def window_accumulator(acc, new, diff=None, window=None, agg=None):
     windowed_groupby_accumulator
     """
     if acc is None:
-        acc = {'dfs': [], 'state': agg.initial(new)}
-    dfs = acc['dfs']
-    state = acc['state']
+        acc = {"dfs": [], "state": agg.initial(new)}
+    dfs = acc["dfs"]
+    state = acc["state"]
     dfs, old = diff(dfs, new, window=window)
     if new is not None:
         state, result = agg.on_new(state, new)
     for o in old:
         if len(o):
             state, result = agg.on_old(state, o)
-    acc2 = {'dfs': dfs, 'state': state}
+    acc2 = {"dfs": dfs, "state": state}
     return acc2, result
 
 
-def windowed_groupby_accumulator(acc, new, diff=None, window=None, agg=None, grouper=None):
+def windowed_groupby_accumulator(
+    acc, new, diff=None, window=None, agg=None, grouper=None
+):
     """ An accumulation binary operator for windowed groupb-aggregations
 
     This is the function that is actually given to the ``Stream.accumulate``
@@ -321,20 +324,22 @@ def windowed_groupby_accumulator(acc, new, diff=None, window=None, agg=None, gro
     size = GroupbySize(agg.columns, agg.grouper)
 
     if acc is None:
-        acc = {'dfs': [],
-               'state': agg.initial(new, grouper=grouper),
-               'size-state': size.initial(new, grouper=grouper)}
+        acc = {
+            "dfs": [],
+            "state": agg.initial(new, grouper=grouper),
+            "size-state": size.initial(new, grouper=grouper),
+        }
         if isinstance(grouper, (pd.Series, pd.Index, np.ndarray)):
-            acc['groupers'] = deque([])
+            acc["groupers"] = deque([])
 
-    dfs = acc['dfs']
-    state = acc['state']
-    size_state = acc['size-state']
+    dfs = acc["dfs"]
+    state = acc["state"]
+    size_state = acc["size-state"]
 
     dfs, old = diff(dfs, new, window=window)
 
-    if 'groupers' in acc:
-        groupers = deque(acc['groupers'])
+    if "groupers" in acc:
+        groupers = deque(acc["groupers"])
         groupers.append(grouper)
         old_groupers, groupers = diff_align(dfs, groupers)
     else:
@@ -344,9 +349,9 @@ def windowed_groupby_accumulator(acc, new, diff=None, window=None, agg=None, gro
         state, result = agg.on_new(state, new, grouper=grouper)
         size_state, _ = size.on_new(size_state, new, grouper=grouper)
     for o, og in zip(old, old_groupers):
-        if 'groupers' in acc:
+        if "groupers" in acc:
             assert len(o) == len(og)
-            if hasattr(og, 'index'):
+            if hasattr(og, "index"):
                 assert (o.index == og.index).all()
         if len(o):
             state, result = agg.on_old(state, o, grouper=og)
@@ -361,9 +366,9 @@ def windowed_groupby_accumulator(acc, new, diff=None, window=None, agg=None, gro
         else:
             state = state[nonzero]
 
-    acc2 = {'dfs': dfs, 'state': state, 'size-state': size_state}
-    if 'groupers' in acc:
-        acc2['groupers'] = groupers
+    acc2 = {"dfs": dfs, "state": state, "size-state": size_state}
+    if "groupers" in acc:
+        acc2["groupers"] = groupers
     return acc2, result
 
 
@@ -414,7 +419,7 @@ class GroupbySum(GroupbyAggregation):
         return result, result
 
     def initial(self, new, grouper=None):
-        if hasattr(grouper, 'iloc'):
+        if hasattr(grouper, "iloc"):
             grouper = grouper.iloc[:0]
         if isinstance(grouper, (pd.Index, np.ndarray)):
             grouper = grouper[:0]
@@ -435,7 +440,7 @@ class GroupbyCount(GroupbyAggregation):
         return result, result
 
     def initial(self, new, grouper=None):
-        if hasattr(grouper, 'iloc'):
+        if hasattr(grouper, "iloc"):
             grouper = grouper.iloc[:0]
         if isinstance(grouper, (pd.Index, np.ndarray)):
             grouper = grouper[:0]
@@ -456,7 +461,7 @@ class GroupbySize(GroupbyAggregation):
         return result, result
 
     def initial(self, new, grouper=None):
-        if hasattr(grouper, 'iloc'):
+        if hasattr(grouper, "iloc"):
             grouper = grouper.iloc[:0]
         if isinstance(grouper, (pd.Index, np.ndarray)):
             grouper = grouper[:0]
@@ -494,7 +499,7 @@ class GroupbyMean(GroupbyAggregation):
         return (totals, counts), totals / counts
 
     def initial(self, new, grouper=None):
-        if hasattr(grouper, 'iloc'):
+        if hasattr(grouper, "iloc"):
             grouper = grouper.iloc[:0]
         if isinstance(grouper, (pd.Index, np.ndarray)):
             grouper = grouper[:0]
@@ -514,7 +519,7 @@ class GroupbyVar(GroupbyAggregation):
         g = self.grouped(new, grouper=grouper)
         if len(new):
             x = x.add(g.sum(), fill_value=0)
-            x2 = x2.add(g.agg(lambda x: (x**2).sum()), fill_value=0)
+            x2 = x2.add(g.agg(lambda x: (x ** 2).sum()), fill_value=0)
             n = n.add(g.count(), fill_value=0)
 
         return (x, x2, n), self._compute_result(x, x2, n)
@@ -524,13 +529,13 @@ class GroupbyVar(GroupbyAggregation):
         g = self.grouped(old, grouper=grouper)
         if len(old):
             x = x.sub(g.sum(), fill_value=0)
-            x2 = x2.sub(g.agg(lambda x: (x**2).sum()), fill_value=0)
+            x2 = x2.sub(g.agg(lambda x: (x ** 2).sum()), fill_value=0)
             n = n.sub(g.count(), fill_value=0)
 
         return (x, x2, n), self._compute_result(x, x2, n)
 
     def initial(self, new, grouper=None):
-        if hasattr(grouper, 'iloc'):
+        if hasattr(grouper, "iloc"):
             grouper = grouper.iloc[:0]
         if isinstance(grouper, (pd.Index, np.ndarray)):
             grouper = grouper[:0]
@@ -538,7 +543,7 @@ class GroupbyVar(GroupbyAggregation):
         new = new.iloc[:0]
         g = self.grouped(new, grouper=grouper)
         x = g.sum()
-        x2 = g.agg(lambda x: (x**2).sum())
+        x2 = g.agg(lambda x: (x ** 2).sum())
         n = g.count()
 
         return (x, x2, n)

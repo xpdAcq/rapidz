@@ -6,7 +6,7 @@ import sys
 from BeautifulSoup import BeautifulSoup  # Python 2 only, sorry.
 
 import requests
-from streamz import Stream
+from rapidz import Stream
 import toolz
 import urlparse
 

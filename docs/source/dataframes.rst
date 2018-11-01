@@ -12,7 +12,7 @@ Pandas dataframes as in the following example:
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
 
    def query(df):
        return df[df.name == 'Alice']
@@ -23,14 +23,14 @@ Pandas dataframes as in the following example:
    stream = Stream()
    stream.map(query).accumulate(aggregate, start=0)
 
-This is fine, and straightforward to do if you understand ``streamz.core`` ,
+This is fine, and straightforward to do if you understand ``rapidz.core`` ,
 Pandas, and have some skill with developing algorithms.
 
 
 Streaming Dataframes
 --------------------
 
-The ``streamz.dataframe`` module provides a streaming dataframe object that
+The ``rapidz.dataframe`` module provides a streaming dataframe object that
 implements many of these algorithms for you.  It provides a Pandas-like
 interface on streaming data.  Our example above is rewritten below using
 streaming dataframes:
@@ -38,7 +38,7 @@ streaming dataframes:
 .. code-block:: python
 
    import pandas as pd
-   from streamz.dataframe import DataFrame
+   from rapidz.dataframe import DataFrame
 
    example = pd.DataFrame({'name': [], 'amount': []})
    sdf = DataFrame(stream, example=example)
@@ -86,7 +86,7 @@ following:
 
 .. code-block:: python
 
-   from streamz.dataframe import Aggregation
+   from rapidz.dataframe import Aggregation
 
    class Mean(Aggregation):
        def initial(self, new):

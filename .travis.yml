@@ -21,15 +21,15 @@ install:
   - conda update conda
 
   # Install dependencies
-  - conda create -n test-streamz python=$TRAVIS_PYTHON_VERSION pytest tornado toolz flake8 coverage codecov networkx graphviz python-graphviz dask distributed pandas bokeh ipython ipykernel ipywidgets python-confluent-kafka pytest-tornado -c conda-forge -c bokeh
-  - source activate test-streamz
+  - conda create -n test-rapidz python=$TRAVIS_PYTHON_VERSION pytest tornado toolz flake8 coverage codecov networkx graphviz python-graphviz dask distributed pandas bokeh ipython ipykernel ipywidgets python-confluent-kafka pytest-tornado -c conda-forge -c bokeh
+  - source activate test-rapidz
   - pip install git+https://github.com/dask/distributed.git --upgrade --no-deps
 
   - python setup.py install
 
 script:
   - coverage run run_tests.py --runslow
-  - flake8 zstreamz
+  - flake8 rapidz
 
 after_success:
   - codecov

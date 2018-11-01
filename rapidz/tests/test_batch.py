@@ -1,17 +1,17 @@
 import pytest
 import toolz
 
-from zstreamz.batch import Batch, Streaming
-from zstreamz.utils_test import inc
+from rapidz.batch import Batch, Streaming
+from rapidz.utils_test import inc
 
 
 def test_core():
     a = Batch()
-    b = a.pluck('x').map(inc)
+    b = a.pluck("x").map(inc)
     c = b.sum()
     L = c.stream.sink_to_list()
 
-    a.emit([{'x': i, 'y': 0} for i in range(4)])
+    a.emit([{"x": i, "y": 0} for i in range(4)])
 
     assert isinstance(b, Batch)
     assert isinstance(c, Streaming)
@@ -19,12 +19,13 @@ def test_core():
 
 
 def test_dataframes():
-    pd = pytest.importorskip('pandas')
-    from zstreamz.dataframe import DataFrame
-    data = [{'x': i, 'y': 2 * i} for i in range(10)]
+    pd = pytest.importorskip("pandas")
+    from rapidz.dataframe import DataFrame
 
-    s = Batch(example=[{'x': 0, 'y': 0}])
-    sdf = s.map(lambda d: toolz.assoc(d, 'z', d['x'] + d['y'])).to_dataframe()
+    data = [{"x": i, "y": 2 * i} for i in range(10)]
+
+    s = Batch(example=[{"x": 0, "y": 0}])
+    sdf = s.map(lambda d: toolz.assoc(d, "z", d["x"] + d["y"])).to_dataframe()
 
     assert isinstance(sdf, DataFrame)
 

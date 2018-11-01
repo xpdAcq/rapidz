@@ -61,9 +61,9 @@ def move_to_first(node, f=True):
 
     Parameters
     ----------
-    node : zstreamz instance
+    node : rapidz instance
         Node to be promoted
-    f : bool or Sequence of zstreamz
+    f : bool or Sequence of rapidz
         The upstream node(s) to promote this node for. If True, promote all
         upstream nodes. Defaults to True
 
@@ -416,7 +416,7 @@ class Stream(object):
         self._emit(x)
 
     def gather(self):
-        """ This is a no-op for core zstreamz
+        """ This is a no-op for core rapidz
 
         This allows gather to be used in both dask and core streams
         """
@@ -1487,5 +1487,5 @@ def destroy_pipeline(source_node: Stream):
         try:
             source_node.destroy()
         # some source nodes are tuples and some are bad wekrefs
-        except (AttributeError, KeyError) as e:
+        except (AttributeError, KeyError):
             pass

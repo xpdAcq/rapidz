@@ -1,11 +1,11 @@
-Streamz
+rapidz
 =======
 
-Streamz helps you build pipelines to manage continuous streams of data.  It is
+rapidz helps you build pipelines to manage continuous streams of data.  It is
 simple to use in simple cases, but also supports complex pipelines that involve
 branching, joining, flow control, feedback, back pressure, and so on.
 
-Optionally, Streamz can also work with Pandas dataframes to provide sensible
+Optionally, rapidz can also work with Pandas dataframes to provide sensible
 streaming operations on continuous tabular data.
 
 To learn more about how to use streams, visit :doc:`Core documentation <core>`.
@@ -26,15 +26,15 @@ Sometimes these pipelines are very simple, with a linear sequence of processing
 steps:
 
 .. image:: images/simple.svg
-   :alt: a simple streamz pipeline
+   :alt: a simple rapidz pipeline
 
 And sometimes these pipelines are more complex, involving branching, look-back
 periods, feedback into earlier stages, and more.
 
 .. image:: images/complex.svg
-   :alt: a more complex streamz pipeline
+   :alt: a more complex rapidz pipeline
 
-Streamz endeavors to be simple in simple cases, while also being powerful
+rapidz endeavors to be simple in simple cases, while also being powerful
 enough to let you define custom and powerful pipelines for your application.
 
 Why not Python generator expressions?
@@ -70,7 +70,7 @@ pipelines.
 Related Work
 ------------
 
-Streamz is similar to reactive
+rapidz is similar to reactive
 programming systems like `RxPY <https://github.com/ReactiveX/RxPY>`_ or big
 data streaming systems like `Apache Flink <https://flink.apache.org/>`_,
 `Apache Beam <https://beam.apache.org/get-started/quickstart-py/>`_ or

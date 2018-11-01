@@ -8,18 +8,18 @@ discuss flow control and finally back pressure.  Examples are used throughout.
 Map, emit, and sink
 -------------------
 
-.. currentmodule:: streamz
+.. currentmodule:: rapidz
 
 .. autosummary::
    Stream.emit
    map
    sink
 
-You can create a basic pipeline by instantiating the ``Streamz`` object and then using methods like ``map``, ``accumulate``, and ``sink``.
+You can create a basic pipeline by instantiating the ``rapidz`` object and then using methods like ``map``, ``accumulate``, and ``sink``.
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
 
    def increment(x):
        return x + 1
@@ -201,7 +201,7 @@ Similarly you can also combine multiple streams together with operations like
    :alt: a branching and zipped stream
 
 This branching and combining is where Python iterators break down, and projects
-like ``streamz`` start becoming valuable.
+like ``rapidz`` start becoming valuable.
 
 
 Processing Time and Back Pressure
@@ -224,7 +224,7 @@ you may want to batch all elements that have arrived in the last minute, or
 slow down the flow of data through sensitive parts of the pipeline,
 particularly when they may be writing to slow resources like databases.
 
-Streamz helps you do these operations both with operations like ``delay``,
+rapidz helps you do these operations both with operations like ``delay``,
 ``rate_limit``, and ``timed_window``, and also by passing `Tornado
 <http://www.tornadoweb.org/en/stable/>`_ futures back through the
 pipeline.  As data moves forward through the pipeline, futures that signal work
@@ -250,7 +250,7 @@ inserts it into a database using an async-aware insertion function.
 
 As we call the ``write_to_database`` function on our parsed JSON data it
 produces a future for us to signal that the writing process has finished.
-Streamz will ensure that this future is passed all the way back to the
+rapidz will ensure that this future is passed all the way back to the
 ``source.emit`` call, so that user code at the start of our pipeline can await
 on it.  This allows us to avoid buildup even in very large and complex streams.
 We always pass futures back to ensure responsiveness.
@@ -285,13 +285,13 @@ you can split multiple streams off of any point.  Streams will pass their
 outputs on to all downstream streams so that anyone can hook in at any point,
 and get a full view of what that stream is producing.
 
-If you delete a part of a stream then it will stop getting data.  Streamz
+If you delete a part of a stream then it will stop getting data.  rapidz
 follows normal Python garbage collection semantics so once all references to a
 stream have been lost those operations will no longer occur.  The one counter
 example to this is ``sink``, which is intended to be used with side effects and
 will stick around even without a reference.
 
-.. note:: Sink streams store themselves in ``streamz.core._global_sinks``.  You
+.. note:: Sink streams store themselves in ``rapidz.core._global_sinks``.  You
           can remove them permanently by clearing that collection.
 
 .. code-block:: python
@@ -309,7 +309,7 @@ As an example, here is a tiny web crawler:
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
    source = Stream()
 
    pages = source.unique()
@@ -331,11 +331,11 @@ As an example, here is a tiny web crawler:
 Performance
 -----------
 
-Streamz adds microsecond overhead to normal Python operations.
+rapidz adds microsecond overhead to normal Python operations.
 
 .. code-block:: python
 
-   from streamz import Stream
+   from rapidz import Stream
 
    source = Stream()
 
@@ -359,7 +359,7 @@ generally.
 
 In the following example we pass filenames through a stream, convert them to
 Pandas dataframes, and then map pandas-level functions on those dataframes.
-For operations like this Streamz adds virtually no overhead.
+For operations like this rapidz adds virtually no overhead.
 
 .. code-block:: python
 

@@ -1,17 +1,17 @@
 Collections
 ===========
 
-Streamz high-level collection APIs are built on top of ``streamz.core``, and
+rapidz high-level collection APIs are built on top of ``rapidz.core``, and
 bring special consideration to certain types of data:
 
-1.  ``streamz.batch``: supports streams of lists of Python objects like tuples
+1.  ``rapidz.batch``: supports streams of lists of Python objects like tuples
     or dictionaries
-2.  ``streamz.dataframe``: supports streams of Pandas dataframes or Pandas series
+2.  ``rapidz.dataframe``: supports streams of Pandas dataframes or Pandas series
 
 These high-level APIs help us handle common situations in data processing.
 They help us implement complex algorithms and also improve efficiency.
 
-These APIs are built on the streamz core operations (map, accumulate, buffer,
+These APIs are built on the rapidz core operations (map, accumulate, buffer,
 timed_window, ...) which provide the building blocks to build complex pipelines
 but offer no help with what those functions should be.  The higher-level APIs
 help to fill in this gap for common situations.
@@ -20,7 +20,7 @@ help to fill in this gap for common situations.
 Conversion
 ----------
 
-.. currentmodule:: streamz.core
+.. currentmodule:: rapidz.core
 
 .. autosummary::
    Stream.to_batch
@@ -53,7 +53,7 @@ We create a stream and connect it to a file object
 .. code-block:: python
 
     file = ...  # filename or file-like object
-    from streamz import Stream
+    from rapidz import Stream
 
     source = Stream.from_textfile(file)
 

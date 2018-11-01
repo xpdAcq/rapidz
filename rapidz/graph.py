@@ -7,15 +7,15 @@ import re
 
 
 def _clean_text(text, match=None):
-    ''' Clean text, remove forbidden characters.
-    '''
+    """ Clean text, remove forbidden characters.
+    """
     # all non alpha numeric characters, except for _ and :
     # replace them with space
     # the + condenses a group of consecutive characters all into one space
     # (rather than assigning a space to each)
     if match is None:
-        match = '[^a-zA-Z0-9_:]+'
-    text = re.sub(match, ' ', text)
+        match = "[^a-zA-Z0-9_:]+"
+    text = re.sub(match, " ", text)
     # now replace the colon with semicolon
     text = re.sub(":", ";", text)
     return text
@@ -32,23 +32,27 @@ def create_graph(node, graph, prior_node=None, pc=None):
     if node is None:
         return
     t = hash(node)
-    graph.add_node(t,
-                   label=_clean_text(str(node)),
-                   shape=node._graphviz_shape,
-                   orientation=str(node._graphviz_orientation),
-                   style=node._graphviz_style,
-                   fillcolor=node._graphviz_fillcolor)
+    graph.add_node(
+        t,
+        label=_clean_text(str(node)),
+        shape=node._graphviz_shape,
+        orientation=str(node._graphviz_orientation),
+        style=node._graphviz_style,
+        fillcolor=node._graphviz_fillcolor,
+    )
     if prior_node:
         tt = hash(prior_node)
         if graph.has_edge(t, tt):
             return
-        if pc == 'downstream':
+        if pc == "downstream":
             graph.add_edge(tt, t)
         else:
             graph.add_edge(t, tt)
 
-    for nodes, pc in zip([list(node.downstreams), list(node.upstreams)],
-                         ['downstream', 'upstreams']):
+    for nodes, pc in zip(
+        [list(node.downstreams), list(node.upstreams)],
+        ["downstream", "upstreams"],
+    ):
         for node2 in nodes:
             if node2 is not None:
                 create_graph(node2, graph, node, pc=pc)
@@ -65,25 +69,29 @@ def create_edge_label_graph(node, graph, prior_node=None, pc=None, i=None):
     if node is None:
         return
     t = hash(node)
-    graph.add_node(t,
-                   label=_clean_text(str(node)),
-                   shape=node._graphviz_shape,
-                   orientation=str(node._graphviz_orientation),
-                   style=node._graphviz_style,
-                   fillcolor=node._graphviz_fillcolor)
+    graph.add_node(
+        t,
+        label=_clean_text(str(node)),
+        shape=node._graphviz_shape,
+        orientation=str(node._graphviz_orientation),
+        style=node._graphviz_style,
+        fillcolor=node._graphviz_fillcolor,
+    )
     if prior_node:
         tt = hash(prior_node)
         if graph.has_edge(t, tt):
             return
         if i is None:
-            i = ''
-        if pc == 'downstream':
+            i = ""
+        if pc == "downstream":
             graph.add_edge(tt, t, label=str(i))
         else:
             graph.add_edge(t, tt)
 
-    for nodes, pc in zip([list(node.downstreams), list(node.upstreams)],
-                         ['downstream', 'upstreams']):
+    for nodes, pc in zip(
+        [list(node.downstreams), list(node.upstreams)],
+        ["downstream", "upstreams"],
+    ):
         for i, node2 in enumerate(nodes):
             if node2 is not None:
                 if len(nodes) > 1:
@@ -101,17 +109,18 @@ def readable_graph(node, source_node=False):
         A node in the task graph
     """
     import networkx as nx
+
     g = nx.DiGraph()
     if source_node:
         create_edge_label_graph(node, g)
     else:
         create_graph(node, g)
-    mapping = {k: '{}'.format(g.node[k]['label']) for k in g}
+    mapping = {k: "{}".format(g.node[k]["label"]) for k in g}
     idx_mapping = {}
     for k, v in mapping.items():
         if v in idx_mapping.keys():
             idx_mapping[v] += 1
-            mapping[k] += '-{}'.format(idx_mapping[v])
+            mapping[k] += "-{}".format(idx_mapping[v])
         else:
             idx_mapping[v] = 0
 
@@ -122,6 +131,7 @@ def readable_graph(node, source_node=False):
 
 def to_graphviz(graph, **graph_attr):
     import graphviz
+
     gvz = graphviz.Digraph(graph_attr=graph_attr)
     for node, attrs in graph.node.items():
         gvz.node(node, **attrs)
@@ -130,7 +140,7 @@ def to_graphviz(graph, **graph_attr):
     return gvz
 
 
-def visualize(node, filename='mystream.png', source_node=False, **kwargs):
+def visualize(node, filename="mystream.png", source_node=False, **kwargs):
     """
     Render a task graph using dot.
 
@@ -168,39 +178,41 @@ def visualize(node, filename='mystream.png', source_node=False, **kwargs):
     rg = readable_graph(node, source_node=source_node)
     g = to_graphviz(rg, **kwargs)
 
-    fmts = ['.png', '.pdf', '.dot', '.svg', '.jpeg', '.jpg']
+    fmts = [".png", ".pdf", ".dot", ".svg", ".jpeg", ".jpg"]
     if filename is None:
-        format = 'png'
+        format = "png"
 
     elif any(filename.lower().endswith(fmt) for fmt in fmts):
         filename, format = os.path.splitext(filename)
         format = format[1:].lower()
 
     else:
-        format = 'png'
+        format = "png"
 
     data = g.pipe(format=format)
     if not data:
-        raise RuntimeError("Graphviz failed to properly produce an image. "
-                           "This probably means your installation of graphviz "
-                           "is missing png support. See: "
-                           "https://github.com/ContinuumIO/anaconda-issues/"
-                           "issues/485 for more information.")
+        raise RuntimeError(
+            "Graphviz failed to properly produce an image. "
+            "This probably means your installation of graphviz "
+            "is missing png support. See: "
+            "https://github.com/ContinuumIO/anaconda-issues/"
+            "issues/485 for more information."
+        )
 
     display_cls = _get_display_cls(format)
 
     if not filename:
         return display_cls(data=data)
 
-    full_filename = '.'.join([filename, format])
-    with open(full_filename, 'wb') as f:
+    full_filename = ".".join([filename, format])
+    with open(full_filename, "wb") as f:
         f.write(data)
 
     return display_cls(filename=full_filename)
 
 
-IPYTHON_IMAGE_FORMATS = frozenset(['jpeg', 'png'])
-IPYTHON_NO_DISPLAY_FORMATS = frozenset(['dot', 'pdf'])
+IPYTHON_IMAGE_FORMATS = frozenset(["jpeg", "png"])
+IPYTHON_NO_DISPLAY_FORMATS = frozenset(["dot", "pdf"])
 
 
 def _get_display_cls(format):
@@ -227,7 +239,7 @@ def _get_display_cls(format):
         # Partially apply `format` so that `Image` and `SVG` supply a uniform
         # interface to the caller.
         return partial(display.Image, format=format)
-    elif format == 'svg':
+    elif format == "svg":
         return display.SVG
     else:
         raise ValueError("Unknown format '%s' passed to `dot_graph`" % format)

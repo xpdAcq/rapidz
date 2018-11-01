@@ -4,7 +4,7 @@ Collections API
 Collections
 -----------
 
-.. currentmodule:: streamz.collection
+.. currentmodule:: rapidz.collection
 
 .. autosummary::
    Streaming
@@ -15,7 +15,7 @@ Collections
 Batch
 -----
 
-.. currentmodule:: streamz.batch
+.. currentmodule:: rapidz.batch
 
 .. autosummary::
    Batch
@@ -28,7 +28,7 @@ Batch
 Dataframes
 ----------
 
-.. currentmodule:: streamz.dataframe
+.. currentmodule:: rapidz.dataframe
 
 .. autosummary::
    DataFrame
@@ -92,18 +92,18 @@ Dataframes
 Details
 -------
 
-.. currentmodule:: streamz.collection
+.. currentmodule:: rapidz.collection
 
 .. autoclass:: Streaming
    :members:
 
-.. currentmodule:: streamz.batch
+.. currentmodule:: rapidz.batch
 
 .. autoclass:: Batch
    :members:
    :inherited-members:
 
-.. currentmodule:: streamz.dataframe
+.. currentmodule:: rapidz.dataframe
 
 .. autoclass:: DataFrame
    :members:

@@ -6,9 +6,9 @@ from tornado import gen
 import pytest
 
 from distributed.utils_test import inc, slowinc  # flake8: noqa
-from zstreamz import Stream
-from zstreamz.parallel import scatter
-from zstreamz.clients import thread_default_client
+from rapidz import Stream
+from rapidz.parallel import scatter
+from rapidz.clients import thread_default_client
 
 gen_test = pytest.mark.gen_test
 
