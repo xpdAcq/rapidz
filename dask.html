@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dask Integration &mdash; rapidz 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Collections" href="collections.html" />
+    <link rel="prev" title="DataFrames" href="dataframes.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> rapidz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframes.html">DataFrames</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dask Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-local-dask-client">Start Local Dask Client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sequential-execution">Sequential Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-execution">Parallel Execution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections-api.html">Collections API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="async.html">Asynchronous Computation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rapidz</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Dask Integration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/dask.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dask-integration">
+<h1>Dask Integration<a class="headerlink" href="#dask-integration" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">rapidz.dask</span></code> module contains a <a class="reference external" href="https://dask.pydata.org/en/latest/">Dask</a>-powered implementation of the
+core Stream object.  This is a drop-in implementation, but uses Dask for
+execution and so can scale to a multicore machine or a distributed cluster.</p>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<p>First install dask and dask.distributed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">dask</span>
+<span class="ow">or</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">dask</span><span class="p">[</span><span class="n">complete</span><span class="p">]</span> <span class="o">--</span><span class="n">upgrade</span>
+</pre></div>
+</div>
+<p>You may also want to install Bokeh for web diagnostics:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">bokeh</span> <span class="n">bokeh</span>
+<span class="ow">or</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">bokeh</span> <span class="o">--</span><span class="n">upgrade</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-local-dask-client">
+<h3>Start Local Dask Client<a class="headerlink" href="#start-local-dask-client" title="Permalink to this headline">¶</a></h3>
+<p>Then start a local Dask cluster</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This operates on a local processes or threads.  If you have Bokeh installed
+then this will also start a diagnostics web server at
+<a class="reference external" href="http://localhost:8787/status">http://localhost:8787/status</a> which you may want to open to get a real-time view
+of execution.</p>
+</div>
+<div class="section" id="sequential-execution">
+<h3>Sequential Execution<a class="headerlink" href="#sequential-execution" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.emit</span></code>(x[,&nbsp;asynchronous])</td>
+<td>Push data into the stream at this point</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.map" title="rapidz.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Apply a function to every element in the stream</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.sink" title="rapidz.sink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sink</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Apply a function on every element</td>
+</tr>
+</tbody>
+</table>
+<p>Before we build a parallel stream, lets build a sequential stream that maps a
+simple function across data, and then prints those results.  We use the core
+<code class="docutils literal notranslate"><span class="pre">Stream</span></code> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+<span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># simulate actual work</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This should take ten seconds we call the <code class="docutils literal notranslate"><span class="pre">inc</span></code> function ten times
+sequentially.</p>
+</div>
+<div class="section" id="parallel-execution">
+<h3>Parallel Execution<a class="headerlink" href="#parallel-execution" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">scatter</span></code>(*args,&nbsp;**kwargs)</td>
+<td>Convert local stream to Dask Stream</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.buffer" title="rapidz.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
+<td>Allow results to pile up at this point in the stream</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.dask.gather" title="rapidz.dask.gather"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather</span></code></a>([upstream,&nbsp;upstreams,&nbsp;stream_name,&nbsp;…])</td>
+<td>Wait on and gather results from DaskStream to local Stream</td>
+</tr>
+</tbody>
+</table>
+<p>That example ran sequentially under normal execution, now we use <code class="docutils literal notranslate"><span class="pre">.scatter()</span></code>
+to convert our stream into a DaskStream and <code class="docutils literal notranslate"><span class="pre">.gather()</span></code> to convert back.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">scatter</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">()</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You may want to look at <a class="reference external" href="http://localhost:8787/status">http://localhost:8787/status</a> during execution to get a
+sense of the parallel execution.</p>
+<p>This should have run much more quickly depending on how many cores you have on
+your machine.  We added a few extra nodes to our stream, lets look at what they
+did.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">scatter</span></code>: Converted our Stream into a DaskStream.  The elements that we
+emitted into our source were sent to the Dask client, and the subsequent
+<code class="docutils literal notranslate"><span class="pre">map</span></code> call used that client’s cores to perform the computations.</li>
+<li><code class="docutils literal notranslate"><span class="pre">gather</span></code>: Converted our DaskStream back into a Stream, pulling data on our
+Dask client back to our local stream</li>
+<li><code class="docutils literal notranslate"><span class="pre">buffer(5)</span></code>: Normally gather would exert back pressure so that the source
+would not accept new data until results finished and were pulled back to the
+local stream.  This back-pressure would limit parallelism.  To counter-act
+this we add a buffer of size eight to allow eight unfinished futures to
+build up in the pipeline before we start to apply back-pressure to
+<code class="docutils literal notranslate"><span class="pre">source.emit</span></code>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dataframes.html" class="btn btn-neutral" title="DataFrames" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Rocklin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

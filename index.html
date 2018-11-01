@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rapidz &mdash; rapidz 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Core Streams" href="core.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> rapidz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframes.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dask.html">Dask Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections-api.html">Collections API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="async.html">Asynchronous Computation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">rapidz</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>rapidz</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rapidz">
+<h1>rapidz<a class="headerlink" href="#rapidz" title="Permalink to this headline">¶</a></h1>
+<p>rapidz helps you build pipelines to manage continuous streams of data.  It is
+simple to use in simple cases, but also supports complex pipelines that involve
+branching, joining, flow control, feedback, back pressure, and so on.</p>
+<p>Optionally, rapidz can also work with Pandas dataframes to provide sensible
+streaming operations on continuous tabular data.</p>
+<p>To learn more about how to use streams, visit <a class="reference internal" href="core.html"><span class="doc">Core documentation</span></a>.</p>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Continuous data streams arise in many applications like the following:</p>
+<ol class="arabic simple">
+<li>Log processing from web servers</li>
+<li>Scientific instrument data like telemetry or image processing pipelines</li>
+<li>Financial time series</li>
+<li>Machine learning pipelines for real-time and on-line learning</li>
+<li>…</li>
+</ol>
+<p>Sometimes these pipelines are very simple, with a linear sequence of processing
+steps:</p>
+<img alt="a simple rapidz pipeline" src="_images/simple.svg" /><p>And sometimes these pipelines are more complex, involving branching, look-back
+periods, feedback into earlier stages, and more.</p>
+<img alt="a more complex rapidz pipeline" src="_images/complex.svg" /><p>rapidz endeavors to be simple in simple cases, while also being powerful
+enough to let you define custom and powerful pipelines for your application.</p>
+<div class="section" id="why-not-python-generator-expressions">
+<h3>Why not Python generator expressions?<a class="headerlink" href="#why-not-python-generator-expressions" title="Permalink to this headline">¶</a></h3>
+<p>Python users often manage continuous sequences of data with iterators or
+generator expressions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fib</span><span class="p">():</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">a</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">fib</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>However iterators become challenging when you want to fork them or control the
+flow of data.  Typically people rely on tools like <code class="docutils literal notranslate"><span class="pre">itertools.tee</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">zip</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">tee</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However this quickly become cumbersome, especially when building complex
+pipelines.</p>
+</div>
+</div>
+<div class="section" id="related-work">
+<h2>Related Work<a class="headerlink" href="#related-work" title="Permalink to this headline">¶</a></h2>
+<p>rapidz is similar to reactive
+programming systems like <a class="reference external" href="https://github.com/ReactiveX/RxPY">RxPY</a> or big
+data streaming systems like <a class="reference external" href="https://flink.apache.org/">Apache Flink</a>,
+<a class="reference external" href="https://beam.apache.org/get-started/quickstart-py/">Apache Beam</a> or
+<a class="reference external" href="https://beam.apache.org/get-started/quickstart-py/">Apache Spark Streaming</a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="core.html" class="btn btn-neutral float-right" title="Core Streams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Rocklin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

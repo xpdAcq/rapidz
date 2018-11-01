@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Asynchronous Computation &mdash; rapidz 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> rapidz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframes.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dask.html">Dask Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections-api.html">Collections API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Asynchronous Computation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#within-the-event-loop">Within the Event Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#event-loop-on-a-separate-thread">Event Loop on a Separate Thread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-dask">Using Dask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#asynchronous-dask">Asynchronous Dask</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rapidz</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Asynchronous Computation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/async.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="asynchronous-computation">
+<h1>Asynchronous Computation<a class="headerlink" href="#asynchronous-computation" title="Permalink to this headline">¶</a></h1>
+<p><em>This section is only relevant if you want to use time-based functionality.  If
+you are only using operations like map and accumulate then you can safely skip
+this section.</em></p>
+<p>When using time-based flow control like <code class="docutils literal notranslate"><span class="pre">rate_limit</span></code>, <code class="docutils literal notranslate"><span class="pre">delay</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">timed_window</span></code> rapidz relies on the <a class="reference external" href="http://www.tornadoweb.org/en/stable/">Tornado</a> framework for concurrency.
+This allows us to handle many concurrent operations cheaply and consistently
+within a single thread.  However, this also adds complexity and requires some
+understanding of asynchronous programming.  There are a few different ways to
+use rapidz with a Tornado event loop.</p>
+<p>We give a few examples below that all do the same thing, but with different
+styles.  In each case we use the following toy functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A blocking increment function</span>
+
+<span class="sd">    Simulates a computational function that was not designed to work</span>
+<span class="sd">    asynchronously</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="nd">@gen.coroutine</span>
+<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A non-blocking write function</span>
+
+<span class="sd">    Simulates writing to a database asynchronously</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">yield</span> <span class="n">gen</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="within-the-event-loop">
+<h2>Within the Event Loop<a class="headerlink" href="#within-the-event-loop" title="Permalink to this headline">¶</a></h2>
+<p>You may have an application that runs strictly within an event loop.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
+
+<span class="nd">@gen.coroutine</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="n">asynchronous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c1"># tell the stream we&#39;re working asynchronously</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">(</span><span class="mf">0.500</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">IOLoop</span><span class="p">()</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We call Stream with the <code class="docutils literal notranslate"><span class="pre">asynchronous=True</span></code> keyword, informing it that it
+should expect to operate within an event loop.  This ensures that calls to
+<code class="docutils literal notranslate"><span class="pre">emit</span></code> return Tornado futures rather than block.  We wait on results using
+<code class="docutils literal notranslate"><span class="pre">yield</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">yield</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># waits until the pipeline is ready</span>
+</pre></div>
+</div>
+<p>This would also work with async-await syntax in Python 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="n">asynchronous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c1"># tell the stream we&#39;re working asynchronously</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">(</span><span class="mf">0.500</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">await</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">IOLoop</span><span class="p">()</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="event-loop-on-a-separate-thread">
+<h2>Event Loop on a Separate Thread<a class="headerlink" href="#event-loop-on-a-separate-thread" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes the event loop runs on a separate thread.  This is common when you
+want to support interactive workloads (the user needs their own thread for
+interaction) or when using Dask (next section).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="n">asynchronous</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  <span class="c1"># starts IOLoop in separate thread</span>
+<span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">(</span><span class="s1">&#39;500ms&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case we pass <code class="docutils literal notranslate"><span class="pre">asynchronous=False</span></code> to inform the stream that it is
+expected to perform time-based computation (our write function is a coroutine)
+but that it should not expect to run in an event loop, and so needs to start
+its own in a separate thread.  Now when we call <code class="docutils literal notranslate"><span class="pre">source.emit</span></code> normally
+without using <code class="docutils literal notranslate"><span class="pre">yield</span></code> or <code class="docutils literal notranslate"><span class="pre">await</span></code> the emit call blocks, waiting on a
+coroutine to finish within the IOLoop.</p>
+<p>All functions here happen on the IOLoop.  This is good for consistency, but can
+cause other concurrent applications to become unresponsive if your functions
+(like <code class="docutils literal notranslate"><span class="pre">increment</span></code>) block for long periods of time.  You might address this by
+using Dask (see below) which will offload these computations onto separate
+threads or processes.</p>
+</div>
+<div class="section" id="using-dask">
+<h2>Using Dask<a class="headerlink" href="#using-dask" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://dask.pydata.org/en/latest/">Dask</a> is a parallel computing library that uses Tornado for concurrency and
+threads for computation.  The <code class="docutils literal notranslate"><span class="pre">DaskStream</span></code> object is a drop-in replacement
+for <code class="docutils literal notranslate"><span class="pre">Stream</span></code> (mostly). Typically we create a Dask client, and then
+<code class="docutils literal notranslate"><span class="pre">scatter</span></code> a local Stream to become a DaskStream.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  <span class="c1"># starts thread pool, IOLoop in separate thread</span>
+
+<span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">scatter</span><span class="p">()</span>       <span class="c1"># scatter local elements to cluster, creating a DaskStream</span>
+       <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>  <span class="c1"># map a function remotely</span>
+       <span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>       <span class="c1"># allow five futures to stay on the cluster at any time</span>
+       <span class="o">.</span><span class="n">gather</span><span class="p">()</span>        <span class="c1"># bring results back to local process</span>
+       <span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write</span><span class="p">))</span>    <span class="c1"># call write locally</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This operates very much like the synchronous case in terms of coding style (no
+<code class="docutils literal notranslate"><span class="pre">&#64;gen.coroutine</span></code> or <code class="docutils literal notranslate"><span class="pre">yield</span></code>) but does computations on separate threads.
+This also provides parallelism and access to a dashboard at
+<a class="reference external" href="http://localhost:8787/status">http://localhost:8787/status</a> .</p>
+</div>
+<div class="section" id="asynchronous-dask">
+<h2>Asynchronous Dask<a class="headerlink" href="#asynchronous-dask" title="Permalink to this headline">¶</a></h2>
+<p>Dask can also operate within an event loop if preferred.  Here you can get the
+non-blocking operation within an event loop while also offloading computations
+to separate threads.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">await</span> <span class="n">Client</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">asynchronous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="n">asynchronous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">scatter</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">(</span><span class="s1">&#39;500ms&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">()</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">await</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">IOLoop</span><span class="p">()</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Rocklin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Core Streams &mdash; rapidz 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DataFrames" href="dataframes.html" />
+    <link rel="prev" title="rapidz" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> rapidz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Core Streams</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#map-emit-and-sink">Map, emit, and sink</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accumulating-state">Accumulating State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flow-control">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#branching-and-joining">Branching and Joining</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing-time-and-back-pressure">Processing Time and Back Pressure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modifying-and-cleaning-up-streams">Modifying and Cleaning up Streams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recursion-and-feedback">Recursion and Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataframes.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dask.html">Dask Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections-api.html">Collections API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="async.html">Asynchronous Computation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rapidz</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Core Streams</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/core.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="core-streams">
+<h1>Core Streams<a class="headerlink" href="#core-streams" title="Permalink to this headline">¶</a></h1>
+<p>This document takes you through how to build basic streams and push data
+through them.  We start with map and accumulate, talk about emitting data, then
+discuss flow control and finally back pressure.  Examples are used throughout.</p>
+<div class="section" id="map-emit-and-sink">
+<h2>Map, emit, and sink<a class="headerlink" href="#map-emit-and-sink" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.emit</span></code>(x[,&nbsp;asynchronous])</td>
+<td>Push data into the stream at this point</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.map" title="rapidz.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Apply a function to every element in the stream</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.sink" title="rapidz.sink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sink</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Apply a function on every element</td>
+</tr>
+</tbody>
+</table>
+<p>You can create a basic pipeline by instantiating the <code class="docutils literal notranslate"><span class="pre">rapidz</span></code> object and then using methods like <code class="docutils literal notranslate"><span class="pre">map</span></code>, <code class="docutils literal notranslate"><span class="pre">accumulate</span></code>, and <code class="docutils literal notranslate"><span class="pre">sink</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+
+<span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">map</span></code> and <code class="docutils literal notranslate"><span class="pre">sink</span></code> methods both take a function and apply that function to every element in the stream.  The <code class="docutils literal notranslate"><span class="pre">map</span></code> method returns a new stream with the modified elements while <code class="docutils literal notranslate"><span class="pre">sink</span></code> is typically used at the end of a stream for final actions.</p>
+<p>To push data through our pipeline we call <code class="docutils literal notranslate"><span class="pre">emit</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">11</span>
+</pre></div>
+</div>
+<p>As we can see, whenever we push data in at the source, our pipeline calls
+<code class="docutils literal notranslate"><span class="pre">increment</span></code> on that data, and then calls <code class="docutils literal notranslate"><span class="pre">print</span></code> on that data, resulting in
+incremented results being printed to the screen.</p>
+<p>Often we call <code class="docutils literal notranslate"><span class="pre">emit</span></code> from some other continuous process, like reading lines
+from a file</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;myfile.json&#39;</span><span class="p">):</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="accumulating-state">
+<h2>Accumulating State<a class="headerlink" href="#accumulating-state" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.accumulate" title="rapidz.accumulate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate</span></code></a>(upstream,&nbsp;func[,&nbsp;start,&nbsp;…])</td>
+<td>Accumulate results with previous state</td>
+</tr>
+</tbody>
+</table>
+<p>Map and sink both pass data directly through a stream.  One piece of data comes
+in, either one or zero pieces go out.  Accumulate allows you to track some
+state within the pipeline.  It takes an accumulation function that takes the
+previous state, the new element, and then returns a new state and a new element
+to emit.  In the following example we make an accumulator that keeps a running
+total of the elements seen so far.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">add</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p>The accumulation function above is particularly simple, the state that we store
+and the value that we emit are the same.  In more complex situations we might
+want to keep around different state  than we emit.  For example lets count the
+number of distinct elements that we have seen so far.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">num_distinct</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+ <span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+ <span class="n">source</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">num_distinct</span><span class="p">,</span> <span class="n">returns_state</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+
+ <span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">)</span>
+ <span class="mi">1</span>
+ <span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;dog&#39;</span><span class="p">)</span>
+ <span class="mi">2</span>
+ <span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">)</span>
+ <span class="mi">2</span>
+ <span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;mouse&#39;</span><span class="p">)</span>
+ <span class="mi">3</span>
+</pre></div>
+</div>
+<p>Accumulators allow us to build many interesting operations.</p>
+</div>
+<div class="section" id="flow-control">
+<h2>Flow Control<a class="headerlink" href="#flow-control" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.buffer" title="rapidz.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
+<td>Allow results to pile up at this point in the stream</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.flatten" title="rapidz.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>([upstream,&nbsp;upstreams,&nbsp;stream_name,&nbsp;…])</td>
+<td>Flatten streams of lists or iterables into a stream of elements</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.partition" title="rapidz.partition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partition</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
+<td>Partition stream into tuples of equal size</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.sliding_window" title="rapidz.sliding_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sliding_window</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
+<td>Produce overlapping tuples of size n</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.union" title="rapidz.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">union</span></code></a>(*upstreams,&nbsp;**kwargs)</td>
+<td>Combine multiple streams into one</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.unique" title="rapidz.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique</span></code></a>(upstream[,&nbsp;history,&nbsp;key])</td>
+<td>Avoid sending through repeated elements</td>
+</tr>
+</tbody>
+</table>
+<p>You can batch and slice streams into streams of batches in various ways with
+operations like <code class="docutils literal notranslate"><span class="pre">partition</span></code>, <code class="docutils literal notranslate"><span class="pre">buffer</span></code>, and <code class="docutils literal notranslate"><span class="pre">sliding_window</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">sliding_window</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="branching-and-joining">
+<h2>Branching and Joining<a class="headerlink" href="#branching-and-joining" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.combine_latest" title="rapidz.combine_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine_latest</span></code></a>(*upstreams,&nbsp;**kwargs)</td>
+<td>Combine multiple streams together to a stream of tuples</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.zip" title="rapidz.zip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip</span></code></a>(*upstreams,&nbsp;**kwargs)</td>
+<td>Combine streams together into a stream of tuples</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.zip_latest" title="rapidz.zip_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip_latest</span></code></a>(lossless,&nbsp;*upstreams,&nbsp;**kwargs)</td>
+<td>Combine multiple streams together to a stream of tuples</td>
+</tr>
+</tbody>
+</table>
+<p>You can branch multiple streams off of a single stream.  Elements that go into
+the input will pass through to both output streams.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">decrement</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">decrement</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;LR&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="a branching stream" src="_images/inc-dec-print.svg" /><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">9</span>
+<span class="go">11</span>
+</pre></div>
+</div>
+<p>Similarly you can also combine multiple streams together with operations like
+<code class="docutils literal notranslate"><span class="pre">zip</span></code>, which emits once both streams have provided a new element, or
+<code class="docutils literal notranslate"><span class="pre">combine_latest</span></code> which emits when either stream has provided a new element.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">decrement</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="mi">20</span>  <span class="c1"># 9 + 11</span>
+</pre></div>
+</div>
+<img alt="a branching and zipped stream" src="_images/inc-dec-add-print.svg" /><p>This branching and combining is where Python iterators break down, and projects
+like <code class="docutils literal notranslate"><span class="pre">rapidz</span></code> start becoming valuable.</p>
+</div>
+<div class="section" id="processing-time-and-back-pressure">
+<h2>Processing Time and Back Pressure<a class="headerlink" href="#processing-time-and-back-pressure" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.delay" title="rapidz.delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delay</span></code></a>(upstream,&nbsp;interval,&nbsp;**kwargs)</td>
+<td>Add a time delay to results</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.rate_limit" title="rapidz.rate_limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate_limit</span></code></a>(upstream,&nbsp;interval,&nbsp;**kwargs)</td>
+<td>Limit the flow of data</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.timed_window" title="rapidz.timed_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timed_window</span></code></a>(upstream,&nbsp;interval,&nbsp;**kwargs)</td>
+<td>Emit a tuple of collected results every interval</td>
+</tr>
+</tbody>
+</table>
+<p>Time-based flow control depends on having an active <a class="reference external" href="http://www.tornadoweb.org/en/stable/">Tornado</a> event loop.  Tornado is active by
+default within a Jupyter notebook, but otherwise you will need to learn at
+least a little about asynchronous programming in Python to use these features.
+Learning async programming is not mandatory, the rest of the project will work
+fine without Tornado.</p>
+<p>You can control the flow of data through your stream over time.  For example
+you may want to batch all elements that have arrived in the last minute, or
+slow down the flow of data through sensitive parts of the pipeline,
+particularly when they may be writing to slow resources like databases.</p>
+<p>rapidz helps you do these operations both with operations like <code class="docutils literal notranslate"><span class="pre">delay</span></code>,
+<code class="docutils literal notranslate"><span class="pre">rate_limit</span></code>, and <code class="docutils literal notranslate"><span class="pre">timed_window</span></code>, and also by passing <a class="reference external" href="http://www.tornadoweb.org/en/stable/">Tornado</a> futures back through the
+pipeline.  As data moves forward through the pipeline, futures that signal work
+completed move backwards.  In this way you can reliably avoid buildup of data
+in slower parts of your pipeline.</p>
+<p>Lets consider the following example that reads JSON data from a file and
+inserts it into a database using an async-aware insertion function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">async</span> <span class="k">def</span> <span class="nf">write_to_database</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="c1"># build pipeline</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">Source</span><span class="p">()</span>
+<span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write_to_database</span><span class="p">)</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">process_file</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">await</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>  <span class="c1"># wait for pipeline to clear</span>
+</pre></div>
+</div>
+<p>As we call the <code class="docutils literal notranslate"><span class="pre">write_to_database</span></code> function on our parsed JSON data it
+produces a future for us to signal that the writing process has finished.
+rapidz will ensure that this future is passed all the way back to the
+<code class="docutils literal notranslate"><span class="pre">source.emit</span></code> call, so that user code at the start of our pipeline can await
+on it.  This allows us to avoid buildup even in very large and complex streams.
+We always pass futures back to ensure responsiveness.</p>
+<p>But wait, maybe we don’t mind having a few messages in memory at once, this
+will help steady the flow of data so that we can continue to work even if our
+sources or sinks become less productive for brief periods.  We might add a
+<code class="docutils literal notranslate"><span class="pre">buffer</span></code>  just before writing to the database.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write_to_database</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And if we are pulling from an API with known limits then we might want to
+introduce artificial rate limits at 10ms.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">(</span><span class="mf">0.010</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">write_to_database</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Operations like these (and more) allow us to shape the flow of data through our
+pipelines.</p>
+</div>
+<div class="section" id="modifying-and-cleaning-up-streams">
+<h2>Modifying and Cleaning up Streams<a class="headerlink" href="#modifying-and-cleaning-up-streams" title="Permalink to this headline">¶</a></h2>
+<p>When you call <code class="docutils literal notranslate"><span class="pre">Stream</span></code> you create a stream.  When you call any method on a
+<code class="docutils literal notranslate"><span class="pre">Stream</span></code>, like <code class="docutils literal notranslate"><span class="pre">Stream.map</span></code>, you also create a stream.  All operations can
+be chained together.  Additionally, as discussed in the section on Branching,
+you can split multiple streams off of any point.  Streams will pass their
+outputs on to all downstream streams so that anyone can hook in at any point,
+and get a full view of what that stream is producing.</p>
+<p>If you delete a part of a stream then it will stop getting data.  rapidz
+follows normal Python garbage collection semantics so once all references to a
+stream have been lost those operations will no longer occur.  The one counter
+example to this is <code class="docutils literal notranslate"><span class="pre">sink</span></code>, which is intended to be used with side effects and
+will stick around even without a reference.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sink streams store themselves in <code class="docutils literal notranslate"><span class="pre">rapidz.core._global_sinks</span></code>.  You
+can remove them permanently by clearing that collection.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>      <span class="c1"># this doesn&#39;t do anything</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>     <span class="c1"># this stays active even without a reference</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>  <span class="c1"># this works too because we have a handle to s</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="recursion-and-feedback">
+<h2>Recursion and Feedback<a class="headerlink" href="#recursion-and-feedback" title="Permalink to this headline">¶</a></h2>
+<p>By connecting sources to sinks you can create feedback loops.
+As an example, here is a tiny web crawler:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+
+<span class="n">pages</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">content</span> <span class="o">=</span> <span class="n">pages</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="n">links</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">get_list_of_links</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">links</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">)</span>  <span class="c1"># pipe new links back into pages</span>
+
+<span class="n">pages</span><span class="o">.</span><span class="n">sink</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;http://github.com&#39;</span><span class="p">)</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">features</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">business</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">explore</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pricing</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h2>
+<p>rapidz adds microsecond overhead to normal Python operations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>from rapidz import Stream
+
+source = Stream()
+
+def inc(x):
+    return x + 1
+
+source.sink(inc)
+
+In [5]: %timeit source.emit(1)
+100000 loops, best of 3: 3.19 µs per loop
+
+In [6]: %timeit inc(1)
+10000000 loops, best of 3: 91.5 ns per loop
+</pre></div>
+</div>
+<p>You may want to avoid pushing millions of individual elements per second
+through a stream.  However, you can avoid performance issues by collecting lots
+of data into single elements, for example by pushing through Pandas dataframes
+instead of individual integers and strings.  This will be faster regardless,
+just because projects like NumPy and Pandas can be much faster than Python
+generally.</p>
+<p>In the following example we pass filenames through a stream, convert them to
+Pandas dataframes, and then map pandas-level functions on those dataframes.
+For operations like this rapidz adds virtually no overhead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;data/2017-*-*.csv&#39;</span><span class="p">):</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Streams provides higher level APIs for situations just like this one.  You may
+want to read further about <a class="reference internal" href="collections.html"><span class="doc">collections</span></a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dataframes.html" class="btn btn-neutral float-right" title="DataFrames" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="rapidz" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Rocklin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

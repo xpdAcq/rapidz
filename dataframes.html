@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DataFrames &mdash; rapidz 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dask Integration" href="dask.html" />
+    <link rel="prev" title="Core Streams" href="core.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> rapidz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Streams</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DataFrames</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#streaming-dataframes">Streaming Dataframes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-operations">Supported Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataframe-aggregations">DataFrame Aggregations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aggregations">Aggregations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windowing-schemes">Windowing Schemes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grouping">Grouping</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dask">Dask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#not-yet-supported">Not Yet Supported</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dask.html">Dask Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections-api.html">Collections API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="async.html">Asynchronous Computation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rapidz</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>DataFrames</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/dataframes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dataframes">
+<h1>DataFrames<a class="headerlink" href="#dataframes" title="Permalink to this headline">¶</a></h1>
+<p>When handling large volumes of streaming tabular data it is often more
+efficient to pass around larger Pandas dataframes with many rows each rather
+than pass around individual Python tuples or dicts.  Handling and computing on
+data with Pandas can be much faster than operating on Python objects.</p>
+<p>So one could imagine building streaming dataframe pipelines using the <code class="docutils literal notranslate"><span class="pre">.map</span></code>
+and <code class="docutils literal notranslate"><span class="pre">.accumulate</span></code> streaming operators with functions that consume and produce
+Pandas dataframes as in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz</span> <span class="kn">import</span> <span class="n">Stream</span>
+
+<span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Alice&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">aggregate</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">acc</span> <span class="o">+</span> <span class="n">df</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">stream</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">aggregate</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is fine, and straightforward to do if you understand <code class="docutils literal notranslate"><span class="pre">rapidz.core</span></code> ,
+Pandas, and have some skill with developing algorithms.</p>
+<div class="section" id="streaming-dataframes">
+<h2>Streaming Dataframes<a class="headerlink" href="#streaming-dataframes" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">rapidz.dataframe</span></code> module provides a streaming dataframe object that
+implements many of these algorithms for you.  It provides a Pandas-like
+interface on streaming data.  Our example above is rewritten below using
+streaming dataframes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">rapidz.dataframe</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+<span class="n">example</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="p">[]})</span>
+<span class="n">sdf</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">example</span><span class="o">=</span><span class="n">example</span><span class="p">)</span>
+
+<span class="n">sdf</span><span class="p">[</span><span class="n">sdf</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Alice&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The two examples are identical in terms of performance and execution.  The
+resulting streaming dataframe contains a <code class="docutils literal notranslate"><span class="pre">.stream</span></code> attribute which is
+equivalent to the <code class="docutils literal notranslate"><span class="pre">stream</span></code> produced in the first example.  Streaming
+dataframes are only syntactic sugar on core streams.</p>
+</div>
+<div class="section" id="supported-operations">
+<h2>Supported Operations<a class="headerlink" href="#supported-operations" title="Permalink to this headline">¶</a></h2>
+<p>Streaming dataframes support the following classes of operations</p>
+<ul class="simple">
+<li>Elementwise operations like <code class="docutils literal notranslate"><span class="pre">df.x</span> <span class="pre">+</span> <span class="pre">1</span></code></li>
+<li>Filtering like <code class="docutils literal notranslate"><span class="pre">df[df.name</span> <span class="pre">==</span> <span class="pre">'Alice']</span></code></li>
+<li>Column addition like <code class="docutils literal notranslate"><span class="pre">df['z']</span> <span class="pre">=</span> <span class="pre">df.x</span> <span class="pre">+</span> <span class="pre">df.y</span></code></li>
+<li>Reductions like <code class="docutils literal notranslate"><span class="pre">df.amount.mean()</span></code></li>
+<li>Groupby-aggregations like <code class="docutils literal notranslate"><span class="pre">df.groupby(df.name).amount.mean()</span></code></li>
+<li>Windowed aggregations (fixed length) like <code class="docutils literal notranslate"><span class="pre">df.window(n=100).amount.sum()</span></code></li>
+<li>Windowed aggregations (index valued) like <code class="docutils literal notranslate"><span class="pre">df.window(value='2h').amount.sum()</span></code></li>
+<li>Windowed groupby aggregations like <code class="docutils literal notranslate"><span class="pre">df.window(value='2h').groupby('name').amount.sum()</span></code></li>
+</ul>
+</div>
+<div class="section" id="dataframe-aggregations">
+<h2>DataFrame Aggregations<a class="headerlink" href="#dataframe-aggregations" title="Permalink to this headline">¶</a></h2>
+<p>Dataframe aggregations are composed of an aggregation (like sum, mean, …) and
+a windowing scheme (fixed sized windows, index-valued, all time, …)</p>
+<div class="section" id="aggregations">
+<h3>Aggregations<a class="headerlink" href="#aggregations" title="Permalink to this headline">¶</a></h3>
+<p>Streaming Dataframe aggregations are built from three methods</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">initial</span></code>: Creates initial state given an empty example dataframe</li>
+<li><code class="docutils literal notranslate"><span class="pre">on_new</span></code>: Updates state and produces new result to emit given new data</li>
+<li><code class="docutils literal notranslate"><span class="pre">on_old</span></code>: Updates state and produces new result to emit given decayed data</li>
+</ul>
+<p>So a simple implementation of <code class="docutils literal notranslate"><span class="pre">sum</span></code> as an aggregation might look like the
+following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rapidz.dataframe</span> <span class="kn">import</span> <span class="n">Aggregation</span>
+
+<span class="k">class</span> <span class="nc">Mean</span><span class="p">(</span><span class="n">Aggregation</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">new</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">on_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="n">total</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="n">new</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="n">new</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">new_state</span> <span class="o">=</span> <span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+        <span class="n">new_value</span> <span class="o">=</span> <span class="n">total</span> <span class="o">/</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">new_state</span><span class="p">,</span> <span class="n">new_value</span>
+
+    <span class="k">def</span> <span class="nf">on_old</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">old</span><span class="p">):</span>
+        <span class="n">total</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">new</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>   <span class="c1"># switch + for - here</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="n">new</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="c1"># switch + for - here</span>
+        <span class="n">new_state</span> <span class="o">=</span> <span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+        <span class="n">new_value</span> <span class="o">=</span> <span class="n">total</span> <span class="o">/</span> <span class="n">count</span>
+        <span class="k">return</span> <span class="n">new_state</span><span class="p">,</span> <span class="n">new_value</span>
+</pre></div>
+</div>
+<p>These aggregations can then used in a variety of different windowing schemes
+with the <code class="docutils literal notranslate"><span class="pre">aggregate</span></code> method as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Mean</span><span class="p">())</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">window</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Mean</span><span class="p">())</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">window</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;60s&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>whose job it is to deliver new and old data to your aggregation for processing.</p>
+</div>
+<div class="section" id="windowing-schemes">
+<h3>Windowing Schemes<a class="headerlink" href="#windowing-schemes" title="Permalink to this headline">¶</a></h3>
+<p>Different windowing schemes like fixed sized windows (last 100 elements) or
+value-indexed windows (last two hours of data) will track newly arrived and
+decaying data and call these methods accordingly.  The mechanism to track data
+arriving and leaving is kept orthogonal from the aggregations themselves.
+These windowing schemes include the following:</p>
+<ol class="arabic">
+<li><p class="first">All previous data.  Only <code class="docutils literal notranslate"><span class="pre">initial</span></code> and <code class="docutils literal notranslate"><span class="pre">on_new</span></code> are called, <code class="docutils literal notranslate"><span class="pre">on_old</span></code>
+is never called.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The previous <code class="docutils literal notranslate"><span class="pre">n</span></code> elements</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">window</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">An index range, like a time range for a datetime index</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">window</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;2h&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Although this can be done for any range on any type of index, time is just
+a common case.</p>
+</li>
+</ol>
+<p>Windowing schemes generally maintain a deque of historical values within
+accumulated state.  As new data comes in they inspect that state and eject data
+that no longer falls within the window.</p>
+</div>
+<div class="section" id="grouping">
+<h3>Grouping<a class="headerlink" href="#grouping" title="Permalink to this headline">¶</a></h3>
+<p>Groupby aggregations also maintain historical data on the grouper and perform a
+parallel aggregation on the number of times any key has been seen, removing
+that key once it is no longer present.</p>
+</div>
+</div>
+<div class="section" id="dask">
+<h2>Dask<a class="headerlink" href="#dask" title="Permalink to this headline">¶</a></h2>
+<p>In all cases, dataframe operations are only implemented with the <code class="docutils literal notranslate"><span class="pre">.map</span></code> and
+<code class="docutils literal notranslate"><span class="pre">.accumulate</span></code> operators, and so are equally compatible with core <code class="docutils literal notranslate"><span class="pre">Stream</span></code>
+and <code class="docutils literal notranslate"><span class="pre">DaskStream</span></code> objects.</p>
+</div>
+<div class="section" id="not-yet-supported">
+<h2>Not Yet Supported<a class="headerlink" href="#not-yet-supported" title="Permalink to this headline">¶</a></h2>
+<p>Streaming dataframes algorithms do not currently pay special attention to data
+arriving out-of-order.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dask.html" class="btn btn-neutral float-right" title="Dask Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="core.html" class="btn btn-neutral" title="Core Streams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Rocklin
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
