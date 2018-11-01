@@ -9,10 +9,11 @@ python:
   - 3.6
 
 env:
-  - STREAMZ_LAUNCH_KAFKA=true
   global:
     # Doctr deploy key for xpdAcq/rapidz
     - secure: "r+krxcUeVzCJD3at6t4KaDrmGLlRmgcdpLzJ3V2N76fVGYXaK83Fu66weVvq8gVAqvJop+E3L1pZ8u13GL7Tw4kwYOc7nImIPDQ7KJDyX21pR4Ow4N35P9E6Er++TEJH7XKKhQCeNVdeuqOeMgF8cVuGwPc2M5x6QWZfyqY25hR9gudre1ewlXNOVvZ7kbq2vOMs2K8B6K01KDdgu+GhKY863xnChI5njqwqzsb/cGKhuXGy/Um8Tmww7cMJic2gIoo2YNyIIOOEYKbXtBolJhnrb5IjU3gfF1YtmiEkyGmwrHyN5kWDfaT0JO5uvhnw2YSLWoSxHcBGIoYjJt03hGoKv2jwWZy1ojS43ERi+CGfbEO91XBdhGfhImB5pZ++4Tn56AMunnXRFq3VX0rJeF9tE85xuBc6jX8JUCTtSMw8wR7mLTKXSS39cp63PWqXFAoCZKRdylt4D4U5ex1qwehx8fz1iHEGvb0cia9UzogJA563WBMVkG83o2HUt54qBKfO+0K/U7Qh6ZOb4KovdCPnX2OtUcqctp0h3EUpLTzghQewSQK7zG/dIH2eaHO6c6l9X3b3ao7m2q64sQ7aqiPrALSPEc0N0XYHBSh47aMxt0Qht54uJuyv5syM/FxYapY/jap1koINVz0Fix3PAKs32AtVSpOdJpwwAt7/RYc="
+  matrix:
+    - STREAMZ_LAUNCH_KAFKA=true
 
 install:
   # Install conda
