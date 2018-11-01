@@ -39,7 +39,7 @@ after_success:
   - cd docs
   - make html
   - cd ..
-  - doctr deploy . --built-docs ./docs/_build/html;
+  - doctr deploy . --built-docs ./docs/build/html;
   - flake8 rapidz
 
 notifications:
