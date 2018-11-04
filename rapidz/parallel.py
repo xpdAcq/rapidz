@@ -82,6 +82,7 @@ class ParallelStream(Stream):
     --------
     dask.distributed.Client
     """
+    _graphviz_fillcolor = "azure"
 
     def __init__(self, *args, backend="dask", **kwargs):
         super().__init__(*args, **kwargs)
