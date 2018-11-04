@@ -1,5 +1,5 @@
-from collections import Sequence
-from concurrent.futures import ThreadPoolExecutor
+from collections import Sequence, MutableMapping
+from concurrent.futures import ThreadPoolExecutor, Future
 from functools import wraps
 
 from distributed import default_client as dask_default_client
@@ -9,9 +9,9 @@ from .core import identity
 
 
 def result_maybe(future_maybe):
-    try:
+    if isinstance(future_maybe, Future):
         return future_maybe.result()
-    except AttributeError:
+    else:
         if isinstance(future_maybe, Sequence) and not isinstance(
             future_maybe, str
         ):
@@ -21,6 +21,9 @@ def result_maybe(future_maybe):
             if isinstance(future_maybe, tuple):
                 aa = tuple(aa)
             return aa
+        elif isinstance(future_maybe, MutableMapping):
+            for k, v in future_maybe.items():
+                future_maybe[k] = result_maybe(v)
         return future_maybe
 
 
