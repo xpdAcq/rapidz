@@ -4,7 +4,7 @@ from functools import wraps
 from rapidz import apply
 from rapidz.core import _truthy, args_kwargs
 from rapidz.core import get_io_loop
-from rapidz.clients import DEFAULT_BACKENDS
+from rapidz.clients import DEFAULT_BACKENDS, FILL_COLOR_LOOKUP
 from operator import getitem
 
 from tornado import gen
@@ -85,6 +85,7 @@ class ParallelStream(Stream):
 
     def __init__(self, *args, backend="dask", **kwargs):
         super().__init__(*args, **kwargs)
+        self._graphviz_fillcolor = FILL_COLOR_LOOKUP.get(backend, "chartreuse")
         upstream_backends = set(
             [getattr(u, "default_client", None) for u in self.upstreams]
         )

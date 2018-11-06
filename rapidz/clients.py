@@ -7,6 +7,8 @@ from tornado import gen
 
 from .core import identity
 
+FILL_COLOR_LOOKUP = {"dask": "cornflowerblue", "threads": "coral"}
+
 
 def result_maybe(future_maybe):
     if isinstance(future_maybe, Future):
