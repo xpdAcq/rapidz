@@ -91,7 +91,6 @@ class accumulate(DaskStream):
             return self._emit(result)
 
 
-@core.Stream.register_api()
 @DaskStream.register_api()
 class scatter(DaskStream):
     """ Convert local stream to Dask Stream
