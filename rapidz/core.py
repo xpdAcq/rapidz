@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 from collections import deque, Sequence, Hashable
+import copy
 from datetime import timedelta
 import functools
 import logging
@@ -755,9 +756,13 @@ class accumulate(Stream):
     func: callable
     start: object
         Initial value.  Defaults to the first submitted element
-    returns_state: boolean
+    returns_state: boolean, optional
         If true then func should return both the state and the value to emit
         If false then both values are the same, and func returns one value
+    reset_stream : Stream instance or None, optional
+        If not None, when the ``reset_node`` stream emits the accumulate node's
+        state will revert to the initial state (set by ``start``), defaults
+        to None
     **kwargs:
         Keyword arguments to pass to func
 
@@ -776,17 +781,28 @@ class accumulate(Stream):
     _graphviz_shape = "box"
 
     def __init__(
-        self, upstream, func, start=no_default, returns_state=False, **kwargs
+        self, upstream, func, start=no_default, returns_state=False, reset_stream=None,
+        **kwargs
     ):
         self.func = func
         self.kwargs = kwargs
         self.state = start
+        # XXX: maybe don't need deepcopy?
+        self._initial_state = copy.deepcopy(start)
         self.returns_state = returns_state
+        self.reset_node = reset_stream
         # this is one of a few stream specific kwargs
         stream_name = kwargs.pop("stream_name", None)
-        Stream.__init__(self, upstream, stream_name=stream_name)
+        if reset_stream:
+            Stream.__init__(self, upstreams=[upstream, reset_stream],
+                            stream_name=stream_name)
+        else:
+            Stream.__init__(self, upstream, stream_name=stream_name)
 
     def update(self, x, who=None):
+        if who is self.reset_node:
+            self.state = copy.deepcopy(self._initial_state)
+            return
         if self.state is no_default:
             self.state = x
             return self._emit(x)
