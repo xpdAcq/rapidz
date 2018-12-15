@@ -12,7 +12,9 @@ from rapidz.clients import thread_default_client, result_maybe
 
 gen_test = pytest.mark.gen_test
 
-test_params = ["thread", thread_default_client]
+test_params = ["thread",
+               thread_default_client
+               ]
 
 
 @pytest.mark.parametrize("backend", test_params)
@@ -32,6 +34,7 @@ def test_filter_combine_latest(backend):
         yield source.emit(i)
 
     assert L == LL
+    s.default_client().shutdown()
 
 
 @pytest.mark.parametrize("backend", test_params)
@@ -51,6 +54,7 @@ def test_filter_combine_latest_odd(backend):
         yield source.emit(i)
 
     assert L == LL
+    s.default_client().shutdown()
 
 
 @pytest.mark.parametrize("backend", test_params)
@@ -71,3 +75,46 @@ def test_filter_combine_latest_emit_on(backend):
         yield source.emit(i)
 
     assert L == LL
+    s.default_client().shutdown()
+
+
+@pytest.mark.parametrize("backend", test_params)
+@gen_test()
+def test_filter_combine_latest_triple(backend):
+    source = Stream(asynchronous=True)
+
+    s = scatter(source, backend=backend)
+    futures = s.filter(lambda x: x % 3 == 1).combine_latest(s)
+    L = futures.gather().sink_to_list()
+
+    presents = source.filter(lambda x: x % 3 == 1).combine_latest(source)
+
+    LL = presents.sink_to_list()
+
+    for i in range(10):
+        yield source.emit(i)
+
+    assert L == LL
+    s.default_client().shutdown()
+
+
+@pytest.mark.parametrize("backend", test_params)
+@gen_test()
+def test_unique(backend):
+    source = Stream(asynchronous=True)
+
+    s = scatter(source, backend=backend)
+    futures = s.unique()
+    L = futures.gather().sink_to_list()
+
+    presents = source.unique()
+
+    LL = presents.sink_to_list()
+
+    for i in range(10):
+        if i % 2 == 1:
+            i = i - 1
+        yield source.emit(i)
+
+    assert L == LL
+    s.default_client().shutdown()

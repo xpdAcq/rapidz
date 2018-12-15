@@ -340,6 +340,11 @@ class combine_latest(ParallelStream):
             tup = tuple(self.last)
             client = self.default_client()
             l = []
+            # we only want to fall back on prior data if it is not the
+            # incoming data
+            # It is fine to not emit if the incoming data is bad, but in
+            # serial mode the bad data would have never gotten to the node
+            # so we need to have the buffered data only be good data
             for t, up in szip(tup, self.upstreams):
                 if up == who:
                     a = t
@@ -362,7 +367,7 @@ class delay(ParallelStream, core.delay):
 class latest(ParallelStream, core.latest):
     pass
 
-
+# TODO: needs to be filter proofed
 @args_kwargs
 @ParallelStream.register_api()
 class partition(ParallelStream, core.partition):
@@ -375,6 +380,7 @@ class rate_limit(ParallelStream, core.rate_limit):
     pass
 
 
+# TODO: needs to be filter proofed
 @args_kwargs
 @ParallelStream.register_api()
 class sliding_window(ParallelStream, core.sliding_window):
@@ -392,7 +398,7 @@ class timed_window(ParallelStream, core.timed_window):
 class union(ParallelStream, core.union):
     pass
 
-
+# TODO: needs to be filter proofed
 @args_kwargs
 @ParallelStream.register_api()
 class zip(ParallelStream):
@@ -467,3 +473,42 @@ class filenames(ParallelStream, sources.filenames):
 @ParallelStream.register_api(staticmethod)
 class from_textfile(ParallelStream, sources.from_textfile):
     pass
+
+
+def is_unique(x, past):
+    if x in past:
+        return NULL_COMPUTE
+    return x
+
+@args_kwargs
+@ParallelStream.register_api()
+class unique(ParallelStream):
+    """ Avoid sending through repeated elements
+
+    This deduplicates a stream so that only new elements pass through.
+    You can control how much of a history is stored with the ``history=``
+    parameter.  For example setting ``history=1`` avoids sending through
+    elements when one is repeated right after the other.
+
+    Examples
+    --------
+    >>> source = Stream()
+    >>> source.unique(history=1).sink(print)
+    >>> for x in [1, 1, 2, 2, 2, 1, 3]:
+    ...     source.emit(x)
+    1
+    2
+    1
+    3
+    """
+
+    def __init__(self, upstream, history=None, **kwargs):
+        self.history = history
+        self.past = []
+        ParallelStream.__init__(self, upstream, **kwargs)
+
+    def update(self, x, who=None):
+        client = self.default_client()
+        ret = client.submit(is_unique, x, self.past)
+        self.past.append(ret)
+        return self._emit(ret)
