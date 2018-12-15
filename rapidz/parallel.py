@@ -1,8 +1,9 @@
 from concurrent.futures import Future
 from functools import wraps
+from builtins import zip as szip
 
 from rapidz import apply
-from rapidz.core import _truthy, args_kwargs
+from rapidz.core import _truthy, args_kwargs, move_to_first
 from rapidz.core import get_io_loop
 from rapidz.clients import DEFAULT_BACKENDS, FILL_COLOR_LOOKUP
 from operator import getitem
@@ -12,10 +13,21 @@ from tornado import gen
 from . import core, sources
 from .core import Stream
 
-from collections import Sequence
+from collections import Sequence, deque, Iterable
 from toolz import pluck as _pluck
 
 NULL_COMPUTE = "~~NULL_COMPUTE~~"
+
+
+def future_chain(present_future, past_future=None):
+    # If the most recent compute result is NULL then return a previous one
+    if present_future == NULL_COMPUTE:
+        if past_future is None:
+            print('hi')
+            return NULL_COMPUTE
+        else:
+            return past_future
+    return present_future
 
 
 def return_null(func):
@@ -298,8 +310,45 @@ class buffer(ParallelStream, core.buffer):
 
 @args_kwargs
 @ParallelStream.register_api()
-class combine_latest(ParallelStream, core.combine_latest):
-    pass
+class combine_latest(ParallelStream):
+    def __init__(self, *upstreams, **kwargs):
+        emit_on = kwargs.pop("emit_on", None)
+        first = kwargs.pop("first", None)
+
+        self.last = [None for _ in upstreams]
+        self.missing = set(upstreams)
+        if emit_on is not None:
+            if not isinstance(emit_on, Iterable):
+                emit_on = (emit_on,)
+            emit_on = tuple(
+                upstreams[x] if isinstance(x, int) else x for x in emit_on
+            )
+            self.emit_on = emit_on
+        else:
+            self.emit_on = upstreams
+        ParallelStream.__init__(self, upstreams=upstreams, **kwargs)
+        if first:
+            move_to_first(self, first)
+        self.future_buffers = {up: None for up in upstreams}
+
+    def update(self, x, who=None):
+        if self.missing and who in self.missing:
+            self.missing.remove(who)
+
+        self.last[self.upstreams.index(who)] = x
+        if not self.missing and who in self.emit_on:
+            tup = tuple(self.last)
+            client = self.default_client()
+            l = []
+            for t, up in szip(tup, self.upstreams):
+                if up == who:
+                    a = t
+                else:
+                    a = client.submit(future_chain, t, self.future_buffers[up])
+                    self.future_buffers[up] = a
+                l.append(a)
+            tup = tuple(l)
+            return self._emit(tup)
 
 
 @args_kwargs
@@ -346,8 +395,60 @@ class union(ParallelStream, core.union):
 
 @args_kwargs
 @ParallelStream.register_api()
-class zip(ParallelStream, core.zip):
-    pass
+class zip(ParallelStream):
+    def __init__(self, *upstreams, **kwargs):
+        self.maxsize = kwargs.pop("maxsize", 10)
+        first = kwargs.pop("first", None)
+        self.literals = [
+            (i, val)
+            for i, val in enumerate(upstreams)
+            if not isinstance(val, Stream)
+        ]
+
+        self.buffers = {
+            upstream: deque()
+            for upstream in upstreams
+            if isinstance(upstream, Stream)
+        }
+
+        upstreams2 = [
+            upstream for upstream in upstreams if isinstance(upstream, Stream)
+        ]
+
+        ParallelStream.__init__(self, upstreams=upstreams2, **kwargs)
+        if first:
+            move_to_first(self, first)
+        self.future_buffers = {upstream: None for upstream in upstreams
+                               if isinstance(upstream, Stream)}
+
+    def pack_literals(self, tup):
+        """ Fill buffers for literals whenever we empty them """
+        inp = list(tup)[::-1]
+        out = []
+        for i, val in self.literals:
+            while len(out) < i:
+                out.append(inp.pop())
+            out.append(val)
+
+        while inp:
+            out.append(inp.pop())
+
+        return tuple(out)
+
+    def update(self, x, who=None):
+        L = self.buffers[who]  # get buffer for stream
+        L.append(x)
+        if len(L) == 1 and all(self.buffers.values()):
+            client = self.default_client()
+
+            tup = tuple(client.submit(future_chain, self.buffers[up][0], self.future_buffers[up]) for up in self.upstreams)
+            for buf in self.buffers.values():
+                buf.popleft()
+            for t, up in szip(tup, self.upstreams):
+                self.future_buffers[up] = t
+            if self.literals:
+                tup = self.pack_literals(tup)
+            return self._emit(tup)
 
 
 @args_kwargs
