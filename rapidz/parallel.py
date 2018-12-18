@@ -3,9 +3,9 @@ from functools import wraps
 from builtins import zip as szip
 
 from rapidz import apply
-from rapidz.core import _truthy, args_kwargs, move_to_first
+from rapidz.core import _truthy, args_kwargs, move_to_first, identity
 from rapidz.core import get_io_loop
-from rapidz.clients import DEFAULT_BACKENDS, FILL_COLOR_LOOKUP
+from rapidz.clients import DEFAULT_BACKENDS, FILL_COLOR_LOOKUP, result_maybe
 from operator import getitem
 
 from tornado import gen
@@ -447,7 +447,8 @@ class zip(ParallelStream):
         if len(L) == 1 and all(self.buffers.values()):
             client = self.default_client()
 
-            tup = tuple(client.submit(future_chain, self.buffers[up][0], self.future_buffers[up]) for up in self.upstreams)
+            tup = tuple(client.submit(future_chain, self.buffers[up][0],
+                                      self.future_buffers[up]) for up in self.upstreams)
             for buf in self.buffers.values():
                 buf.popleft()
             for t, up in szip(tup, self.upstreams):
@@ -480,6 +481,11 @@ def is_unique(x, past):
         return NULL_COMPUTE
     return x
 
+
+# TODO: this doesn't work on dask (and might never work)
+#  The main issue here is that we need a central storage place for all the
+#  history but dask might not be so friendly to this idea
+#  This (or something very like it) works in actual ipython dask
 @args_kwargs
 @ParallelStream.register_api()
 class unique(ParallelStream):
