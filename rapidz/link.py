@@ -30,10 +30,18 @@ def mutating_link(func, namespace, input_lut, output_lut):
 
     Parameters
     ----------
-    func
-    namespace
-    input_lut
-    output_lut
+    func : callable
+        The pipeline chunk
+    namespace : dict
+        The current pipeline namespace
+    input_lut : dict
+        The input lookup table, keys are the names of the nodes
+        currently in the pipeline and values are their names in the
+        pipeline chunk
+    output_lut : dict
+        The output lookup table, keys are the names of the nodes
+        in the pipeline chunk and values are their names in the
+        pipeline
 
     Returns
     -------
