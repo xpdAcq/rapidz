@@ -24,7 +24,7 @@ install:
   - conda update conda
 
   # Install dependencies
-  - conda create -n test-rapidz python=$TRAVIS_PYTHON_VERSION pytest tornado toolz flake8 coverage codecov networkx graphviz python-graphviz dask distributed pandas bokeh ipython ipykernel ipywidgets python-confluent-kafka pytest-tornado doctr sphinx sphinx_rtd_theme numpydoc -c conda-forge -c bokeh
+  - conda create -n test-rapidz python=$TRAVIS_PYTHON_VERSION pytest=3.10 tornado toolz flake8 coverage codecov networkx graphviz python-graphviz dask distributed pandas bokeh ipython ipykernel ipywidgets python-confluent-kafka pytest-tornado doctr sphinx sphinx_rtd_theme numpydoc -c conda-forge -c bokeh
   - source activate test-rapidz
   - pip install git+https://github.com/dask/distributed.git --upgrade --no-deps
 
