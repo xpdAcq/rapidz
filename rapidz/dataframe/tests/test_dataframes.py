@@ -23,7 +23,6 @@ import rapidz.dataframe as sd
 from rapidz.dask import DaskStream
 
 from distributed import Client
-from distributed.utils_test import loop  # flake8: noqa
 
 
 @pytest.fixture(scope="module")
@@ -36,7 +35,7 @@ def client():
 
 
 @pytest.fixture(params=["core", "dask"])
-def stream(loop, request, client):  # flake8: noqa
+def stream(request, client):  # flake8: noqa
     if request.param == "core":
         return Stream()
     else:
@@ -411,26 +410,26 @@ def test_setitem_overwrites(stream):
     [
         ({}, "sum"),
         ({}, "mean"),
-        pytest.mark.slow(({}, "min")),
+        pytest.param({}, "min", marks=pytest.mark.slow),
         ({}, "median"),
-        pytest.mark.slow(({}, "max")),
-        pytest.mark.slow(({}, "var")),
-        pytest.mark.slow(({}, "count")),
+        pytest.param({}, "max", marks=pytest.mark.slow),
+        pytest.param({}, "var", marks=pytest.mark.slow),
+        pytest.param({}, "count", marks=pytest.mark.slow),
         ({"ddof": 0}, "std"),
-        pytest.mark.slow(({"quantile": 0.5}, "quantile")),
+        pytest.param({"quantile": 0.5}, "quantile", marks=pytest.mark.slow),
         ({"arg": {"A": "sum", "B": "min"}}, "aggregate"),
     ],
 )
 @pytest.mark.parametrize(
     "window",
     [
-        pytest.mark.slow(2),
+        pytest.param(2, marks=pytest.mark.slow),
         7,
-        pytest.mark.slow("3h"),
+        pytest.param("3h", marks=pytest.mark.slow),
         pd.Timedelta("200 minutes"),
     ],
 )
-@pytest.mark.parametrize("m", [2, pytest.mark.slow(5)])
+@pytest.mark.parametrize("m", [2, pytest.param(5, marks=pytest.mark.slow)])
 @pytest.mark.parametrize(
     "pre_get,post_get",
     [
@@ -675,7 +674,7 @@ def test_tail(stream):
     assert_eq(L[1], df.tail(2))
 
 
-def test_random_source2(client):
+def test_random_source(client):
     n = len(client.cluster.scheduler.tasks)
     source = sd.Random(freq="1ms", interval="10ms", dask=True)
     L = source.x.stream.gather().sink_to_list()
@@ -778,7 +777,7 @@ def test_windowing_n(func, n, getter):
         lambda x: x.count(),
         lambda x: x.var(ddof=1),
         lambda x: x.std(),
-        pytest.mark.xfail(lambda x: x.var(ddof=0), reason="don't know"),
+        pytest.param(lambda x: x.var(ddof=0), marks=pytest.mark.xfail),
     ],
 )
 @pytest.mark.parametrize("value", ["10h", "1d"])
@@ -837,7 +836,7 @@ def test_groupby_windowing_value(func, value, getter, grouper, indexer):
         lambda x: x.size(),
         lambda x: x.var(ddof=1),
         lambda x: x.std(ddof=1),
-        pytest.mark.xfail(lambda x: x.var(ddof=0), reason="don't know"),
+        pytest.param(lambda x: x.var(ddof=0), marks=pytest.mark.xfail),
     ],
 )
 @pytest.mark.parametrize("n", [1, 4])
