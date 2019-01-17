@@ -465,6 +465,8 @@ class Stream(object):
         for upstream in list(streams):
             upstream.downstreams.remove(self)
             self.upstreams.remove(upstream)
+        if self in _global_sinks:
+            _global_sinks.remove(self)
 
     def scatter(self, **kwargs):
         from .parallel import scatter
