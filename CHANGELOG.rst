@@ -4,6 +4,24 @@ rapidz Change Log
 
 .. current developments
 
+v0.1.2
+====================
+
+**Changed:**
+
+* ``run_tests.py`` now runs the streamin dataframe tests
+
+**Fixed:**
+
+* The streaming dataframe tests now work with pytest properly
+* ``link.link`` properly splays out ``kwargs`` in namespaces
+
+**Authors:**
+
+* Christopher J. Wright
+
+
+
 v0.1.1
 ====================
 
