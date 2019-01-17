@@ -19,5 +19,7 @@ def link(*args, **kwargs):
     for pipe in args:
         new_namespace = pipe(**namespace)
         if new_namespace:
-            namespace.update(**new_namespace)
+            # flatten out the kwargs so we don't have kwargs all the way down
+            namespace.update(new_namespace.pop('kwargs', {}))
+            namespace.update(new_namespace)
     return namespace

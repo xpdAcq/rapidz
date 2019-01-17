@@ -20,7 +20,7 @@ def test_link():
 
 
 def test_double_link():
-    def make_a():
+    def make_a(**kwargs):
         in_a = Stream()
         out_a = in_a.map(lambda x: x + 1)
         return locals()
@@ -35,6 +35,7 @@ def test_double_link():
 
     ab = link(make_a, make_b)
     abc = link(make_c, **ab)
+    assert set(abc.keys()) == {'in_a', 'out_a', 'out_b', 'out_c'}
     L = ab["out_b"].sink_to_list()
     L2 = abc["out_c"].sink_to_list()
     for i in range(10):
