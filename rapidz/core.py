@@ -509,7 +509,7 @@ class Stream(object):
 
         return self.scan(update_frequencies, start={}, **kwargs)
 
-    def visualize(self, filename="mystream.png", source_node=False, **kwargs):
+    def visualize(self, filename="mystream.png", **kwargs):
         """Render the computation of this object's task graph using graphviz.
 
         Requires ``graphviz`` to be installed.
@@ -518,15 +518,12 @@ class Stream(object):
         ----------
         filename : str, optional
             The name of the file to write to disk.
-        source_node: bool, optional
-            If True then the node is the source node and we can label the
-            edges in their execution order. Defaults to False
         kwargs:
             Graph attributes to pass to graphviz like ``rankdir="LR"``
         """
         from .graph import visualize
 
-        return visualize(self, filename, source_node=source_node, **kwargs)
+        return visualize(self, filename, **kwargs)
 
     def to_dataframe(self, example):
         """ Convert a stream of Pandas dataframes to a DataFrame
@@ -1112,6 +1109,12 @@ class combine_latest(Stream):
         else:
             self.emit_on = upstreams
         Stream.__init__(self, upstreams=upstreams, **kwargs)
+        self._graphviz_edge_types = {
+            u: {"style": "solid"} for u in self.upstreams
+        }
+        self._graphviz_edge_types.update(
+            {u: {"style": "dashed"} for u in self.emit_on}
+        )
         if first:
             move_to_first(self, first)
 

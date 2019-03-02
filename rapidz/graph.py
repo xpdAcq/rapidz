@@ -5,6 +5,8 @@ from functools import partial
 import os
 import re
 
+from rapidz.core import _weakref_node
+
 
 def _clean_text(text, match=None):
     """ Clean text, remove forbidden characters.
@@ -21,86 +23,93 @@ def _clean_text(text, match=None):
     return text
 
 
-def create_graph(node, graph, prior_node=None, pc=None):
-    """Create graph from a single node, searching up and down the chain
+def build_node_set(node, s=None):
+    """Build a set of all the nodes in a rapidz graph
 
     Parameters
     ----------
-    node: Stream instance
-    graph: networkx.DiGraph instance
+    node : Stream
+        The node to use as a starting point for building the set
+    s : set or None
+        The set to put the nodes into. If None return a new set full of nodes
+
+    Returns
+    -------
+    s : set
+        The set of nodes in the graph
+
     """
-    if node is None:
-        return
-    t = hash(node)
-    graph.add_node(
-        t,
-        label=_clean_text(str(node)),
-        shape=node._graphviz_shape,
-        orientation=str(node._graphviz_orientation),
-        style=node._graphviz_style,
-        fillcolor=node._graphviz_fillcolor,
-    )
-    if prior_node:
-        tt = hash(prior_node)
-        if graph.has_edge(t, tt):
-            return
-        if pc == "downstream":
-            graph.add_edge(tt, t)
-        else:
-            graph.add_edge(t, tt)
-
-    for nodes, pc in zip(
-        [list(node.downstreams), list(node.upstreams)],
-        ["downstream", "upstreams"],
+    if s is None:
+        s = set()
+    if node is None or (
+        node in s
+        and all(n in s for n in node.upstreams)
+        and all(n in s for n in node.downstreams)
     ):
-        for node2 in nodes:
-            if node2 is not None:
-                create_graph(node2, graph, node, pc=pc)
+        return
+    s.add(node)
+    s.update(node.upstreams)
+    s.update({n for n in node.downstreams})
+    [build_node_set(n, s) for n in list(s)]
+    return s
 
 
-def create_edge_label_graph(node, graph, prior_node=None, pc=None, i=None):
-    """Create graph from a single node, searching up and down the chain
+def create_graph(node, graph):
+    """Create networkx graph of the pipeline
 
     Parameters
     ----------
-    node: Stream instance
-    graph: networkx.DiGraph instance
+    node : Stream
+        The node to start from
+    graph : networkx.DiGraph
+        The graph to fill with nodes
+
+    Returns
+    -------
+
     """
-    if node is None:
-        return
-    t = hash(node)
-    graph.add_node(
-        t,
-        label=_clean_text(str(node)),
-        shape=node._graphviz_shape,
-        orientation=str(node._graphviz_orientation),
-        style=node._graphviz_style,
-        fillcolor=node._graphviz_fillcolor,
-    )
-    if prior_node:
-        tt = hash(prior_node)
-        if graph.has_edge(t, tt):
-            return
-        if i is None:
-            i = ""
-        if pc == "downstream":
-            graph.add_edge(tt, t, label=str(i))
-        else:
-            graph.add_edge(t, tt)
+    # Step 1 build a set of all the nodes
+    node_set = build_node_set(node)
+    if None in node_set:
+        node_set.remove(None)
 
-    for nodes, pc in zip(
-        [list(node.downstreams), list(node.upstreams)],
-        ["downstream", "upstreams"],
-    ):
-        for i, node2 in enumerate(nodes):
-            if node2 is not None:
-                if len(nodes) > 1:
-                    create_edge_label_graph(node2, graph, node, pc=pc, i=i)
-                else:
-                    create_edge_label_graph(node2, graph, node, pc=pc)
+    # Step 2 for each node in the set add do the graph
+    for n in node_set:
+        t = hash(n)
+        graph.add_node(
+            t,
+            label=_clean_text(str(n)),
+            shape=n._graphviz_shape,
+            orientation=str(n._graphviz_orientation),
+            style=n._graphviz_style,
+            fillcolor=n._graphviz_fillcolor,
+            # This allows us to poke actual node elements! (while not adding
+            # actual reference counts)
+            node=_weakref_node(n),
+        )
+
+    # Step 3 for each node establish its edges
+    for n in node_set:
+        t = hash(n)
+        edges_kwargs = getattr(n, "_graphviz_edge_types", {})
+        upstreams = [_ for _ in n.upstreams if _ is not None]
+        for nn in upstreams:
+            tt = hash(nn)
+            graph.add_edge(tt, t, **edges_kwargs.get(nn, {}))
+
+        downstreams = n.downstreams
+        for i, nn in enumerate(downstreams):
+            tt = hash(nn)
+            if len(downstreams) > 1:
+                graph.add_edge(t, tt, label=str(i))
+            else:
+                graph.add_edge(t, tt)
+
+    # Step 4 destroy set
+    del node_set
 
 
-def readable_graph(node, source_node=False):
+def readable_graph(node):
     """Create human readable version of this object's task graph.
 
     Parameters
@@ -111,10 +120,7 @@ def readable_graph(node, source_node=False):
     import networkx as nx
 
     g = nx.DiGraph()
-    if source_node:
-        create_edge_label_graph(node, g)
-    else:
-        create_graph(node, g)
+    create_graph(node, g)
     mapping = {k: "{}".format(g.node[k]["label"]) for k in g}
     idx_mapping = {}
     for k, v in mapping.items():
@@ -134,13 +140,16 @@ def to_graphviz(graph, **graph_attr):
 
     gvz = graphviz.Digraph(graph_attr=graph_attr)
     for node, attrs in graph.node.items():
-        gvz.node(node, **attrs)
+        # Remove the node attribute from the graph so graphviz doesn't balk
+        attrs2 = dict(attrs)
+        del attrs2["node"]
+        gvz.node(node, **attrs2)
     for edge, attrs in graph.edges().items():
         gvz.edge(edge[0], edge[1], **attrs)
     return gvz
 
 
-def visualize(node, filename="mystream.png", source_node=False, **kwargs):
+def visualize(node, filename="mystream.png", **kwargs):
     """
     Render a task graph using dot.
 
@@ -175,7 +184,7 @@ def visualize(node, filename="mystream.png", source_node=False, **kwargs):
     --------
     streams.graph.readable_graph
     """
-    rg = readable_graph(node, source_node=source_node)
+    rg = readable_graph(node)
     g = to_graphviz(rg, **kwargs)
 
     fmts = [".png", ".pdf", ".dot", ".svg", ".jpeg", ".jpg"]
