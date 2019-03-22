@@ -501,6 +501,17 @@ def test_unique():
     assert L == [1, 2]
 
 
+def test_unique_dict():
+    source = Stream()
+    L = source.unique().sink_to_list()
+
+    source.emit({'hi': 'world'})
+    source.emit({'hi': 'bar'})
+    source.emit({'hi': 'world'})
+
+    assert L == [{'hi': 'world'}, {'hi': 'bar'}]
+
+
 def test_unique_key():
     source = Stream()
     L = source.unique(key=lambda x: x % 2, history=1).sink_to_list()
@@ -536,6 +547,34 @@ def test_unique_history():
     source.emit(1)
 
     assert L == [1, 2, 3, 1]
+
+
+def test_unique_history_dict():
+    source = Stream()
+    s = source.unique(history=2)
+    L = s.sink_to_list()
+
+    a = {'hi': 'world'}
+    b = {'hi': 'bar'}
+    c = {'foo': 'bar'}
+
+    source.emit(a)
+    source.emit(b)
+    source.emit(a)
+    source.emit(b)
+    source.emit(a)
+    source.emit(b)
+
+    assert L == [a, b]
+
+    source.emit(c)
+    source.emit(b)
+
+    assert L == [a, b, c]
+
+    source.emit(a)
+
+    assert L == [a, b, c, a]
 
 
 def test_union():

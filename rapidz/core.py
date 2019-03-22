@@ -1186,26 +1186,34 @@ class unique(Stream):
     """
 
     def __init__(self, upstream, history=None, key=identity, **kwargs):
-        self.seen = dict()
+        self.seen = None
         self.key = key
-        if history:
-            from zict import LRU
-
-            self.seen = LRU(history, self.seen)
-            self.non_hash_seen = deque(maxlen=history)
+        self.history = history
 
         Stream.__init__(self, upstream, **kwargs)
 
     def update(self, x, who=None):
         y = self.key(x)
-        # If y is a dict then we can't use LRU cache use FILO deque instead
-        if not isinstance(y, Hashable):
-            if y not in self.non_hash_seen:
-                self.non_hash_seen.append(y)
-                return self._emit(x)
-        else:
+        # If this is the first piece of data make the cache
+        if self.seen is None:
+            self.seen = dict()
+            if self.history:
+                # if it is hashable use LRU cache
+                if isinstance(y, Hashable):
+                    from zict import LRU
+                    self.seen = LRU(self.history, self.seen)
+                # if not hashable use deque (since it doesn't need a hash
+                else:
+                    self.seen = deque(maxlen=self.history)
+        if isinstance(y, Hashable):
+            print(self.seen, y)
             if y not in self.seen:
                 self.seen[y] = 1
+                return self._emit(x)
+        # If y is a dict then we can't use LRU cache use FILO deque instead
+        else:
+            if y not in self.seen:
+                self.seen.append(y)
                 return self._emit(x)
 
 
