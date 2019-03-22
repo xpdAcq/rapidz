@@ -1196,15 +1196,17 @@ class unique(Stream):
         y = self.key(x)
         # If this is the first piece of data make the cache
         if self.seen is None:
-            self.seen = dict()
-            if self.history:
-                # if it is hashable use LRU cache
-                if isinstance(y, Hashable):
-                    from zict import LRU
-                    self.seen = LRU(self.history, self.seen)
-                # if not hashable use deque (since it doesn't need a hash
-                else:
-                    self.seen = deque(maxlen=self.history)
+            if isinstance(y, Hashable):
+
+                self.seen = dict()
+                if self.history:
+                    # if it is hashable use LRU cache
+                    if isinstance(y, Hashable):
+                        from zict import LRU
+                        self.seen = LRU(self.history, self.seen)
+            # if not hashable use deque (since it doesn't need a hash
+            else:
+                self.seen = deque(maxlen=self.history)
         if isinstance(y, Hashable):
             if y not in self.seen:
                 self.seen[y] = 1
