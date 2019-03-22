@@ -1201,7 +1201,7 @@ def test_star_sink():
 
 def test_unique_dict():
     source = Stream()
-    L = source.unique(history=1).sink_to_list()
+    L = source.unique().sink_to_list()
 
     source.emit({"a": 1})
     source.emit({"a": 1})
