@@ -1206,7 +1206,6 @@ class unique(Stream):
                 else:
                     self.seen = deque(maxlen=self.history)
         if isinstance(y, Hashable):
-            print(self.seen, y)
             if y not in self.seen:
                 self.seen[y] = 1
                 return self._emit(x)
