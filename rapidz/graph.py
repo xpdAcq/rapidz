@@ -109,19 +109,17 @@ def create_graph(node, graph):
     del node_set
 
 
-def readable_graph(node):
+def readable_graph(graph):
     """Create human readable version of this object's task graph.
 
     Parameters
     ----------
-    node: Stream instance
-        A node in the task graph
+    graph: nx.DiGraph instance
+        The networkx graph representing the pipeline
     """
     import networkx as nx
 
-    g = nx.DiGraph()
-    create_graph(node, g)
-    mapping = {k: "{}".format(g.node[k]["label"]) for k in g}
+    mapping = {k: "{}".format(graph.node[k]["label"]) for k in graph}
     idx_mapping = {}
     for k, v in mapping.items():
         if v in idx_mapping.keys():
@@ -131,7 +129,7 @@ def readable_graph(node):
             idx_mapping[v] = 0
 
     gg = {k: v for k, v in mapping.items()}
-    rg = nx.relabel_nodes(g, gg, copy=True)
+    rg = nx.relabel_nodes(graph, gg, copy=True)
     return rg
 
 
@@ -184,7 +182,11 @@ def visualize(node, filename="mystream.png", **kwargs):
     --------
     streams.graph.readable_graph
     """
-    rg = readable_graph(node)
+    import networkx as nx
+
+    nx_g = nx.DiGraph()
+    create_graph(node, nx_g)
+    rg = readable_graph(nx_g)
     g = to_graphviz(rg, **kwargs)
 
     fmts = [".png", ".pdf", ".dot", ".svg", ".jpeg", ".jpg"]
