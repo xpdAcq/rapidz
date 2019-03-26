@@ -117,3 +117,29 @@ did.
     ``source.emit``.
 
 .. _Dask: https://dask.pydata.org/en/latest/
+
+
+HPC Execution
++++++++++++++
+If ``dask-jobqueue`` is installed you can use high performance computing (HPC)
+resources to execute the tasks.
+
+.. code-block:: python
+
+   from dask.distributed import Client
+   from dask_jobqueue import PBSCluster
+   cluster = PBSCluster()
+   cluster.scale(10)  # Ask for ten workers
+
+   client = Client(cluster)
+
+   # Now this pipeline runs using HPC resources
+   source = Stream()
+   source.scatter().map(inc).buffer(8).gather().sink(print)
+
+   for i in range(10):
+       source.emit(i)
+
+For more details on using dask-jobqueue_ please see the associated docs.
+
+.. _dask-jobqueue: https://dask-jobqueue.readthedocs.io/en/latest/
