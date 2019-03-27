@@ -1338,7 +1338,7 @@ def test_accumulate():
 def test_accumulate_reset():
     a = Stream()
     rn = Stream()
-    b = a.accumulate(lambda x, y: x + y, reset_node=rn)
+    b = a.accumulate(lambda x, y: x + y, reset_stream=rn)
     L = b.sink_to_list()
     LL = []
 

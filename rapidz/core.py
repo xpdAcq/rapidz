@@ -760,7 +760,7 @@ class accumulate(Stream):
         If true then func should return both the state and the value to emit
         If false then both values are the same, and func returns one value
     reset_stream : Stream instance or None, optional
-        If not None, when the ``reset_node`` stream emits the accumulate node's
+        If not None, when the ``reset_stream`` stream emits the accumulate node's
         state will revert to the initial state (set by ``start``), defaults
         to None
     **kwargs:
