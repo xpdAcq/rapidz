@@ -1317,3 +1317,38 @@ def test_destroy_pipeline():
     pipeline = source.map(operator.add).zip(source).sink(print)
     destroy_pipeline(source)
     assert pipeline.upstreams == []
+
+
+def test_accumulate():
+    a = Stream()
+    b = a.accumulate(lambda x, y: x + y)
+    L = b.sink_to_list()
+    LL = []
+
+    for i in range(10):
+        a.emit(i)
+        if len(LL) == 0:
+            LL.append(i)
+        else:
+            LL.append(i + LL[-1])
+
+    assert L == LL
+
+
+def test_accumulate_reset():
+    a = Stream()
+    rn = Stream()
+    b = a.accumulate(lambda x, y: x + y, reset_stream=rn)
+    L = b.sink_to_list()
+    LL = []
+
+    for i in range(10):
+        if i == 5:
+            rn.emit('hi')
+        a.emit(i)
+        if len(LL) == 0 or i == 5:
+            LL.append(i)
+        else:
+            LL.append(i + LL[-1])
+
+    assert L == LL
