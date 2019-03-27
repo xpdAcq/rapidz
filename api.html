@@ -297,7 +297,7 @@
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="rapidz.accumulate">
-<code class="descclassname">rapidz.</code><code class="descname">accumulate</code><span class="sig-paren">(</span><em>upstream</em>, <em>func</em>, <em>start='--no-default--'</em>, <em>returns_state=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.accumulate" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">rapidz.</code><code class="descname">accumulate</code><span class="sig-paren">(</span><em>upstream</em>, <em>func</em>, <em>start='--no-default--'</em>, <em>returns_state=False</em>, <em>reset_stream=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.accumulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accumulate results with previous state</p>
 <p>This performs running or cumulative reductions, applying the function
 to the previous total and the new element.  The function should take
@@ -313,9 +313,14 @@ it should return a new accumulated state.</p>
 <dt><strong>start: object</strong></dt>
 <dd><p class="first last">Initial value.  Defaults to the first submitted element</p>
 </dd>
-<dt><strong>returns_state: boolean</strong></dt>
+<dt><strong>returns_state: boolean, optional</strong></dt>
 <dd><p class="first last">If true then func should return both the state and the value to emit
 If false then both values are the same, and func returns one value</p>
+</dd>
+<dt><strong>reset_stream</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Stream instance or None, optional</span></dt>
+<dd><p class="first last">If not None, when the <code class="docutils literal notranslate"><span class="pre">reset_stream</span></code> stream emits the accumulate node’s
+state will revert to the initial state (set by <code class="docutils literal notranslate"><span class="pre">start</span></code>), defaults
+to None</p>
 </dd>
 <dt><strong>**kwargs:</strong></dt>
 <dd><p class="first last">Keyword arguments to pass to func</p>
