@@ -1,7 +1,5 @@
 import pytest
-from distributed.utils_test import (
-    gen_cluster,
-)  # flake8: noqa
+from distributed.utils_test import gen_cluster  # flake8: noqa
 from rapidz import Stream
 from rapidz.parallel import scatter, NULL_COMPUTE
 
@@ -22,6 +20,7 @@ def test_filter_combine_latest(c, s, a, b):
         yield source.emit(i)
 
     assert L == LL
+
 
 @pytest.mark.xfail
 @gen_cluster(client=True)
@@ -50,8 +49,9 @@ def test_filter_combine_latest_emit_on(c, s, a, b):
     futures = s.filter(lambda x: x % 2 == 1).combine_latest(s, emit_on=0)
     L = futures.gather().sink_to_list()
 
-    presents = source.filter(lambda x: x % 2 == 1).combine_latest(source,
-                                                                  emit_on=0)
+    presents = source.filter(lambda x: x % 2 == 1).combine_latest(
+        source, emit_on=0
+    )
 
     LL = presents.sink_to_list()
 

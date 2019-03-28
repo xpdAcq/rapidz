@@ -238,6 +238,7 @@ def test_filter_map(c, s, a, b):
     assert L == [1, 3, 5]
     assert all(isinstance(f, Future) for f in futures_L)
 
+
 @pytest.mark.xfail
 @gen_cluster(client=True)
 def test_filter_zip(c, s, a, b):
