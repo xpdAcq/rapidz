@@ -1,3 +1,4 @@
+import pytest
 from distributed.utils_test import (
     gen_cluster,
 )  # flake8: noqa
@@ -22,7 +23,7 @@ def test_filter_combine_latest(c, s, a, b):
 
     assert L == LL
 
-
+@pytest.mark.xfail
 @gen_cluster(client=True)
 def test_filter_combine_latest_odd(c, s, a, b):
     source = Stream(asynchronous=True)
@@ -92,7 +93,7 @@ def test_unique(c, s, a, b):
     futures = s.accumulate(acc_func, start=[], returns_state=True)
     L = futures.gather().sink_to_list()
 
-    presents = source.accumulate(acc_func, start=[], returns_state=True)
+    presents = source.unique()
 
     LL = presents.sink_to_list()
 

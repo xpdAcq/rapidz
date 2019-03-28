@@ -266,6 +266,7 @@ def test_filter_pluck(backend):
 
 
 @pytest.mark.parametrize("backend", test_params)
+@pytest.mark.xfail
 @gen_test()
 def test_filter_zip(backend):
     source = Stream(asynchronous=True)
