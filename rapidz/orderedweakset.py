@@ -33,3 +33,10 @@ class OrderedWeakrefSet(weakref.WeakSet):
         self.data = OrderedSet()
         for elem in values:
             self.add(elem)
+
+    def index(self, value):
+        for i, nn in enumerate(self):
+            if nn == value:
+                return i
+        else:
+            raise ValueError(f'{value} is not in set')

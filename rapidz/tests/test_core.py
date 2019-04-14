@@ -1352,3 +1352,13 @@ def test_accumulate_reset():
             LL.append(i + LL[-1])
 
     assert L == LL
+
+
+def test_orderedweakset_index():
+    source = Stream()
+    b1 = source.map(inc)
+    b2 = source.map(double)
+
+    c = b1.scan(add)
+
+    assert source.downstreams.index(b1) == 0
