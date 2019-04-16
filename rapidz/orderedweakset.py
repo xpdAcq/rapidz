@@ -38,5 +38,5 @@ class OrderedWeakrefSet(weakref.WeakSet):
         for i, nn in enumerate(self):
             if nn == value:
                 return i
-        else:  # pragma: noqa
+        else:  # pragma: no cover
             raise ValueError(f'{value} is not in set')
