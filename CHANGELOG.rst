@@ -4,6 +4,32 @@ rapidz Change Log
 
 .. current developments
 
+v0.2.0
+====================
+
+**Added:**
+
+* ``index`` method to ``orderedweakrefset.OrderedWeakrefSet``
+
+**Changed:**
+
+* ``accumulate`` nodes now take in an additional optional kwarg
+  ``reset_stream``.
+  If provided, when this stream emits the ``accumulate`` node will be reset
+  to it's initial state.
+* Plotting handles cyclic graphs better and ``emit_on`` edges
+* Updated ``plot_graph.py`` example to match the new syntax
+* ``rapidz.core.unique`` does the correct thing with non-hashable data
+  and now inits the cache when it sees the first piece of data
+* Make ``rapidz.graph.readable_graph`` more usable by having it take in a
+  networkx graph rather than a node
+
+**Authors:**
+
+* Christopher J. Wright
+
+
+
 v0.1.2
 ====================
 
