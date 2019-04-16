@@ -166,9 +166,9 @@
 <p>rapidz high-level collection APIs are built on top of <code class="docutils literal notranslate"><span class="pre">rapidz.core</span></code>, and
 bring special consideration to certain types of data:</p>
 <ol class="arabic simple">
-<li><code class="docutils literal notranslate"><span class="pre">rapidz.batch</span></code>: supports streams of lists of Python objects like tuples
-or dictionaries</li>
-<li><code class="docutils literal notranslate"><span class="pre">rapidz.dataframe</span></code>: supports streams of Pandas dataframes or Pandas series</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rapidz.batch</span></code>: supports streams of lists of Python objects like tuples
+or dictionaries</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rapidz.dataframe</span></code>: supports streams of Pandas dataframes or Pandas series</p></li>
 </ol>
 <p>These high-level APIs help us handle common situations in data processing.
 They help us implement complex algorithms and also improve efficiency.</p>
@@ -178,17 +178,17 @@ but offer no help with what those functions should be.  The higher-level APIs
 help to fill in this gap for common situations.</p>
 <div class="section" id="conversion">
 <h2>Conversion<a class="headerlink" href="#conversion" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.to_batch</span></code>(**kwargs)</td>
-<td>Convert a stream of lists to a Batch</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.to_batch</span></code>(**kwargs)</p></td>
+<td><p>Convert a stream of lists to a Batch</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.to_dataframe</span></code>(example)</td>
-<td>Convert a stream of Pandas dataframes to a DataFrame</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.to_dataframe</span></code>(example)</p></td>
+<td><p>Convert a stream of Pandas dataframes to a DataFrame</p></td>
 </tr>
 </tbody>
 </table>

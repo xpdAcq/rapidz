@@ -174,20 +174,20 @@ through them.  We start with map and accumulate, talk about emitting data, then
 discuss flow control and finally back pressure.  Examples are used throughout.</p>
 <div class="section" id="map-emit-and-sink">
 <h2>Map, emit, and sink<a class="headerlink" href="#map-emit-and-sink" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.emit</span></code>(x[,&nbsp;asynchronous])</td>
-<td>Push data into the stream at this point</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.emit</span></code>(x[, asynchronous])</p></td>
+<td><p>Push data into the stream at this point</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.map" title="rapidz.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Apply a function to every element in the stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.map" title="rapidz.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(upstream, func, *args, **kwargs)</p></td>
+<td><p>Apply a function to every element in the stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.sink" title="rapidz.sink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sink</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Apply a function on every element</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.sink" title="rapidz.sink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sink</span></code></a>(upstream, func, *args, **kwargs)</p></td>
+<td><p>Apply a function on every element</p></td>
 </tr>
 </tbody>
 </table>
@@ -230,14 +230,14 @@ from a file</p>
 </div>
 <div class="section" id="accumulating-state">
 <h2>Accumulating State<a class="headerlink" href="#accumulating-state" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.accumulate" title="rapidz.accumulate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate</span></code></a>(upstream,&nbsp;func[,&nbsp;start,&nbsp;…])</td>
-<td>Accumulate results with previous state</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.accumulate" title="rapidz.accumulate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate</span></code></a>(upstream, func[, start, …])</p></td>
+<td><p>Accumulate results with previous state</p></td>
 </tr>
 </tbody>
 </table>
@@ -289,29 +289,29 @@ number of distinct elements that we have seen so far.</p>
 </div>
 <div class="section" id="flow-control">
 <h2>Flow Control<a class="headerlink" href="#flow-control" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.buffer" title="rapidz.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
-<td>Allow results to pile up at this point in the stream</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.buffer" title="rapidz.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer</span></code></a>(upstream, n, **kwargs)</p></td>
+<td><p>Allow results to pile up at this point in the stream</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.flatten" title="rapidz.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>([upstream,&nbsp;upstreams,&nbsp;stream_name,&nbsp;…])</td>
-<td>Flatten streams of lists or iterables into a stream of elements</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.flatten" title="rapidz.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>([upstream, upstreams, stream_name, …])</p></td>
+<td><p>Flatten streams of lists or iterables into a stream of elements</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.partition" title="rapidz.partition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partition</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
-<td>Partition stream into tuples of equal size</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.partition" title="rapidz.partition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partition</span></code></a>(upstream, n, **kwargs)</p></td>
+<td><p>Partition stream into tuples of equal size</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.sliding_window" title="rapidz.sliding_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sliding_window</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
-<td>Produce overlapping tuples of size n</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.sliding_window" title="rapidz.sliding_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sliding_window</span></code></a>(upstream, n, **kwargs)</p></td>
+<td><p>Produce overlapping tuples of size n</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.union" title="rapidz.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">union</span></code></a>(*upstreams,&nbsp;**kwargs)</td>
-<td>Combine multiple streams into one</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.union" title="rapidz.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">union</span></code></a>(*upstreams, **kwargs)</p></td>
+<td><p>Combine multiple streams into one</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.unique" title="rapidz.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique</span></code></a>(upstream[,&nbsp;history,&nbsp;key])</td>
-<td>Avoid sending through repeated elements</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.unique" title="rapidz.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique</span></code></a>(upstream[, history, key])</p></td>
+<td><p>Avoid sending through repeated elements</p></td>
 </tr>
 </tbody>
 </table>
@@ -333,20 +333,20 @@ operations like <code class="docutils literal notranslate"><span class="pre">par
 </div>
 <div class="section" id="branching-and-joining">
 <h2>Branching and Joining<a class="headerlink" href="#branching-and-joining" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.combine_latest" title="rapidz.combine_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine_latest</span></code></a>(*upstreams,&nbsp;**kwargs)</td>
-<td>Combine multiple streams together to a stream of tuples</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.combine_latest" title="rapidz.combine_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine_latest</span></code></a>(*upstreams, **kwargs)</p></td>
+<td><p>Combine multiple streams together to a stream of tuples</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.zip" title="rapidz.zip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip</span></code></a>(*upstreams,&nbsp;**kwargs)</td>
-<td>Combine streams together into a stream of tuples</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.zip" title="rapidz.zip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip</span></code></a>(*upstreams, **kwargs)</p></td>
+<td><p>Combine streams together into a stream of tuples</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.zip_latest" title="rapidz.zip_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip_latest</span></code></a>(lossless,&nbsp;*upstreams,&nbsp;**kwargs)</td>
-<td>Combine multiple streams together to a stream of tuples</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.zip_latest" title="rapidz.zip_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip_latest</span></code></a>(lossless, *upstreams, **kwargs)</p></td>
+<td><p>Combine multiple streams together to a stream of tuples</p></td>
 </tr>
 </tbody>
 </table>
@@ -389,20 +389,20 @@ like <code class="docutils literal notranslate"><span class="pre">rapidz</span><
 </div>
 <div class="section" id="processing-time-and-back-pressure">
 <h2>Processing Time and Back Pressure<a class="headerlink" href="#processing-time-and-back-pressure" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.delay" title="rapidz.delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delay</span></code></a>(upstream,&nbsp;interval,&nbsp;**kwargs)</td>
-<td>Add a time delay to results</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.delay" title="rapidz.delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delay</span></code></a>(upstream, interval, **kwargs)</p></td>
+<td><p>Add a time delay to results</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.rate_limit" title="rapidz.rate_limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate_limit</span></code></a>(upstream,&nbsp;interval,&nbsp;**kwargs)</td>
-<td>Limit the flow of data</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.rate_limit" title="rapidz.rate_limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate_limit</span></code></a>(upstream, interval, **kwargs)</p></td>
+<td><p>Limit the flow of data</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.timed_window" title="rapidz.timed_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timed_window</span></code></a>(upstream,&nbsp;interval,&nbsp;**kwargs)</td>
-<td>Emit a tuple of collected results every interval</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.timed_window" title="rapidz.timed_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timed_window</span></code></a>(upstream, interval, **kwargs)</p></td>
+<td><p>Emit a tuple of collected results every interval</p></td>
 </tr>
 </tbody>
 </table>
@@ -470,8 +470,8 @@ stream have been lost those operations will no longer occur.  The one counter
 example to this is <code class="docutils literal notranslate"><span class="pre">sink</span></code>, which is intended to be used with side effects and
 will stick around even without a reference.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Sink streams store themselves in <code class="docutils literal notranslate"><span class="pre">rapidz.core._global_sinks</span></code>.  You
+<p class="admonition-title">Note</p>
+<p>Sink streams store themselves in <code class="docutils literal notranslate"><span class="pre">rapidz.core._global_sinks</span></code>.  You
 can remove them permanently by clearing that collection.</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">print</span><span class="p">)</span>      <span class="c1"># this doesn&#39;t do anything</span>

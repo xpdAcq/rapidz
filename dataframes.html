@@ -216,14 +216,14 @@ dataframes are only syntactic sugar on core streams.</p>
 <h2>Supported Operations<a class="headerlink" href="#supported-operations" title="Permalink to this headline">¶</a></h2>
 <p>Streaming dataframes support the following classes of operations</p>
 <ul class="simple">
-<li>Elementwise operations like <code class="docutils literal notranslate"><span class="pre">df.x</span> <span class="pre">+</span> <span class="pre">1</span></code></li>
-<li>Filtering like <code class="docutils literal notranslate"><span class="pre">df[df.name</span> <span class="pre">==</span> <span class="pre">'Alice']</span></code></li>
-<li>Column addition like <code class="docutils literal notranslate"><span class="pre">df['z']</span> <span class="pre">=</span> <span class="pre">df.x</span> <span class="pre">+</span> <span class="pre">df.y</span></code></li>
-<li>Reductions like <code class="docutils literal notranslate"><span class="pre">df.amount.mean()</span></code></li>
-<li>Groupby-aggregations like <code class="docutils literal notranslate"><span class="pre">df.groupby(df.name).amount.mean()</span></code></li>
-<li>Windowed aggregations (fixed length) like <code class="docutils literal notranslate"><span class="pre">df.window(n=100).amount.sum()</span></code></li>
-<li>Windowed aggregations (index valued) like <code class="docutils literal notranslate"><span class="pre">df.window(value='2h').amount.sum()</span></code></li>
-<li>Windowed groupby aggregations like <code class="docutils literal notranslate"><span class="pre">df.window(value='2h').groupby('name').amount.sum()</span></code></li>
+<li><p>Elementwise operations like <code class="docutils literal notranslate"><span class="pre">df.x</span> <span class="pre">+</span> <span class="pre">1</span></code></p></li>
+<li><p>Filtering like <code class="docutils literal notranslate"><span class="pre">df[df.name</span> <span class="pre">==</span> <span class="pre">'Alice']</span></code></p></li>
+<li><p>Column addition like <code class="docutils literal notranslate"><span class="pre">df['z']</span> <span class="pre">=</span> <span class="pre">df.x</span> <span class="pre">+</span> <span class="pre">df.y</span></code></p></li>
+<li><p>Reductions like <code class="docutils literal notranslate"><span class="pre">df.amount.mean()</span></code></p></li>
+<li><p>Groupby-aggregations like <code class="docutils literal notranslate"><span class="pre">df.groupby(df.name).amount.mean()</span></code></p></li>
+<li><p>Windowed aggregations (fixed length) like <code class="docutils literal notranslate"><span class="pre">df.window(n=100).amount.sum()</span></code></p></li>
+<li><p>Windowed aggregations (index valued) like <code class="docutils literal notranslate"><span class="pre">df.window(value='2h').amount.sum()</span></code></p></li>
+<li><p>Windowed groupby aggregations like <code class="docutils literal notranslate"><span class="pre">df.window(value='2h').groupby('name').amount.sum()</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="dataframe-aggregations">
@@ -234,9 +234,9 @@ a windowing scheme (fixed sized windows, index-valued, all time, …)</p>
 <h3>Aggregations<a class="headerlink" href="#aggregations" title="Permalink to this headline">¶</a></h3>
 <p>Streaming Dataframe aggregations are built from three methods</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">initial</span></code>: Creates initial state given an empty example dataframe</li>
-<li><code class="docutils literal notranslate"><span class="pre">on_new</span></code>: Updates state and produces new result to emit given new data</li>
-<li><code class="docutils literal notranslate"><span class="pre">on_old</span></code>: Updates state and produces new result to emit given decayed data</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial</span></code>: Creates initial state given an empty example dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_new</span></code>: Updates state and produces new result to emit given new data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_old</span></code>: Updates state and produces new result to emit given decayed data</p></li>
 </ul>
 <p>So a simple implementation of <code class="docutils literal notranslate"><span class="pre">sum</span></code> as an aggregation might look like the
 following:</p>
@@ -283,18 +283,18 @@ decaying data and call these methods accordingly.  The mechanism to track data
 arriving and leaving is kept orthogonal from the aggregations themselves.
 These windowing schemes include the following:</p>
 <ol class="arabic">
-<li><p class="first">All previous data.  Only <code class="docutils literal notranslate"><span class="pre">initial</span></code> and <code class="docutils literal notranslate"><span class="pre">on_new</span></code> are called, <code class="docutils literal notranslate"><span class="pre">on_old</span></code>
+<li><p>All previous data.  Only <code class="docutils literal notranslate"><span class="pre">initial</span></code> and <code class="docutils literal notranslate"><span class="pre">on_new</span></code> are called, <code class="docutils literal notranslate"><span class="pre">on_old</span></code>
 is never called.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">The previous <code class="docutils literal notranslate"><span class="pre">n</span></code> elements</p>
+<li><p>The previous <code class="docutils literal notranslate"><span class="pre">n</span></code> elements</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">window</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">An index range, like a time range for a datetime index</p>
+<li><p>An index range, like a time range for a datetime index</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">window</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;2h&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 </div>

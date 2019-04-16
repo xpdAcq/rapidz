@@ -203,20 +203,20 @@ of execution.</p>
 </div>
 <div class="section" id="sequential-execution">
 <h3>Sequential Execution<a class="headerlink" href="#sequential-execution" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.emit</span></code>(x[,&nbsp;asynchronous])</td>
-<td>Push data into the stream at this point</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stream.emit</span></code>(x[, asynchronous])</p></td>
+<td><p>Push data into the stream at this point</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.map" title="rapidz.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Apply a function to every element in the stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.map" title="rapidz.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(upstream, func, *args, **kwargs)</p></td>
+<td><p>Apply a function to every element in the stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.sink" title="rapidz.sink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sink</span></code></a>(upstream,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Apply a function on every element</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.sink" title="rapidz.sink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sink</span></code></a>(upstream, func, *args, **kwargs)</p></td>
+<td><p>Apply a function on every element</p></td>
 </tr>
 </tbody>
 </table>
@@ -243,28 +243,28 @@ sequentially.</p>
 </div>
 <div class="section" id="parallel-execution">
 <h3>Parallel Execution<a class="headerlink" href="#parallel-execution" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">scatter</span></code>(*args,&nbsp;**kwargs)</td>
-<td>Convert local stream to Dask Stream</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scatter</span></code>(*args, **kwargs)</p></td>
+<td><p>Convert local stream to Dask Stream</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api.html#rapidz.buffer" title="rapidz.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer</span></code></a>(upstream,&nbsp;n,&nbsp;**kwargs)</td>
-<td>Allow results to pile up at this point in the stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="api.html#rapidz.buffer" title="rapidz.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer</span></code></a>(upstream, n, **kwargs)</p></td>
+<td><p>Allow results to pile up at this point in the stream</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api.html#rapidz.dask.gather" title="rapidz.dask.gather"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather</span></code></a>([upstream,&nbsp;upstreams,&nbsp;stream_name,&nbsp;…])</td>
-<td>Wait on and gather results from DaskStream to local Stream</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api.html#rapidz.dask.gather" title="rapidz.dask.gather"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather</span></code></a>([upstream, upstreams, stream_name, …])</p></td>
+<td><p>Wait on and gather results from DaskStream to local Stream</p></td>
 </tr>
 </tbody>
 </table>
@@ -283,17 +283,17 @@ sense of the parallel execution.</p>
 your machine.  We added a few extra nodes to our stream, lets look at what they
 did.</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">scatter</span></code>: Converted our Stream into a DaskStream.  The elements that we
+<li><p><code class="docutils literal notranslate"><span class="pre">scatter</span></code>: Converted our Stream into a DaskStream.  The elements that we
 emitted into our source were sent to the Dask client, and the subsequent
-<code class="docutils literal notranslate"><span class="pre">map</span></code> call used that client’s cores to perform the computations.</li>
-<li><code class="docutils literal notranslate"><span class="pre">gather</span></code>: Converted our DaskStream back into a Stream, pulling data on our
-Dask client back to our local stream</li>
-<li><code class="docutils literal notranslate"><span class="pre">buffer(5)</span></code>: Normally gather would exert back pressure so that the source
+<code class="docutils literal notranslate"><span class="pre">map</span></code> call used that client’s cores to perform the computations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gather</span></code>: Converted our DaskStream back into a Stream, pulling data on our
+Dask client back to our local stream</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer(5)</span></code>: Normally gather would exert back pressure so that the source
 would not accept new data until results finished and were pulled back to the
 local stream.  This back-pressure would limit parallelism.  To counter-act
 this we add a buffer of size eight to allow eight unfinished futures to
 build up in the pipeline before we start to apply back-pressure to
-<code class="docutils literal notranslate"><span class="pre">source.emit</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">source.emit</span></code>.</p></li>
 </ul>
 </div>
 <div class="section" id="hpc-execution">

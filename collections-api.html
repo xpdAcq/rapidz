@@ -168,244 +168,244 @@
 <h1>Collections API<a class="headerlink" href="#collections-api" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="collections">
 <h2>Collections<a class="headerlink" href="#collections" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.collection.Streaming" title="rapidz.collection.Streaming"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming</span></code></a>([stream,&nbsp;example,&nbsp;stream_type])</td>
-<td>Superclass for streaming collections</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.collection.Streaming" title="rapidz.collection.Streaming"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming</span></code></a>([stream, example, stream_type])</p></td>
+<td><p>Superclass for streaming collections</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.collection.Streaming.map_partitions" title="rapidz.collection.Streaming.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Map a function across all batch elements of this stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.collection.Streaming.map_partitions" title="rapidz.collection.Streaming.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Map a function across all batch elements of this stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.collection.Streaming.accumulate_partitions" title="rapidz.collection.Streaming.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></a>(func,&nbsp;*args,&nbsp;…)</td>
-<td>Accumulate a function with state across batch elements</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.collection.Streaming.accumulate_partitions" title="rapidz.collection.Streaming.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></a>(func, *args, …)</p></td>
+<td><p>Accumulate a function with state across batch elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.collection.Streaming.verify" title="rapidz.collection.Streaming.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.verify</span></code></a>(x)</td>
-<td>Verify elements that pass through this stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.collection.Streaming.verify" title="rapidz.collection.Streaming.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.verify</span></code></a>(x)</p></td>
+<td><p>Verify elements that pass through this stream</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="batch">
 <h2>Batch<a class="headerlink" href="#batch" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch" title="rapidz.batch.Batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch</span></code></a>([stream,&nbsp;example])</td>
-<td>A Stream of tuples or lists</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch" title="rapidz.batch.Batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch</span></code></a>([stream, example])</p></td>
+<td><p>A Stream of tuples or lists</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.filter" title="rapidz.batch.Batch.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.filter</span></code></a>(predicate)</td>
-<td>Filter elements by a predicate</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.filter" title="rapidz.batch.Batch.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.filter</span></code></a>(predicate)</p></td>
+<td><p>Filter elements by a predicate</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.map" title="rapidz.batch.Batch.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.map</span></code></a>(func,&nbsp;**kwargs)</td>
-<td>Map a function across all elements</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.map" title="rapidz.batch.Batch.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.map</span></code></a>(func, **kwargs)</p></td>
+<td><p>Map a function across all elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.pluck" title="rapidz.batch.Batch.pluck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.pluck</span></code></a>(ind)</td>
-<td>Pick a field out of all elements</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.pluck" title="rapidz.batch.Batch.pluck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.pluck</span></code></a>(ind)</p></td>
+<td><p>Pick a field out of all elements</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.to_dataframe" title="rapidz.batch.Batch.to_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.to_dataframe</span></code></a>()</td>
-<td>Convert to a streaming dataframe</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.to_dataframe" title="rapidz.batch.Batch.to_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.to_dataframe</span></code></a>()</p></td>
+<td><p>Convert to a streaming dataframe</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.to_stream" title="rapidz.batch.Batch.to_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.to_stream</span></code></a>()</td>
-<td>Concatenate batches and return base Stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.to_stream" title="rapidz.batch.Batch.to_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Batch.to_stream</span></code></a>()</p></td>
+<td><p>Concatenate batches and return base Stream</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="dataframes">
 <h2>Dataframes<a class="headerlink" href="#dataframes" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame" title="rapidz.dataframe.DataFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>A Streaming dataframe</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame" title="rapidz.dataframe.DataFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame</span></code></a>(*args, **kwargs)</p></td>
+<td><p>A Streaming dataframe</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.groupby" title="rapidz.dataframe.DataFrame.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.groupby</span></code></a>(other)</td>
-<td>Groupby aggreagtions</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.groupby" title="rapidz.dataframe.DataFrame.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.groupby</span></code></a>(other)</p></td>
+<td><p>Groupby aggreagtions</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.rolling" title="rapidz.dataframe.DataFrame.rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.rolling</span></code></a>(window[,&nbsp;min_periods])</td>
-<td>Compute rolling aggregations</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.rolling" title="rapidz.dataframe.DataFrame.rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.rolling</span></code></a>(window[, min_periods])</p></td>
+<td><p>Compute rolling aggregations</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.assign" title="rapidz.dataframe.DataFrame.assign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.assign</span></code></a>(**kwargs)</td>
-<td>Assign new columns to this dataframe</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.assign" title="rapidz.dataframe.DataFrame.assign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.assign</span></code></a>(**kwargs)</p></td>
+<td><p>Assign new columns to this dataframe</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.sum" title="rapidz.dataframe.DataFrame.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.sum</span></code></a>()</td>
-<td>Sum frame</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.sum" title="rapidz.dataframe.DataFrame.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.sum</span></code></a>()</p></td>
+<td><p>Sum frame</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.mean" title="rapidz.dataframe.DataFrame.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.mean</span></code></a>()</td>
-<td>Average</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.mean" title="rapidz.dataframe.DataFrame.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.mean</span></code></a>()</p></td>
+<td><p>Average</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumsum" title="rapidz.dataframe.DataFrame.cumsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cumsum</span></code></a>()</td>
-<td>Cumulative sum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumsum" title="rapidz.dataframe.DataFrame.cumsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cumsum</span></code></a>()</p></td>
+<td><p>Cumulative sum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumprod" title="rapidz.dataframe.DataFrame.cumprod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cumprod</span></code></a>()</td>
-<td>Cumulative product</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumprod" title="rapidz.dataframe.DataFrame.cumprod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cumprod</span></code></a>()</p></td>
+<td><p>Cumulative product</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummin" title="rapidz.dataframe.DataFrame.cummin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cummin</span></code></a>()</td>
-<td>Cumulative minimum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummin" title="rapidz.dataframe.DataFrame.cummin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cummin</span></code></a>()</p></td>
+<td><p>Cumulative minimum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummax" title="rapidz.dataframe.DataFrame.cummax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cummax</span></code></a>()</td>
-<td>Cumulative maximum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummax" title="rapidz.dataframe.DataFrame.cummax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.cummax</span></code></a>()</p></td>
+<td><p>Cumulative maximum</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy" title="rapidz.dataframe.GroupBy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy</span></code></a>(root,&nbsp;grouper[,&nbsp;index])</td>
-<td>Groupby aggregations on streaming dataframes</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy" title="rapidz.dataframe.GroupBy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy</span></code></a>(root, grouper[, index])</p></td>
+<td><p>Groupby aggregations on streaming dataframes</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.count" title="rapidz.dataframe.GroupBy.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.count</span></code></a>()</td>
-<td>Groupby-count</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.count" title="rapidz.dataframe.GroupBy.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.count</span></code></a>()</p></td>
+<td><p>Groupby-count</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.mean" title="rapidz.dataframe.GroupBy.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.mean</span></code></a>()</td>
-<td>Groupby-mean</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.mean" title="rapidz.dataframe.GroupBy.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.mean</span></code></a>()</p></td>
+<td><p>Groupby-mean</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.size" title="rapidz.dataframe.GroupBy.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.size</span></code></a>()</td>
-<td>Groupby-size</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.size" title="rapidz.dataframe.GroupBy.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.size</span></code></a>()</p></td>
+<td><p>Groupby-size</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.std" title="rapidz.dataframe.GroupBy.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.std</span></code></a>([ddof])</td>
-<td>Groupby-std</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.std" title="rapidz.dataframe.GroupBy.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.std</span></code></a>([ddof])</p></td>
+<td><p>Groupby-std</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.sum" title="rapidz.dataframe.GroupBy.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.sum</span></code></a>()</td>
-<td>Groupby-sum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.sum" title="rapidz.dataframe.GroupBy.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.sum</span></code></a>()</p></td>
+<td><p>Groupby-sum</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.var" title="rapidz.dataframe.GroupBy.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.var</span></code></a>([ddof])</td>
-<td>Groupby-variance</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.var" title="rapidz.dataframe.GroupBy.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupBy.var</span></code></a>([ddof])</p></td>
+<td><p>Groupby-variance</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling" title="rapidz.dataframe.Rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling</span></code></a>(sdf,&nbsp;window,&nbsp;min_periods)</td>
-<td>Rolling aggregations</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling" title="rapidz.dataframe.Rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling</span></code></a>(sdf, window, min_periods)</p></td>
+<td><p>Rolling aggregations</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.aggregate" title="rapidz.dataframe.Rolling.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.aggregate</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling aggregation</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.aggregate" title="rapidz.dataframe.Rolling.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.aggregate</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling aggregation</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.count" title="rapidz.dataframe.Rolling.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.count</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling count</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.count" title="rapidz.dataframe.Rolling.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.count</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling count</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.max" title="rapidz.dataframe.Rolling.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.max</span></code></a>()</td>
-<td>Rolling maximum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.max" title="rapidz.dataframe.Rolling.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.max</span></code></a>()</p></td>
+<td><p>Rolling maximum</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.mean" title="rapidz.dataframe.Rolling.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.mean</span></code></a>()</td>
-<td>Rolling mean</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.mean" title="rapidz.dataframe.Rolling.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.mean</span></code></a>()</p></td>
+<td><p>Rolling mean</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.median" title="rapidz.dataframe.Rolling.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.median</span></code></a>()</td>
-<td>Rolling median</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.median" title="rapidz.dataframe.Rolling.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.median</span></code></a>()</p></td>
+<td><p>Rolling median</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.min" title="rapidz.dataframe.Rolling.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.min</span></code></a>()</td>
-<td>Rolling minimum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.min" title="rapidz.dataframe.Rolling.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.min</span></code></a>()</p></td>
+<td><p>Rolling minimum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.quantile" title="rapidz.dataframe.Rolling.quantile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.quantile</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling quantile</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.quantile" title="rapidz.dataframe.Rolling.quantile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.quantile</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling quantile</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.std" title="rapidz.dataframe.Rolling.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.std</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling standard deviation</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.std" title="rapidz.dataframe.Rolling.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.std</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling standard deviation</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.sum" title="rapidz.dataframe.Rolling.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.sum</span></code></a>()</td>
-<td>Rolling sum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.sum" title="rapidz.dataframe.Rolling.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.sum</span></code></a>()</p></td>
+<td><p>Rolling sum</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.var" title="rapidz.dataframe.Rolling.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.var</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling variance</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.var" title="rapidz.dataframe.Rolling.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.var</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling variance</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.window</span></code></a>([n,&nbsp;value])</td>
-<td>Sliding window operations</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.window</span></code></a>([n, value])</p></td>
+<td><p>Sliding window operations</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.apply" title="rapidz.dataframe.Window.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.apply</span></code></a>(func)</td>
-<td>Apply an arbitrary function over each window of data</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.apply" title="rapidz.dataframe.Window.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.apply</span></code></a>(func)</p></td>
+<td><p>Apply an arbitrary function over each window of data</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.count" title="rapidz.dataframe.Window.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.count</span></code></a>()</td>
-<td>Count elements within window</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.count" title="rapidz.dataframe.Window.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.count</span></code></a>()</p></td>
+<td><p>Count elements within window</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.groupby" title="rapidz.dataframe.Window.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.groupby</span></code></a>(other)</td>
-<td>Groupby-aggregations within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.groupby" title="rapidz.dataframe.Window.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.groupby</span></code></a>(other)</p></td>
+<td><p>Groupby-aggregations within window</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.sum" title="rapidz.dataframe.Window.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.sum</span></code></a>()</td>
-<td>Sum elements within window</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.sum" title="rapidz.dataframe.Window.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.sum</span></code></a>()</p></td>
+<td><p>Sum elements within window</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.size" title="rapidz.dataframe.Window.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.size</span></code></a></td>
-<td>Number of elements within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.size" title="rapidz.dataframe.Window.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.size</span></code></a></p></td>
+<td><p>Number of elements within window</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.std" title="rapidz.dataframe.Window.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.std</span></code></a>([ddof])</td>
-<td>Compute standard deviation of elements within window</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.std" title="rapidz.dataframe.Window.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.std</span></code></a>([ddof])</p></td>
+<td><p>Compute standard deviation of elements within window</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.var" title="rapidz.dataframe.Window.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.var</span></code></a>([ddof])</td>
-<td>Compute variance of elements within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.var" title="rapidz.dataframe.Window.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Window.var</span></code></a>([ddof])</p></td>
+<td><p>Compute variance of elements within window</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.aggregate" title="rapidz.dataframe.Rolling.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.aggregate</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling aggregation</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.aggregate" title="rapidz.dataframe.Rolling.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.aggregate</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling aggregation</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.count" title="rapidz.dataframe.Rolling.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.count</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling count</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.count" title="rapidz.dataframe.Rolling.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.count</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling count</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.max" title="rapidz.dataframe.Rolling.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.max</span></code></a>()</td>
-<td>Rolling maximum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.max" title="rapidz.dataframe.Rolling.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.max</span></code></a>()</p></td>
+<td><p>Rolling maximum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.mean" title="rapidz.dataframe.Rolling.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.mean</span></code></a>()</td>
-<td>Rolling mean</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.mean" title="rapidz.dataframe.Rolling.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.mean</span></code></a>()</p></td>
+<td><p>Rolling mean</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.median" title="rapidz.dataframe.Rolling.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.median</span></code></a>()</td>
-<td>Rolling median</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.median" title="rapidz.dataframe.Rolling.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.median</span></code></a>()</p></td>
+<td><p>Rolling median</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.min" title="rapidz.dataframe.Rolling.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.min</span></code></a>()</td>
-<td>Rolling minimum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.min" title="rapidz.dataframe.Rolling.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.min</span></code></a>()</p></td>
+<td><p>Rolling minimum</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.quantile" title="rapidz.dataframe.Rolling.quantile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.quantile</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling quantile</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.quantile" title="rapidz.dataframe.Rolling.quantile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.quantile</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling quantile</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.std" title="rapidz.dataframe.Rolling.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.std</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling standard deviation</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.std" title="rapidz.dataframe.Rolling.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.std</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling standard deviation</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.sum" title="rapidz.dataframe.Rolling.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.sum</span></code></a>()</td>
-<td>Rolling sum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.sum" title="rapidz.dataframe.Rolling.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.sum</span></code></a>()</p></td>
+<td><p>Rolling sum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.var" title="rapidz.dataframe.Rolling.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.var</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling variance</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.var" title="rapidz.dataframe.Rolling.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rolling.var</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling variance</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Random" title="rapidz.dataframe.Random"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Random</span></code></a>([freq,&nbsp;interval,&nbsp;dask])</td>
-<td>A streaming dataframe of random data</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Random" title="rapidz.dataframe.Random"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Random</span></code></a>([freq, interval, dask])</p></td>
+<td><p>A streaming dataframe of random data</p></td>
 </tr>
 </tbody>
 </table>
@@ -417,51 +417,45 @@
 <em class="property">class </em><code class="descclassname">rapidz.collection.</code><code class="descname">Streaming</code><span class="sig-paren">(</span><em>stream=None</em>, <em>example=None</em>, <em>stream_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.collection.Streaming" title="Permalink to this definition">¶</a></dt>
 <dd><p>Superclass for streaming collections</p>
 <p>Do not create this class directly, use one of the subclasses instead.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>stream: rapidz.Stream</strong></dt>
-<dd></dd>
-<dt><strong>example: object</strong></dt>
-<dd><p class="first last">An object to represent an example element of this stream</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>stream: rapidz.Stream</strong></dt><dd></dd>
+<dt><strong>example: object</strong></dt><dd><p>An object to represent an example element of this stream</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rapidz.dataframe.StreamingDataFrame</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rapidz.dataframe.StreamingBatch</span></code></p>
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rapidz.dataframe.StreamingDataFrame</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rapidz.dataframe.StreamingBatch</span></code></p>
 </div>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.collection.Streaming.accumulate_partitions" title="rapidz.collection.Streaming.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Accumulate a function with state across batch elements</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.collection.Streaming.accumulate_partitions" title="rapidz.collection.Streaming.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Accumulate a function with state across batch elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.collection.Streaming.map_partitions" title="rapidz.collection.Streaming.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Map a function across all batch elements of this stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.collection.Streaming.map_partitions" title="rapidz.collection.Streaming.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Map a function across all batch elements of this stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.collection.Streaming.verify" title="rapidz.collection.Streaming.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code></a>(x)</td>
-<td>Verify elements that pass through this stream</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.collection.Streaming.verify" title="rapidz.collection.Streaming.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code></a>(x)</p></td>
+<td><p>Verify elements that pass through this stream</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="44%" />
-<col width="56%" />
+<col style="width: 44%" />
+<col style="width: 56%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>emit</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>emit</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -470,8 +464,8 @@
 <code class="descname">accumulate_partitions</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.collection.Streaming.accumulate_partitions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accumulate a function with state across batch elements</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#rapidz.collection.Streaming.map_partitions" title="rapidz.collection.Streaming.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></a></p>
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#rapidz.collection.Streaming.map_partitions" title="rapidz.collection.Streaming.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -482,8 +476,8 @@
 <p>The output stream type will be determined by the action of that
 function on the example</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#rapidz.collection.Streaming.accumulate_partitions" title="rapidz.collection.Streaming.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></a></p>
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#rapidz.collection.Streaming.accumulate_partitions" title="rapidz.collection.Streaming.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -510,49 +504,49 @@ handing off to streaming dataframes</p>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.accumulate_partitions" title="rapidz.batch.Batch.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Accumulate a function with state across batch elements</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.accumulate_partitions" title="rapidz.batch.Batch.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Accumulate a function with state across batch elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.filter" title="rapidz.batch.Batch.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a>(predicate)</td>
-<td>Filter elements by a predicate</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.filter" title="rapidz.batch.Batch.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a>(predicate)</p></td>
+<td><p>Filter elements by a predicate</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.map" title="rapidz.batch.Batch.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(func,&nbsp;**kwargs)</td>
-<td>Map a function across all elements</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.map" title="rapidz.batch.Batch.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(func, **kwargs)</p></td>
+<td><p>Map a function across all elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.map_partitions" title="rapidz.batch.Batch.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Map a function across all batch elements of this stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.map_partitions" title="rapidz.batch.Batch.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Map a function across all batch elements of this stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.pluck" title="rapidz.batch.Batch.pluck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pluck</span></code></a>(ind)</td>
-<td>Pick a field out of all elements</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.pluck" title="rapidz.batch.Batch.pluck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pluck</span></code></a>(ind)</p></td>
+<td><p>Pick a field out of all elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.sum" title="rapidz.batch.Batch.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</td>
-<td>Sum elements</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.sum" title="rapidz.batch.Batch.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
+<td><p>Sum elements</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.to_dataframe" title="rapidz.batch.Batch.to_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dataframe</span></code></a>()</td>
-<td>Convert to a streaming dataframe</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.to_dataframe" title="rapidz.batch.Batch.to_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dataframe</span></code></a>()</p></td>
+<td><p>Convert to a streaming dataframe</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.batch.Batch.to_stream" title="rapidz.batch.Batch.to_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_stream</span></code></a>()</td>
-<td>Concatenate batches and return base Stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.batch.Batch.to_stream" title="rapidz.batch.Batch.to_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_stream</span></code></a>()</p></td>
+<td><p>Concatenate batches and return base Stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.batch.Batch.verify" title="rapidz.batch.Batch.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code></a>(x)</td>
-<td>Verify elements that pass through this stream</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.batch.Batch.verify" title="rapidz.batch.Batch.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code></a>(x)</p></td>
+<td><p>Verify elements that pass through this stream</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="44%" />
-<col width="56%" />
+<col style="width: 44%" />
+<col style="width: 56%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>emit</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>emit</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -561,8 +555,8 @@ handing off to streaming dataframes</p>
 <code class="descname">accumulate_partitions</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.batch.Batch.accumulate_partitions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accumulate a function with state across batch elements</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></p>
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></p>
 </div>
 </dd></dl>
 
@@ -585,8 +579,8 @@ handing off to streaming dataframes</p>
 <p>The output stream type will be determined by the action of that
 function on the example</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></p>
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></p>
 </div>
 </dd></dl>
 
@@ -632,114 +626,106 @@ function on the example</p>
 Operations on this object will translate to the appropriate operations on
 the underlying Pandas dataframes.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series</span></code></p>
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series</span></code></p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>columns</strong></dt>
-<dd></dd>
-<dt><strong>dtypes</strong></dt>
-<dd></dd>
-<dt><strong>index</strong></dt>
-<dd></dd>
-<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.size" title="rapidz.dataframe.DataFrame.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></a></dt>
-<dd><p class="first last">size of frame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>columns</strong></dt><dd></dd>
+<dt><strong>dtypes</strong></dt><dd></dd>
+<dt><strong>index</strong></dt><dd></dd>
+<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.size" title="rapidz.dataframe.DataFrame.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></a></dt><dd><p>size of frame</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.accumulate_partitions" title="rapidz.dataframe.DataFrame.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Accumulate a function with state across batch elements</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.accumulate_partitions" title="rapidz.dataframe.DataFrame.accumulate_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Accumulate a function with state across batch elements</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.assign" title="rapidz.dataframe.DataFrame.assign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign</span></code></a>(**kwargs)</td>
-<td>Assign new columns to this dataframe</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.assign" title="rapidz.dataframe.DataFrame.assign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign</span></code></a>(**kwargs)</p></td>
+<td><p>Assign new columns to this dataframe</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.count" title="rapidz.dataframe.DataFrame.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>()</td>
-<td>Count of frame</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.count" title="rapidz.dataframe.DataFrame.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>()</p></td>
+<td><p>Count of frame</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummax" title="rapidz.dataframe.DataFrame.cummax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummax</span></code></a>()</td>
-<td>Cumulative maximum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummax" title="rapidz.dataframe.DataFrame.cummax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummax</span></code></a>()</p></td>
+<td><p>Cumulative maximum</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummin" title="rapidz.dataframe.DataFrame.cummin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummin</span></code></a>()</td>
-<td>Cumulative minimum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cummin" title="rapidz.dataframe.DataFrame.cummin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummin</span></code></a>()</p></td>
+<td><p>Cumulative minimum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumprod" title="rapidz.dataframe.DataFrame.cumprod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumprod</span></code></a>()</td>
-<td>Cumulative product</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumprod" title="rapidz.dataframe.DataFrame.cumprod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumprod</span></code></a>()</p></td>
+<td><p>Cumulative product</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumsum" title="rapidz.dataframe.DataFrame.cumsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumsum</span></code></a>()</td>
-<td>Cumulative sum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.cumsum" title="rapidz.dataframe.DataFrame.cumsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumsum</span></code></a>()</p></td>
+<td><p>Cumulative sum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.groupby" title="rapidz.dataframe.DataFrame.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code></a>(other)</td>
-<td>Groupby aggreagtions</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.groupby" title="rapidz.dataframe.DataFrame.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code></a>(other)</p></td>
+<td><p>Groupby aggreagtions</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.map_partitions" title="rapidz.dataframe.DataFrame.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code></a>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Map a function across all batch elements of this stream</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.map_partitions" title="rapidz.dataframe.DataFrame.map_partitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Map a function across all batch elements of this stream</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.mean" title="rapidz.dataframe.DataFrame.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</td>
-<td>Average</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.mean" title="rapidz.dataframe.DataFrame.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</p></td>
+<td><p>Average</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.reset_index" title="rapidz.dataframe.DataFrame.reset_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_index</span></code></a>()</td>
-<td>Reset Index</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.reset_index" title="rapidz.dataframe.DataFrame.reset_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_index</span></code></a>()</p></td>
+<td><p>Reset Index</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.rolling" title="rapidz.dataframe.DataFrame.rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rolling</span></code></a>(window[,&nbsp;min_periods])</td>
-<td>Compute rolling aggregations</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.rolling" title="rapidz.dataframe.DataFrame.rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rolling</span></code></a>(window[, min_periods])</p></td>
+<td><p>Compute rolling aggregations</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.round" title="rapidz.dataframe.DataFrame.round"><code class="xref py py-obj docutils literal notranslate"><span class="pre">round</span></code></a>([decimals])</td>
-<td>Round elements in frame</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.round" title="rapidz.dataframe.DataFrame.round"><code class="xref py py-obj docutils literal notranslate"><span class="pre">round</span></code></a>([decimals])</p></td>
+<td><p>Round elements in frame</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.set_index" title="rapidz.dataframe.DataFrame.set_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_index</span></code></a>(index,&nbsp;**kwargs)</td>
-<td>Set Index</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.set_index" title="rapidz.dataframe.DataFrame.set_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_index</span></code></a>(index, **kwargs)</p></td>
+<td><p>Set Index</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.sum" title="rapidz.dataframe.DataFrame.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</td>
-<td>Sum frame</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.sum" title="rapidz.dataframe.DataFrame.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
+<td><p>Sum frame</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.tail" title="rapidz.dataframe.DataFrame.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tail</span></code></a>([n])</td>
-<td>Round elements in frame</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.tail" title="rapidz.dataframe.DataFrame.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tail</span></code></a>([n])</p></td>
+<td><p>Round elements in frame</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.to_frame" title="rapidz.dataframe.DataFrame.to_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_frame</span></code></a>()</td>
-<td>Convert to a streaming dataframe</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.to_frame" title="rapidz.dataframe.DataFrame.to_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_frame</span></code></a>()</p></td>
+<td><p>Convert to a streaming dataframe</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.verify" title="rapidz.dataframe.DataFrame.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code></a>(x)</td>
-<td>Verify consistency of elements that pass through this stream</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.verify" title="rapidz.dataframe.DataFrame.verify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code></a>(x)</p></td>
+<td><p>Verify consistency of elements that pass through this stream</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></a>([n,&nbsp;value])</td>
-<td>Sliding window operations</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></a>([n, value])</p></td>
+<td><p>Sliding window operations</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="57%" />
-<col width="43%" />
+<col style="width: 57%" />
+<col style="width: 43%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>aggregate</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>aggregate</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>astype</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>astype</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><strong>emit</strong></td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p><strong>emit</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>map</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>map</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><strong>query</strong></td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p><strong>query</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -748,8 +734,8 @@ the underlying Pandas dataframes.</p>
 <code class="descname">accumulate_partitions</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.dataframe.DataFrame.accumulate_partitions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accumulate a function with state across batch elements</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></p>
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.map_partitions</span></code></p>
 </div>
 </dd></dl>
 
@@ -808,8 +794,8 @@ the underlying Pandas dataframes.</p>
 <p>The output stream type will be determined by the action of that
 function on the example</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></p>
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Streaming.accumulate_partitions</span></code></p>
 </div>
 </dd></dl>
 
@@ -838,30 +824,24 @@ aggregated over that window.</p>
 accurate stream.  It performs a copy at every added dataframe.  Because
 of this it may be slow if the rolling window is much larger than the
 average stream element.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>window: int or timedelta</strong></dt>
-<dd><p class="first last">Window over which to roll</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>window: int or timedelta</strong></dt><dd><p>Window over which to roll</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>Rolling object</strong></dt>
-<dd></dd>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Rolling object</strong></dt><dd></dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.window</span></code></a></dt>
-<dd>more generic window operations</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.window</span></code></a></dt><dd><p>more generic window operations</p>
+</dd>
 </dl>
 </div>
 </dd></dl>
@@ -924,10 +904,10 @@ with a fixed number of elements:</p>
 <p>Windowed dataframes support all normal arithmetic, aggregations, and
 groupby-aggregations.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.rolling" title="rapidz.dataframe.DataFrame.rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.rolling</span></code></a></dt>
-<dd>mimic’s Pandas rolling aggregations</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.rolling" title="rapidz.dataframe.DataFrame.rolling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.rolling</span></code></a></dt><dd><p>mimic’s Pandas rolling aggregations</p>
+</dd>
 </dl>
 </div>
 <p class="rubric">Examples</p>
@@ -956,41 +936,41 @@ number of rows or a time window.</p>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.aggregate" title="rapidz.dataframe.Rolling.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling aggregation</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.aggregate" title="rapidz.dataframe.Rolling.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling aggregation</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.count" title="rapidz.dataframe.Rolling.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling count</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.count" title="rapidz.dataframe.Rolling.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling count</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.max" title="rapidz.dataframe.Rolling.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max</span></code></a>()</td>
-<td>Rolling maximum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.max" title="rapidz.dataframe.Rolling.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max</span></code></a>()</p></td>
+<td><p>Rolling maximum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.mean" title="rapidz.dataframe.Rolling.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</td>
-<td>Rolling mean</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.mean" title="rapidz.dataframe.Rolling.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</p></td>
+<td><p>Rolling mean</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.median" title="rapidz.dataframe.Rolling.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median</span></code></a>()</td>
-<td>Rolling median</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.median" title="rapidz.dataframe.Rolling.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median</span></code></a>()</p></td>
+<td><p>Rolling median</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.min" title="rapidz.dataframe.Rolling.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code></a>()</td>
-<td>Rolling minimum</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.min" title="rapidz.dataframe.Rolling.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code></a>()</p></td>
+<td><p>Rolling minimum</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.quantile" title="rapidz.dataframe.Rolling.quantile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quantile</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling quantile</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.quantile" title="rapidz.dataframe.Rolling.quantile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quantile</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling quantile</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.std" title="rapidz.dataframe.Rolling.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">std</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling standard deviation</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.std" title="rapidz.dataframe.Rolling.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">std</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling standard deviation</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.sum" title="rapidz.dataframe.Rolling.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</td>
-<td>Rolling sum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.sum" title="rapidz.dataframe.Rolling.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
+<td><p>Rolling sum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Rolling.var" title="rapidz.dataframe.Rolling.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Rolling variance</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Rolling.var" title="rapidz.dataframe.Rolling.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Rolling variance</p></td>
 </tr>
 </tbody>
 </table>
@@ -1063,83 +1043,74 @@ number of rows or a time window.</p>
 <p>This provides a set of aggregations that can be applied over a sliding
 window of data.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.window</span></code></a></dt>
-<dd>contains full docstring</dd>
-</dl>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>columns</strong></dt>
-<dd></dd>
-<dt><strong>dtypes</strong></dt>
-<dd></dd>
-<dt><strong>example</strong></dt>
-<dd></dd>
-<dt><strong>index</strong></dt>
-<dd></dd>
-<dt><a class="reference internal" href="#rapidz.dataframe.Window.size" title="rapidz.dataframe.Window.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></a></dt>
-<dd><p class="first last">Number of elements within window</p>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#rapidz.dataframe.DataFrame.window" title="rapidz.dataframe.DataFrame.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.window</span></code></a></dt><dd><p>contains full docstring</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>columns</strong></dt><dd></dd>
+<dt><strong>dtypes</strong></dt><dd></dd>
+<dt><strong>example</strong></dt><dd></dd>
+<dt><strong>index</strong></dt><dd></dd>
+<dt><a class="reference internal" href="#rapidz.dataframe.Window.size" title="rapidz.dataframe.Window.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></a></dt><dd><p>Number of elements within window</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.apply" title="rapidz.dataframe.Window.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(func)</td>
-<td>Apply an arbitrary function over each window of data</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.apply" title="rapidz.dataframe.Window.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(func)</p></td>
+<td><p>Apply an arbitrary function over each window of data</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.count" title="rapidz.dataframe.Window.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>()</td>
-<td>Count elements within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.count" title="rapidz.dataframe.Window.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>()</p></td>
+<td><p>Count elements within window</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.groupby" title="rapidz.dataframe.Window.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code></a>(other)</td>
-<td>Groupby-aggregations within window</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.groupby" title="rapidz.dataframe.Window.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code></a>(other)</p></td>
+<td><p>Groupby-aggregations within window</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.mean" title="rapidz.dataframe.Window.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</td>
-<td>Average elements within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.mean" title="rapidz.dataframe.Window.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</p></td>
+<td><p>Average elements within window</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.std" title="rapidz.dataframe.Window.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">std</span></code></a>([ddof])</td>
-<td>Compute standard deviation of elements within window</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.std" title="rapidz.dataframe.Window.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">std</span></code></a>([ddof])</p></td>
+<td><p>Compute standard deviation of elements within window</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.sum" title="rapidz.dataframe.Window.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</td>
-<td>Sum elements within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.sum" title="rapidz.dataframe.Window.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
+<td><p>Sum elements within window</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.Window.value_counts" title="rapidz.dataframe.Window.value_counts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_counts</span></code></a>()</td>
-<td>Count groups of elements within window</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.value_counts" title="rapidz.dataframe.Window.value_counts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_counts</span></code></a>()</p></td>
+<td><p>Count groups of elements within window</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.Window.var" title="rapidz.dataframe.Window.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>([ddof])</td>
-<td>Compute variance of elements within window</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.Window.var" title="rapidz.dataframe.Window.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>([ddof])</p></td>
+<td><p>Compute variance of elements within window</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="64%" />
-<col width="36%" />
+<col style="width: 64%" />
+<col style="width: 36%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>aggregate</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>aggregate</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>full</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>full</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><strong>map_partitions</strong></td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p><strong>map_partitions</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>reset_index</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>reset_index</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1204,29 +1175,29 @@ window of data.</p>
 <em class="property">class </em><code class="descclassname">rapidz.dataframe.</code><code class="descname">GroupBy</code><span class="sig-paren">(</span><em>root</em>, <em>grouper</em>, <em>index=None</em><span class="sig-paren">)</span><a class="headerlink" href="#rapidz.dataframe.GroupBy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Groupby aggregations on streaming dataframes</p>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.count" title="rapidz.dataframe.GroupBy.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>()</td>
-<td>Groupby-count</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.count" title="rapidz.dataframe.GroupBy.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>()</p></td>
+<td><p>Groupby-count</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.mean" title="rapidz.dataframe.GroupBy.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</td>
-<td>Groupby-mean</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.mean" title="rapidz.dataframe.GroupBy.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</p></td>
+<td><p>Groupby-mean</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.size" title="rapidz.dataframe.GroupBy.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></a>()</td>
-<td>Groupby-size</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.size" title="rapidz.dataframe.GroupBy.size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></a>()</p></td>
+<td><p>Groupby-size</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.std" title="rapidz.dataframe.GroupBy.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">std</span></code></a>([ddof])</td>
-<td>Groupby-std</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.std" title="rapidz.dataframe.GroupBy.std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">std</span></code></a>([ddof])</p></td>
+<td><p>Groupby-std</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.sum" title="rapidz.dataframe.GroupBy.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</td>
-<td>Groupby-sum</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.sum" title="rapidz.dataframe.GroupBy.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
+<td><p>Groupby-sum</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#rapidz.dataframe.GroupBy.var" title="rapidz.dataframe.GroupBy.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>([ddof])</td>
-<td>Groupby-variance</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#rapidz.dataframe.GroupBy.var" title="rapidz.dataframe.GroupBy.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>([ddof])</p></td>
+<td><p>Groupby-variance</p></td>
 </tr>
 </tbody>
 </table>
@@ -1276,125 +1247,115 @@ window of data.</p>
 The y column is poisson distributed.
 The z column is normally distributed.</p>
 <p>This class is experimental and will likely be removed in the future</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>freq: timedelta</strong></dt>
-<dd><p class="first last">The time interval between records</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>freq: timedelta</strong></dt><dd><p>The time interval between records</p>
 </dd>
-<dt><strong>interval: timedelta</strong></dt>
-<dd><p class="first last">The time interval between new dataframes, should be significantly
+<dt><strong>interval: timedelta</strong></dt><dd><p>The time interval between new dataframes, should be significantly
 larger than freq</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>columns</strong></dt>
-<dd></dd>
-<dt><strong>dtypes</strong></dt>
-<dd></dd>
-<dt><strong>index</strong></dt>
-<dd></dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></dt>
-<dd><p class="first last">size of frame</p>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>columns</strong></dt><dd></dd>
+<dt><strong>dtypes</strong></dt><dd></dd>
+<dt><strong>index</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code></dt><dd><p>size of frame</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-center">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Accumulate a function with state across batch elements</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">accumulate_partitions</span></code>(func, *args, **kwargs)</p></td>
+<td><p>Accumulate a function with state across batch elements</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign</span></code>(**kwargs)</td>
-<td>Assign new columns to this dataframe</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign</span></code>(**kwargs)</p></td>
+<td><p>Assign new columns to this dataframe</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>()</td>
-<td>Count of frame</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>()</p></td>
+<td><p>Count of frame</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummax</span></code>()</td>
-<td>Cumulative maximum</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummax</span></code>()</p></td>
+<td><p>Cumulative maximum</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummin</span></code>()</td>
-<td>Cumulative minimum</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cummin</span></code>()</p></td>
+<td><p>Cumulative minimum</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumprod</span></code>()</td>
-<td>Cumulative product</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumprod</span></code>()</p></td>
+<td><p>Cumulative product</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumsum</span></code>()</td>
-<td>Cumulative sum</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumsum</span></code>()</p></td>
+<td><p>Cumulative sum</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code>(other)</td>
-<td>Groupby aggreagtions</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code>(other)</p></td>
+<td><p>Groupby aggreagtions</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code>(func,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Map a function across all batch elements of this stream</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_partitions</span></code>(func, *args, **kwargs)</p></td>
+<td><p>Map a function across all batch elements of this stream</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code>()</td>
-<td>Average</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code>()</p></td>
+<td><p>Average</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_index</span></code>()</td>
-<td>Reset Index</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_index</span></code>()</p></td>
+<td><p>Reset Index</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">rolling</span></code>(window[,&nbsp;min_periods])</td>
-<td>Compute rolling aggregations</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rolling</span></code>(window[, min_periods])</p></td>
+<td><p>Compute rolling aggregations</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">round</span></code>([decimals])</td>
-<td>Round elements in frame</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">round</span></code>([decimals])</p></td>
+<td><p>Round elements in frame</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_index</span></code>(index,&nbsp;**kwargs)</td>
-<td>Set Index</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_index</span></code>(index, **kwargs)</p></td>
+<td><p>Set Index</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code>()</td>
-<td>Sum frame</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code>()</p></td>
+<td><p>Sum frame</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">tail</span></code>([n])</td>
-<td>Round elements in frame</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tail</span></code>([n])</p></td>
+<td><p>Round elements in frame</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_frame</span></code>()</td>
-<td>Convert to a streaming dataframe</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_frame</span></code>()</p></td>
+<td><p>Convert to a streaming dataframe</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code>(x)</td>
-<td>Verify consistency of elements that pass through this stream</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify</span></code>(x)</p></td>
+<td><p>Verify consistency of elements that pass through this stream</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code>([n,&nbsp;value])</td>
-<td>Sliding window operations</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code>([n, value])</p></td>
+<td><p>Sliding window operations</p></td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="57%" />
-<col width="43%" />
+<col style="width: 57%" />
+<col style="width: 43%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>aggregate</strong></td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-odd"><td><p><strong>aggregate</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>astype</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>astype</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><strong>emit</strong></td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p><strong>emit</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>map</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>map</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><strong>query</strong></td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p><strong>query</strong></p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><strong>stop</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><p><strong>stop</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
