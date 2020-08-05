@@ -1,4 +1,4 @@
-pytest
+pytest==3.10
 flake8
 coverage
 codecov
