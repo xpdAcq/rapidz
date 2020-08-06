@@ -4,6 +4,21 @@ rapidz Change Log
 
 .. current developments
 
+v0.2.1
+====================
+
+**Fixed:**
+
+* Change "graph.node" to "graph.nodes" in the project
+
+* Use "pd.date_range" instead of "pd.DatetimeIndex" in test_dataframe.py
+
+**Authors:**
+
+* st3107
+
+
+
 v0.2.0
 ====================
 
