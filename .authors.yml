@@ -1,8 +1,17 @@
 - name: Christopher J. Wright
   email: cjwright4242gh@gmail.com
-  num_commits: 68
+  num_commits: 70
   first_commit: 2018-09-27 11:05:14
   alternate_emails:
   - cjwright4242@gmail.com
   aliases:
   - christopher
+- name: Simon Billinge
+  email: sbillinge@users.noreply.github.com
+  num_commits: 0
+  first_commit: 2020-08-06 07:06:54
+- name: st3107
+  email: st3107@columbia.edu
+  num_commits: 5
+  first_commit: 2020-08-05 18:11:47
+  github: st3107
