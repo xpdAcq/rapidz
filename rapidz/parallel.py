@@ -1,10 +1,11 @@
 from concurrent.futures import Future
 from functools import wraps
+from builtins import zip as szip
 
 from rapidz import apply
-from rapidz.core import _truthy, args_kwargs
+from rapidz.core import _truthy, args_kwargs, move_to_first, identity
 from rapidz.core import get_io_loop
-from rapidz.clients import DEFAULT_BACKENDS, FILL_COLOR_LOOKUP
+from rapidz.clients import DEFAULT_BACKENDS, FILL_COLOR_LOOKUP, result_maybe
 from operator import getitem
 
 from tornado import gen
@@ -12,10 +13,21 @@ from tornado import gen
 from . import core, sources
 from .core import Stream
 
-from collections import Sequence
+from collections import Sequence, deque, Iterable
 from toolz import pluck as _pluck
 
 NULL_COMPUTE = "~~NULL_COMPUTE~~"
+
+
+def future_chain(present_future, past_future=None):
+    # If the most recent compute result is NULL then return a previous one
+    if present_future == NULL_COMPUTE:
+        if past_future is None:
+            print('hi')
+            return NULL_COMPUTE
+        else:
+            return past_future
+    return present_future
 
 
 def return_null(func):
@@ -298,8 +310,50 @@ class buffer(ParallelStream, core.buffer):
 
 @args_kwargs
 @ParallelStream.register_api()
-class combine_latest(ParallelStream, core.combine_latest):
-    pass
+class combine_latest(ParallelStream):
+    def __init__(self, *upstreams, **kwargs):
+        emit_on = kwargs.pop("emit_on", None)
+        first = kwargs.pop("first", None)
+
+        self.last = [None for _ in upstreams]
+        self.missing = set(upstreams)
+        if emit_on is not None:
+            if not isinstance(emit_on, Iterable):
+                emit_on = (emit_on,)
+            emit_on = tuple(
+                upstreams[x] if isinstance(x, int) else x for x in emit_on
+            )
+            self.emit_on = emit_on
+        else:
+            self.emit_on = upstreams
+        ParallelStream.__init__(self, upstreams=upstreams, **kwargs)
+        if first:
+            move_to_first(self, first)
+        self.future_buffers = {up: None for up in upstreams}
+
+    def update(self, x, who=None):
+        if self.missing and who in self.missing:
+            self.missing.remove(who)
+
+        self.last[self.upstreams.index(who)] = x
+        if not self.missing and who in self.emit_on:
+            tup = tuple(self.last)
+            client = self.default_client()
+            l = []
+            # we only want to fall back on prior data if it is not the
+            # incoming data
+            # It is fine to not emit if the incoming data is bad, but in
+            # serial mode the bad data would have never gotten to the node
+            # so we need to have the buffered data only be good data
+            for t, up in szip(tup, self.upstreams):
+                if up == who:
+                    a = t
+                else:
+                    a = client.submit(future_chain, t, self.future_buffers[up])
+                    self.future_buffers[up] = a
+                l.append(a)
+            tup = tuple(l)
+            return self._emit(tup)
 
 
 @args_kwargs
@@ -313,7 +367,7 @@ class delay(ParallelStream, core.delay):
 class latest(ParallelStream, core.latest):
     pass
 
-
+# TODO: needs to be filter proofed
 @args_kwargs
 @ParallelStream.register_api()
 class partition(ParallelStream, core.partition):
@@ -326,6 +380,7 @@ class rate_limit(ParallelStream, core.rate_limit):
     pass
 
 
+# TODO: needs to be filter proofed
 @args_kwargs
 @ParallelStream.register_api()
 class sliding_window(ParallelStream, core.sliding_window):
@@ -343,11 +398,64 @@ class timed_window(ParallelStream, core.timed_window):
 class union(ParallelStream, core.union):
     pass
 
-
+# TODO: needs to be filter proofed
 @args_kwargs
 @ParallelStream.register_api()
-class zip(ParallelStream, core.zip):
-    pass
+class zip(ParallelStream):
+    def __init__(self, *upstreams, **kwargs):
+        self.maxsize = kwargs.pop("maxsize", 10)
+        first = kwargs.pop("first", None)
+        self.literals = [
+            (i, val)
+            for i, val in enumerate(upstreams)
+            if not isinstance(val, Stream)
+        ]
+
+        self.buffers = {
+            upstream: deque()
+            for upstream in upstreams
+            if isinstance(upstream, Stream)
+        }
+
+        upstreams2 = [
+            upstream for upstream in upstreams if isinstance(upstream, Stream)
+        ]
+
+        ParallelStream.__init__(self, upstreams=upstreams2, **kwargs)
+        if first:
+            move_to_first(self, first)
+        self.future_buffers = {upstream: None for upstream in upstreams
+                               if isinstance(upstream, Stream)}
+
+    def pack_literals(self, tup):
+        """ Fill buffers for literals whenever we empty them """
+        inp = list(tup)[::-1]
+        out = []
+        for i, val in self.literals:
+            while len(out) < i:
+                out.append(inp.pop())
+            out.append(val)
+
+        while inp:
+            out.append(inp.pop())
+
+        return tuple(out)
+
+    def update(self, x, who=None):
+        L = self.buffers[who]  # get buffer for stream
+        L.append(x)
+        if len(L) == 1 and all(self.buffers.values()):
+            client = self.default_client()
+
+            tup = tuple(client.submit(future_chain, self.buffers[up][0],
+                                      self.future_buffers[up]) for up in self.upstreams)
+            for buf in self.buffers.values():
+                buf.popleft()
+            for t, up in szip(tup, self.upstreams):
+                self.future_buffers[up] = t
+            if self.literals:
+                tup = self.pack_literals(tup)
+            return self._emit(tup)
 
 
 @args_kwargs
@@ -366,3 +474,47 @@ class filenames(ParallelStream, sources.filenames):
 @ParallelStream.register_api(staticmethod)
 class from_textfile(ParallelStream, sources.from_textfile):
     pass
+
+
+def is_unique(x, past):
+    if x in past:
+        return NULL_COMPUTE
+    return x
+
+
+# TODO: this doesn't work on dask (and might never work)
+#  The main issue here is that we need a central storage place for all the
+#  history but dask might not be so friendly to this idea
+#  This (or something very like it) works in actual ipython dask
+@args_kwargs
+@ParallelStream.register_api()
+class unique(ParallelStream):
+    """ Avoid sending through repeated elements
+
+    This deduplicates a stream so that only new elements pass through.
+    You can control how much of a history is stored with the ``history=``
+    parameter.  For example setting ``history=1`` avoids sending through
+    elements when one is repeated right after the other.
+
+    Examples
+    --------
+    >>> source = Stream()
+    >>> source.unique(history=1).sink(print)
+    >>> for x in [1, 1, 2, 2, 2, 1, 3]:
+    ...     source.emit(x)
+    1
+    2
+    1
+    3
+    """
+
+    def __init__(self, upstream, history=None, **kwargs):
+        self.history = history
+        self.past = []
+        ParallelStream.__init__(self, upstream, **kwargs)
+
+    def update(self, x, who=None):
+        client = self.default_client()
+        ret = client.submit(is_unique, x, self.past)
+        self.past.append(ret)
+        return self._emit(ret)
