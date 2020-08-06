@@ -119,7 +119,7 @@ def readable_graph(graph):
     """
     import networkx as nx
 
-    mapping = {k: "{}".format(graph.node[k]["label"]) for k in graph}
+    mapping = {k: "{}".format(graph.nodes[k]["label"]) for k in graph}
     idx_mapping = {}
     for k, v in mapping.items():
         if v in idx_mapping.keys():
@@ -137,7 +137,7 @@ def to_graphviz(graph, **graph_attr):
     import graphviz
 
     gvz = graphviz.Digraph(graph_attr=graph_attr)
-    for node, attrs in graph.node.items():
+    for node, attrs in graph.nodes.items():
         # Remove the node attribute from the graph so graphviz doesn't balk
         attrs2 = dict(attrs)
         del attrs2["node"]
