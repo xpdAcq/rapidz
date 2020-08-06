@@ -10,7 +10,7 @@ tests = [p + ".tests" for p in packages]
 
 setup(
     name="rapidz",
-    version='0.2.0',
+    version='0.2.1',
     description="Streams",
     url="http://github.com/xpdAcq/rapidz/",
     maintainer="CJ Wright",
