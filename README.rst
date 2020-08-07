@@ -1,19 +1,16 @@
 rapidz
 =======
 
-|Build Status| |Doc Status| |Version Status|
+|Build Status| |Version Status|
 
-See documentation at `rapidz.readthedocs.org <https://rapidz.readthedocs.org>`_.
+See documentation at `rapidz <https://xpdacq.github.io/rapidz/>`_.
 
 LICENSE
 -------
 
 BSD-3 Clause
 
-.. |Build Status| image:: https://travis-ci.org/xpdAcqrapidz.svg?branch=master
-   :target: https://travis-ci.org/xpdAcqrapidz
-.. |Doc Status| image:: http://readthedocs.org/projects/rapidz/badge/?version=latest
-   :target: http://rapidz.readthedocs.org/en/latest/
-   :alt: Documentation Status
-.. |Version Status| image:: https://img.shields.io/pypi/v/rapidz.svg
-   :target: https://pypi.python.org/pypi/rapidz/
+.. |Build Status| image:: https://travis-ci.org/xpdAcq/rapidz.svg?branch=master
+    :target: https://travis-ci.org/xpdAcq/rapidz
+.. |Version Status| image:: https://anaconda.org/nsls2forge/rapidz/badges/version.svg
+   :target: https://anaconda.org/nsls2forge/rapidz
