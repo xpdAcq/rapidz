@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
-from collections.abc import deque, Sequence, Hashable
+from collections.abc import Sequence, Hashable
+from collections import deque
 import copy
 from datetime import timedelta
 import functools

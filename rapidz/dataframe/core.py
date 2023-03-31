@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 
-from collections.abc import OrderedDict
+from collections import OrderedDict
 import operator
 from time import time
 

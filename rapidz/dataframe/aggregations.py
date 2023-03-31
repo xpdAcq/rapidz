@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 
-from collections.abc import deque
+from collections import deque
 from numbers import Number
 
 import numpy as np

@@ -1,4 +1,4 @@
-pytest==3.10
+pytest
 flake8
 coverage
 codecov
@@ -7,7 +7,7 @@ graphviz
 python-graphviz
 dask
 distributed
-pandas==0.24.2
+pandas
 bokeh
 ipython
 ipykernel
