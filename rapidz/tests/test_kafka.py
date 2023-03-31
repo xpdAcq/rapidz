@@ -1,5 +1,7 @@
+import asyncio
 import atexit
 from contextlib import contextmanager
+#from flaky import flaky
 import os
 import pytest
 import random
@@ -11,7 +13,7 @@ from tornado import gen
 
 from ..core import Stream
 from ..dask import DaskStream
-from rapidz.utils_test import gen_test, wait_for
+from rapidz.utils_test import gen_test, wait_for, await_for
 
 pytest.importorskip("distributed")
 from distributed.utils_test import gen_cluster  # flake8: noqa
@@ -213,26 +215,32 @@ def test_kafka_batch():
 
 
 @gen_cluster(client=True, timeout=60)
-def test_kafka_dask_batch(c, s, w1, w2):
+async def test_kafka_dask_batch(c, s, w1, w2):
     j = random.randint(0, 10000)
     ARGS = {
         "bootstrap.servers": "localhost:9092",
         "group.id": "rapidz-test%i" % j,
     }
     with kafka_service() as kafka:
+        kafka, TOPIC = kafka
         stream = Stream.from_kafka_batched(
             TOPIC, ARGS, asynchronous=True, dask=True
         )
-        stream.start()
-        assert isinstance(stream, DaskStream)
         out = stream.gather().sink_to_list()
+        stream.start()
+        await asyncio.sleep(5) # this frees the loop while dask workers report in
+        assert isinstance(stream, DaskStream)
         for i in range(10):
             kafka.produce(TOPIC, b"value-%d" % i)
         kafka.flush()
-        timeout = 10
-        while not any(out):
-            yield gen.sleep(0.2)
-            timeout -= 0.2
-            assert timeout > 0, "Timeout"
-        assert out[0][-1] == b"value-9"
-        stream.stopped = True
+        await await_for(lambda: any(out), 10, period=0.2)
+        # while not any(out):
+        #     yield gen.sleep(0.2)
+        #     timeout -= 0.2
+        #     assert timeout > 0, "Timeout"
+        # assert out[0][-1] == b"value-9"
+        # stream.stopped = True
+        assert {'key': None, 'value': b'value-1'} in out[0]
+        stream.stop()
+        await asyncio.sleep(0)
+        stream.upstream.upstream.consumer.close()

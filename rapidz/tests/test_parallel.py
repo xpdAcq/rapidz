@@ -5,12 +5,13 @@ import time
 from tornado import gen
 import pytest
 
-from distributed.utils_test import inc, slowinc  # flake8: noqa
+
+from distributed.utils_test import gen_test, inc, slowinc  # flake8: noqa
 from rapidz import Stream
 from rapidz.parallel import scatter
 from rapidz.clients import thread_default_client
 
-gen_test = pytest.mark.gen_test
+# gen_test = pytest.mark.gen_test
 
 test_params = ["thread", thread_default_client]
 
