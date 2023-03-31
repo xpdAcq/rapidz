@@ -1,4 +1,4 @@
-from collections import Sequence, MutableMapping
+from collections.abc import Sequence, MutableMapping
 from concurrent.futures import ThreadPoolExecutor, Future
 from functools import wraps
 

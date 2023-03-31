@@ -12,7 +12,7 @@ from tornado import gen
 from . import core, sources
 from .core import Stream
 
-from collections import Sequence
+from collections.abc import Sequence
 from toolz import pluck as _pluck
 
 NULL_COMPUTE = "~~NULL_COMPUTE~~"

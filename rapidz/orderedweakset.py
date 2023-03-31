@@ -3,13 +3,13 @@
 # https://stackoverflow.com/questions/7828444/indexable-weak-ordered-set-in-python
 # Asked by Neil G https://stackoverflow.com/users/99989/neil-g
 # Answered/edited by https://stackoverflow.com/users/1001643/raymond-hettinger
-import collections
+import collections.abc
 import weakref
 
 
-class OrderedSet(collections.MutableSet):
+class OrderedSet(collections.abc.MutableSet):
     def __init__(self, values=()):
-        self._od = collections.OrderedDict().fromkeys(values)
+        self._od = collections.abc.OrderedDict().fromkeys(values)
 
     def __len__(self):
         return len(self._od)
