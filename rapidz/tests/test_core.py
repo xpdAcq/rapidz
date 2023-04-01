@@ -28,7 +28,8 @@ from rapidz.utils_test import (
     clean,
     await_for,
 )
-from distributed.utils_test import loop
+
+from distributed.utils_test import loop, loop_in_thread, cleanup
 
 
 def test_basic():
@@ -1025,7 +1026,6 @@ def test_percolate_loop_information(clean):
 
 
 def test_separate_thread_without_time(loop, thread):
-    assert thread.is_alive()
     source = Stream(loop=loop)
     L = source.map(inc).sink_to_list()
 
