@@ -13,6 +13,7 @@ import pytest
 from tornado import gen
 from tornado.queues import Queue
 from tornado.ioloop import IOLoop
+import asyncio
 
 import rapidz as sz
 
