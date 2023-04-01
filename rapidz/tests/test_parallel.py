@@ -18,14 +18,14 @@ test_params = ["thread", thread_default_client]
 
 @pytest.mark.parametrize("backend", test_params)
 @gen_test()
-def test_scatter_gather(backend):
+async def test_scatter_gather(backend):
     source = Stream(asynchronous=True)
     futures = scatter(source, backend=backend)
     futures_L = futures.sink_to_list()
     L = futures.gather().sink_to_list()
 
     for i in range(5):
-        yield source.emit(i)
+        await source.emit(i)
 
     assert L == list(range(5))
     assert all(isinstance(f, Future) for f in futures_L)
