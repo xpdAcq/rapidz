@@ -18,6 +18,7 @@ setup(
     license="BSD",
     keywords="streams",
     packages=packages + tests,
+    python_requires='>=3.8',
     long_description=(
         open("README.rst").read() if exists("README.rst") else ""
     ),

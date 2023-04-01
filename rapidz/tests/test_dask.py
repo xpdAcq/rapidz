@@ -22,35 +22,35 @@ from distributed.utils_test import (
 
 
 @gen_cluster(client=True)
-def test_map(c, s, a, b):
+async def test_map(c, s, a, b):
     source = Stream(asynchronous=True)
     futures = scatter(source).map(inc)
     futures_L = futures.sink_to_list()
     L = futures.gather().sink_to_list()
 
     for i in range(5):
-        yield source.emit(i)
+        await source.emit(i)
 
     assert L == [1, 2, 3, 4, 5]
     assert all(isinstance(f, Future) for f in futures_L)
 
 
 @gen_cluster(client=True)
-def test_scan(c, s, a, b):
+async def test_scan(c, s, a, b):
     source = Stream(asynchronous=True)
     futures = scatter(source).map(inc).scan(add)
     futures_L = futures.sink_to_list()
     L = futures.gather().sink_to_list()
 
     for i in range(5):
-        yield source.emit(i)
+        await source.emit(i)
 
     assert L == [1, 3, 6, 10, 15]
     assert all(isinstance(f, Future) for f in futures_L)
 
 
 @gen_cluster(client=True)
-def test_scan_state(c, s, a, b):
+async def test_scan_state(c, s, a, b):
     source = Stream(asynchronous=True)
 
     def f(acc, i):
@@ -59,23 +59,23 @@ def test_scan_state(c, s, a, b):
 
     L = scatter(source).scan(f, returns_state=True).gather().sink_to_list()
     for i in range(3):
-        yield source.emit(i)
+        await source.emit(i)
 
     assert L == [0, 1, 3]
 
 
 @gen_cluster(client=True)
-def test_zip(c, s, a, b):
+async def test_zip(c, s, a, b):
     a = Stream(asynchronous=True)
     b = Stream(asynchronous=True)
     c = scatter(a).zip(scatter(b))
 
     L = c.gather().sink_to_list()
 
-    yield a.emit(1)
-    yield b.emit("a")
-    yield a.emit(2)
-    yield b.emit("b")
+    await a.emit(1)
+    await b.emit("a")
+    await a.emit(2)
+    await b.emit("b")
 
     assert L == [(1, "a"), (2, "b")]
 
@@ -112,8 +112,8 @@ def test_sync_2(loop):
 
 
 @pytest.mark.slow
-@gen_cluster(client=True, ncores=[("127.0.0.1", 1)] * 2)
-def test_buffer(c, s, a, b):
+@gen_cluster(client=True, nthreads=[("127.0.0.1", 1)] * 2)
+async def test_buffer(c, s, a, b):
     source = Stream(asynchronous=True)
     L = (
         source.scatter()
@@ -125,18 +125,18 @@ def test_buffer(c, s, a, b):
 
     start = time.time()
     for i in range(5):
-        yield source.emit(i)
+        await source.emit(i)
     end = time.time()
     assert end - start < 0.5
 
     for i in range(5, 10):
-        yield source.emit(i)
+        await source.emit(i)
 
     end2 = time.time()
     assert end2 - start > (0.5 / 3)
 
     while len(L) < 10:
-        yield gen.sleep(0.01)
+        await gen.sleep(0.01)
         assert time.time() - start < 5
 
     assert L == list(map(inc, range(10)))
@@ -180,7 +180,7 @@ def test_stream_shares_client_loop(loop):
 
 
 @gen_cluster(client=True)
-def test_starmap(c, s, a, b):
+async def test_starmap(c, s, a, b):
     def add(x, y, z=0):
         return x + y + z
 
@@ -188,6 +188,6 @@ def test_starmap(c, s, a, b):
     L = source.scatter().starmap(add, z=10).gather().sink_to_list()
 
     for i in range(5):
-        yield source.emit((i, i))
+        await source.emit((i, i))
 
     assert L == [10, 12, 14, 16, 18]

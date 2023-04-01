@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
-from collections import deque, Sequence, Hashable
+from collections.abc import Sequence, Hashable
+from collections import deque
 import copy
 from datetime import timedelta
 import functools
@@ -16,7 +17,7 @@ from tornado import gen
 from tornado.locks import Condition
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
-from collections import Iterable
+from collections.abc import Iterable
 
 from .compatibility import get_thread_identity
 from .orderedweakset import OrderedWeakrefSet

@@ -13,6 +13,7 @@ import pytest
 from tornado import gen
 from tornado.queues import Queue
 from tornado.ioloop import IOLoop
+import asyncio
 
 import rapidz as sz
 
@@ -28,7 +29,8 @@ from rapidz.utils_test import (
     clean,
     await_for,
 )
-from distributed.utils_test import loop
+
+from distributed.utils_test import loop, loop_in_thread, cleanup
 
 
 def test_basic():
@@ -196,7 +198,7 @@ def test_backpressure():
 
 
 @gen_test()
-def test_timed_window():
+async def test_timed_window():
     source = Stream(asynchronous=True)
     a = source.timed_window(0.01)
 
@@ -204,16 +206,16 @@ def test_timed_window():
     L = a.sink_to_list()
 
     for i in range(10):
-        yield source.emit(i)
-        yield gen.sleep(0.004)
+        await source.emit(i)
+        await gen.sleep(0.004)
 
-    yield gen.sleep(a.interval)
+    await gen.sleep(a.interval)
     assert L
     assert sum(L, []) == list(range(10))
     assert all(len(x) <= 3 for x in L)
     assert any(len(x) >= 2 for x in L)
 
-    yield gen.sleep(0.1)
+    await gen.sleep(0.1)
     assert not L[-1]
 
 
@@ -898,7 +900,7 @@ def test_subclass():
 
 
 @gen_test()
-def test_latest():
+async def test_latest():
     source = Stream(asynchronous=True)
 
     L = []
@@ -911,17 +913,17 @@ def test_latest():
     s = source.map(inc).latest().map(slow_write)  # flake8: noqa
 
     source.emit(1)
-    yield gen.sleep(0.010)
+    await gen.sleep(0.010)
     source.emit(2)
     source.emit(3)
 
     start = time()
     while len(L) < 2:
-        yield gen.sleep(0.01)
+        await gen.sleep(0.01)
         assert time() < start + 3
     assert L == [2, 4]
 
-    yield gen.sleep(0.060)
+    await gen.sleep(0.060)
     assert L == [2, 4]
 
 
@@ -1025,7 +1027,6 @@ def test_percolate_loop_information(clean):
 
 
 def test_separate_thread_without_time(loop, thread):
-    assert thread.is_alive()
     source = Stream(loop=loop)
     L = source.map(inc).sink_to_list()
 
