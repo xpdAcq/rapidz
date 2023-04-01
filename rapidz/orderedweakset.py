@@ -9,7 +9,7 @@ import weakref
 
 class OrderedSet(collections.abc.MutableSet):
     def __init__(self, values=()):
-        self._od = collections.abc.OrderedDict().fromkeys(values)
+        self._od = collections.OrderedDict().fromkeys(values)
 
     def __len__(self):
         return len(self._od)
