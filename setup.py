@@ -13,12 +13,12 @@ setup(
     version='0.2.1',
     description="Streams",
     url="http://github.com/xpdAcq/rapidz/",
-    maintainer="CJ Wright",
-    maintainer_email="cjwright4242@gmail.com",
+    maintainer="Simon Billinge",
+    maintainer_email="simon.billinge@gmail.com",
     license="BSD",
     keywords="streams",
     packages=packages + tests,
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     long_description=(
         open("README.rst").read() if exists("README.rst") else ""
     ),
