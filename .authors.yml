@@ -9,11 +9,14 @@
 - name: Simon Billinge
   email: simon.billinge@gmail.com
   alternate_emails:
-    - sbillinge@users.noreply.github.com
-  num_commits: 0
+  - sbillinge@users.noreply.github.com
+  num_commits: 13
   first_commit: 2020-08-06 07:06:54
-- name: st3107
+  github: sbillinge
+- name: Songsheng Tao
   email: st3107@columbia.edu
-  num_commits: 5
+  alternate_emails:
+  - 37090959+st3107@users.noreply.github.com
+  num_commits: 8
   first_commit: 2020-08-05 18:11:47
   github: st3107
