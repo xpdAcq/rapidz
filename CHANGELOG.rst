@@ -4,6 +4,16 @@ rapidz Change Log
 
 .. current developments
 
+v0.2.2
+====================
+
+**Authors:**
+
+* Simon Billinge
+* Songsheng Tao
+
+
+
 v0.2.1
 ====================
 
