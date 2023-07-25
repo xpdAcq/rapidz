@@ -10,14 +10,15 @@
   email: simon.billinge@gmail.com
   alternate_emails:
   - sbillinge@users.noreply.github.com
-  num_commits: 0
+  num_commits: 15
   first_commit: 2020-08-06 07:06:54
+  github: sbillinge
 - name: Songsheng Tao
   aliases:
   - st3107
   email: st3107@columbia.edu
   alternate_emails:
   - 37090959+st3107@users.noreply.github.com
-  num_commits: 5
+  num_commits: 8
   first_commit: 2020-08-05 18:11:47
   github: st3107
